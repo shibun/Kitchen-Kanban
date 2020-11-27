@@ -4,4 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\KitchenKanban.BusinessServices.Interfaces\KitchenKanban.BusinessServices.Interfaces.csproj" />
+    <ProjectReference Include="..\KitchenKanban.Models\KitchenKanban.Models.csproj" />
+    <ProjectReference Include="..\KitchenKanban.ViewModels\KitchenKanban.ViewModels.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,3 +1,5 @@
+using KitchenKanban.BusinessServices;
+using KitchenKanban.BusinessServices.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +26,7 @@ namespace KitchenKanban.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IKitchenService, KitchenService>();
             services.AddControllers();
         }
 
