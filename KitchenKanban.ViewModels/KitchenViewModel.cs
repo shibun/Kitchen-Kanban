@@ -2,7 +2,7 @@
 
 namespace KitchenKanban.ViewModels
 {
-    public class Class1
+    public class KitchenViewModel
     {
     }
 }
