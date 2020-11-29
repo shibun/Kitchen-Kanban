@@ -4,14 +4,6 @@ namespace KitchenKanban.ViewModels
 {
     public class AuthenticateResponse
     {
-        public long UserId { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string UserName { get; set; }
-        public string UserFullName { get; set; }
-        public UserType UserType { get; set; }
-        public string Token { get; set; }
-
 
         public AuthenticateResponse(UserViewModel user, string token)
         {
@@ -23,5 +15,13 @@ namespace KitchenKanban.ViewModels
             UserFullName = user.FirstName + " " + user.LastName;
             Token = token;
         }
+
+        public long UserId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string UserName { get; set; }
+        public string UserFullName { get; set; }
+        public UserType UserType { get; set; }
+        public string Token { get; set; }
     }
 }
