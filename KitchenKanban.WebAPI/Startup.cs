@@ -1,5 +1,6 @@
 using KitchenKanban.BusinessServices;
 using KitchenKanban.BusinessServices.Interfaces;
+using KitchenKanban.WebAPI.Providers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,8 @@ namespace KitchenKanban.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.AddTransient<IUserService, UserService>();
             services.AddTransient<IKitchenService, KitchenService>();
             services.AddControllers();
         }
@@ -39,6 +42,15 @@ namespace KitchenKanban.WebAPI
             }
 
             app.UseRouting();
+
+            // global cors policy
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
+            // custom jwt auth middleware
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseAuthorization();
 

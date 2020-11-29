@@ -11,6 +11,7 @@ namespace KitchenKanban.WebAPI.Controllers
 {
     [Route("api/Kitchen")]
     [ApiController]
+    [Authorize]
     public class KitchenController : ControllerBase
     {
         private IKitchenService _kitchenService { get; set; }
@@ -18,6 +19,7 @@ namespace KitchenKanban.WebAPI.Controllers
         {
             this._kitchenService = kitchenService;
         }
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {
