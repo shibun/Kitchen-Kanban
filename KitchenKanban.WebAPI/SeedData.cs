@@ -19,7 +19,7 @@ namespace KitchenKanban.WebAPI
                 context.Users.AddRange(
                     new User
                     {
-                        UserId = Guid.NewGuid().ToString(),
+                        UserId = "95632324-a9f8-44ba-9b3d-4c90dd5d9650",
                         FirstName = "Kitchen",
                         LastName = "Administrator",
                         Username = "admin",
