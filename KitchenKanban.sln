@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenKanban.ViewModels", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenKanban.WebAPI", "KitchenKanban.WebAPI\KitchenKanban.WebAPI.csproj", "{1476E0E8-2862-4AAB-81A5-212962879D20}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KitchenKanban.DataServices", "KitchenKanban.DataServices\KitchenKanban.DataServices.csproj", "{ED8EA1BD-009B-4D63-B487-FEA714726DF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenKanban.DataServices", "KitchenKanban.DataServices\KitchenKanban.DataServices.csproj", "{ED8EA1BD-009B-4D63-B487-FEA714726DF3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KitchenKanban.WebUI", "KitchenKanban.WebUI\KitchenKanban.WebUI.csproj", "{02D21250-2408-41C6-9238-CA3798E71B19}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{ED8EA1BD-009B-4D63-B487-FEA714726DF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED8EA1BD-009B-4D63-B487-FEA714726DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED8EA1BD-009B-4D63-B487-FEA714726DF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02D21250-2408-41C6-9238-CA3798E71B19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02D21250-2408-41C6-9238-CA3798E71B19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02D21250-2408-41C6-9238-CA3798E71B19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02D21250-2408-41C6-9238-CA3798E71B19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
