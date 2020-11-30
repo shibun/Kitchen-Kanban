@@ -1,35 +1,62 @@
 ﻿using KitchenKanban.BusinessServices.Interfaces;
+using KitchenKanban.DataServices.Context;
 using KitchenKanban.Models;
+using KitchenKanban.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace KitchenKanban.BusinessServices
 {
     public class KitchenService : IKitchenService
     {
-        public List<Kitchen> GetKitchens()
+        private readonly IServiceScope _scope;
+        private readonly KitchenKanbanDB _databaseContext;
+
+        public KitchenService(IServiceProvider services)
         {
-            List<Kitchen> kitchens = new List<Kitchen>();
+            _scope = services.CreateScope();
+            _databaseContext = _scope.ServiceProvider.GetRequiredService<KitchenKanbanDB>();
+        }
 
-            kitchens.Add(new Kitchen()
+        public KitchenViewModel Create(KitchenViewModel input)
+        {
+            var newKitchen = new Kitchen()
             {
-                KitchenId = 1,
-                CounterNumber = "K001"
-            });
+                KitchenId = Guid.NewGuid().ToString(),
+                CounterNumber = input.CounterNumber
+            };
 
-            kitchens.Add(new Kitchen()
+            _databaseContext.Kitchens.Add(newKitchen);
+            _databaseContext.SaveChanges();
+
+            input.KitchenId = newKitchen.KitchenId;
+
+            return input;
+        }
+
+        public KitchenViewModel GetKitchenById(string kitchenId)
+        {
+            var kitchen = _databaseContext.Kitchens.Where(x => x.KitchenId == kitchenId).FirstOrDefault();
+            if (kitchen == null)
+                return null;
+
+            return new KitchenViewModel()
             {
-                KitchenId = 2,
-                CounterNumber = "K002"
-            });
+                KitchenId = kitchen.KitchenId,
+                CounterNumber = kitchen.CounterNumber
+            };
+        }
 
-            kitchens.Add(new Kitchen()
+        public List<KitchenViewModel> GetKitchens()
+        {
+            var result = _databaseContext.Kitchens;
+            return result.Select(x => new KitchenViewModel()
             {
-                KitchenId = 3,
-                CounterNumber = "K003"
-            });
-
-            return kitchens;
+                KitchenId = x.KitchenId,
+                CounterNumber = x.CounterNumber
+            }).ToList();
         }
     }
 }

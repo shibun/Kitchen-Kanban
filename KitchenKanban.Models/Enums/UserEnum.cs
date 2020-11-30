@@ -4,7 +4,7 @@
     {
         public enum UserType : int
         {
-            Admin = 1,
+            Administrator = 1,
             User = 2
         }
     }

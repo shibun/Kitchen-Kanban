@@ -1,8 +1,8 @@
 ﻿namespace KitchenKanban.Models
 {
-    public class Kitchen
+    public class Kitchen : BaseModel
     {
-        public long KitchenId { get; set; }
+        public string KitchenId { get; set; }
         public string CounterNumber { get; set; }
     }
 }

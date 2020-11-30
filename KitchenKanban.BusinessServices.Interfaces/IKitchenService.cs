@@ -1,10 +1,12 @@
-﻿using KitchenKanban.Models;
+﻿using KitchenKanban.ViewModels;
 using System.Collections.Generic;
 
 namespace KitchenKanban.BusinessServices.Interfaces
 {
     public interface IKitchenService
     {
-        List<Kitchen> GetKitchens();
+        List<KitchenViewModel> GetKitchens();
+        KitchenViewModel Create(KitchenViewModel input);
+        KitchenViewModel GetKitchenById(string kitchenId);
     }
 }

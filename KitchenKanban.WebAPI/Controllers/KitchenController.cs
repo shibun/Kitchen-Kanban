@@ -1,5 +1,6 @@
 ﻿using KitchenKanban.BusinessServices.Interfaces;
 using KitchenKanban.Models;
+using KitchenKanban.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -25,6 +26,35 @@ namespace KitchenKanban.WebAPI.Controllers
         {
             var kitchens = _kitchenService.GetKitchens();
             return Ok(kitchens);
+        }
+
+        [HttpGet("{kitchenId}")]
+        public IActionResult GetKitchenById(string kitchenId)
+        {
+            if (!String.IsNullOrEmpty(kitchenId))
+            {
+                var result = _kitchenService.GetKitchenById(kitchenId);
+
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Post(KitchenViewModel model)
+        {
+            try
+            {
+                var kitchen = _kitchenService.Create(model);
+                return Ok(kitchen);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

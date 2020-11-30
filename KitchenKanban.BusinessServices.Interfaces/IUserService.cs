@@ -5,6 +5,6 @@ namespace KitchenKanban.BusinessServices.Interfaces
     public interface IUserService
     {
         UserViewModel Authenticate(AuthenticateRequest input);
-        UserViewModel GetById(long userId);
+        UserViewModel GetById(string userId);
     }
 }

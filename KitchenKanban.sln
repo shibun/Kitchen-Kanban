@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KitchenKanban.Models", "KitchenKanban.Models\KitchenKanban.Models.csproj", "{BFCA6A04-CFC7-4C97-BBBD-2525995E0DC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenKanban.Models", "KitchenKanban.Models\KitchenKanban.Models.csproj", "{BFCA6A04-CFC7-4C97-BBBD-2525995E0DC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KitchenKanban.BusinessServices.Interfaces", "KitchenKanban.BusinessServices.Interfaces\KitchenKanban.BusinessServices.Interfaces.csproj", "{9AC5395D-7E79-4296-BDA1-993E92774C62}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenKanban.BusinessServices.Interfaces", "KitchenKanban.BusinessServices.Interfaces\KitchenKanban.BusinessServices.Interfaces.csproj", "{9AC5395D-7E79-4296-BDA1-993E92774C62}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KitchenKanban.BusinessServices", "KitchenKanban.BusinessServices\KitchenKanban.BusinessServices.csproj", "{93C51C5B-B562-4C19-A275-BC0CE85B21A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenKanban.BusinessServices", "KitchenKanban.BusinessServices\KitchenKanban.BusinessServices.csproj", "{93C51C5B-B562-4C19-A275-BC0CE85B21A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KitchenKanban.ViewModels", "KitchenKanban.ViewModels\KitchenKanban.ViewModels.csproj", "{4A6A4CD4-0869-4F4A-9655-DA04BEB3EFB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenKanban.ViewModels", "KitchenKanban.ViewModels\KitchenKanban.ViewModels.csproj", "{4A6A4CD4-0869-4F4A-9655-DA04BEB3EFB3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KitchenKanban.WebAPI", "KitchenKanban.WebAPI\KitchenKanban.WebAPI.csproj", "{1476E0E8-2862-4AAB-81A5-212962879D20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenKanban.WebAPI", "KitchenKanban.WebAPI\KitchenKanban.WebAPI.csproj", "{1476E0E8-2862-4AAB-81A5-212962879D20}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KitchenKanban.DataServices", "KitchenKanban.DataServices\KitchenKanban.DataServices.csproj", "{ED8EA1BD-009B-4D63-B487-FEA714726DF3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{1476E0E8-2862-4AAB-81A5-212962879D20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1476E0E8-2862-4AAB-81A5-212962879D20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1476E0E8-2862-4AAB-81A5-212962879D20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED8EA1BD-009B-4D63-B487-FEA714726DF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED8EA1BD-009B-4D63-B487-FEA714726DF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED8EA1BD-009B-4D63-B487-FEA714726DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED8EA1BD-009B-4D63-B487-FEA714726DF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
