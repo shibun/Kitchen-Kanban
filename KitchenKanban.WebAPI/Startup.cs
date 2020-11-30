@@ -1,21 +1,14 @@
 using KitchenKanban.BusinessServices;
 using KitchenKanban.BusinessServices.Interfaces;
 using KitchenKanban.DataServices.Context;
+using KitchenKanban.DataServices.UserInfo;
 using KitchenKanban.WebAPI.Providers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using KitchenKanban.Models;
-using static KitchenKanban.Models.Enums.UserEnum;
 
 namespace KitchenKanban.WebAPI
 {
@@ -41,6 +34,7 @@ namespace KitchenKanban.WebAPI
 
         private static void ConfigureTransientServices(IServiceCollection services)
         {
+            services.AddTransient<IUserInfo, UserInfo>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IKitchenService, KitchenService>();
         }
