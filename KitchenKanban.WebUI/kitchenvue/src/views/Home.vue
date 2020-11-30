@@ -6,6 +6,7 @@
 
 <script>
 import TestService from '../services/testService'
+import store from '../store/store'
 export default {
   name: 'Home',
   components: {
@@ -16,7 +17,9 @@ export default {
     methods:{ 
       getProducts () {
           TestService.get().then(response =>  
-          console.log(response.data)
+          console.log(response.data),
+          //console.log(store.getters.testData.name),
+          console.log(store.getters.loggedUser)
           )
         },
   }
