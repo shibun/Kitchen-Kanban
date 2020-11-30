@@ -25,7 +25,9 @@ namespace KitchenKanban.BusinessServices
             var newKitchen = new Kitchen()
             {
                 KitchenId = Guid.NewGuid().ToString(),
-                CounterNumber = input.CounterNumber
+                CounterNumber = input.CounterNumber,
+                CreatedBy = _databaseContext.UserInfo.UserId,
+                CreatedOn = DateTime.Now
             };
 
             _databaseContext.Kitchens.Add(newKitchen);

@@ -35,7 +35,7 @@ namespace KitchenKanban.WebAPI
 
             ConfigureTransientServices(services);
             ConfigureEntityFramework(services);
-
+            services.AddHttpContextAccessor();
             services.AddControllers();
         }
 
@@ -68,7 +68,7 @@ namespace KitchenKanban.WebAPI
 
             // custom jwt auth middleware
             app.UseMiddleware<JwtMiddleware>();
-
+            
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
