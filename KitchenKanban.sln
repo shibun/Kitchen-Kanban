@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenKanban.DataServices"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenKanban.WebUI", "KitchenKanban.WebUI\KitchenKanban.WebUI.csproj", "{02D21250-2408-41C6-9238-CA3798E71B19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KitchenKanban.Test", "KitchenKanban.Test\KitchenKanban.Test.csproj", "{9F53B339-CF57-4E46-9001-7BB5D9EF3B20}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KitchenKanban.UnitTests", "KitchenKanban.Test\KitchenKanban.UnitTests.csproj", "{9F53B339-CF57-4E46-9001-7BB5D9EF3B20}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

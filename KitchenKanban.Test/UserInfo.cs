@@ -3,7 +3,7 @@ using KitchenKanban.ViewModels;
 using System;
 using static KitchenKanban.Models.Enums.UserEnum;
 
-namespace KitchenKanban.Test
+namespace KitchenKanban.UnitTests
 {
     public class UserInfo : IUserInfo
     {

@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace KitchenKanban.Test
+namespace KitchenKanban.UnitTests
 {
     public class KitchenTest
     {
