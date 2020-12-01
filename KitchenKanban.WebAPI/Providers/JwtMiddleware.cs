@@ -51,7 +51,7 @@ namespace KitchenKanban.WebAPI.Providers
                 var userId = (jwtToken.Claims.First(x => x.Type == "nameid").Value);
 
                 // attach user to context on successful jwt validation
-                context.Items["User"] = userService.GetById(userId);
+                context.Items["User"] = userService.GetUserById(userId);
             }
             catch
             {

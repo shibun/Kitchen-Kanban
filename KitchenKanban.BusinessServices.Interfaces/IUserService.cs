@@ -1,10 +1,13 @@
 ﻿using KitchenKanban.ViewModels;
+using System.Collections.Generic;
 
 namespace KitchenKanban.BusinessServices.Interfaces
 {
     public interface IUserService
     {
         UserViewModel Authenticate(AuthenticateRequest input);
-        UserViewModel GetById(string userId);
+        UserViewModel GetUserById(string userId);
+        UserViewModel Create(UserInputViewModel input);
+        List<UserViewModel> GetUsers();
     }
 }

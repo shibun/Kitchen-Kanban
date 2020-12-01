@@ -1,8 +1,8 @@
 ﻿using static KitchenKanban.Models.Enums.UserEnum;
 
-namespace KitchenKanban.Models
+namespace KitchenKanban.ViewModels
 {
-    public class User : BaseModel
+    public class UserInputViewModel
     {
         public string UserId { get; set; }
         public string FirstName { get; set; }

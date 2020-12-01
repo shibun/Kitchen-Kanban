@@ -2,7 +2,6 @@
 using KitchenKanban.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Threading.Tasks;
 
 namespace KitchenKanban.WebAPI.Controllers
 {
@@ -18,7 +17,7 @@ namespace KitchenKanban.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public IActionResult Get()
         {
             var kitchens = _kitchenService.GetKitchens();
             return Ok(kitchens);
