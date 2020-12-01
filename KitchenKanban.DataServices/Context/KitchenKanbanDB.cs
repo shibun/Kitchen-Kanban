@@ -6,9 +6,8 @@ namespace KitchenKanban.DataServices.Context
     public class KitchenKanbanDB : DbContext
     {
 
-        public KitchenKanbanDB(DbContextOptions<KitchenKanbanDB> dbContextOptions) : base(dbContextOptions) 
+        public KitchenKanbanDB(DbContextOptions<KitchenKanbanDB> dbContextOptions) : base(dbContextOptions)
         {
-            
         }
 
         public DbSet<User> Users { get; set; }

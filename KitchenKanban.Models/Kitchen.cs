@@ -1,4 +1,6 @@
-﻿namespace KitchenKanban.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace KitchenKanban.Models
 {
     public class Kitchen : BaseModel
     {
