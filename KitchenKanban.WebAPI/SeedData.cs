@@ -29,6 +29,19 @@ namespace KitchenKanban.WebAPI
                     );
                 context.SaveChanges();
             }
+            if (!context.TaxDetails.Any())
+            {
+                context.TaxDetails.AddRange(
+                    new TaxDetail
+                    {
+                        TaxDetailId = Guid.NewGuid().ToString(),
+                        GSTPercentage = 5.0M,
+                        CGSTPercentage = 2.5M,
+                        SGSTPercentage = 2.5M
+                    }
+                    );
+                context.SaveChanges();
+            }
         }
     }
 }
