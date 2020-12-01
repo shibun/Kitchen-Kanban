@@ -8,6 +8,7 @@
      <input required v-model="password" type="password" placeholder="Password"/>
      <hr/>
      <button type="submit">Login</button>
+     <div v-if="!loginsuccess"><span>Username or password is wrong</span></div>
    </form>
  </div>
 </template>
@@ -16,7 +17,8 @@
     data(){
       return {
         Username : "",
-        password : ""
+        password : "",
+        loginsuccess:true
       }
     },
      methods: {
@@ -25,7 +27,10 @@
         let password = this.password
         this.$store.dispatch('login', { Username, password })
        .then(() => this.$router.push('/'))
-       .catch(err => console.log(err))
+       .catch(err => console.log(err),
+            console.log("error"),
+            this.loginsuccess=false
+       )
       }
     }
   }

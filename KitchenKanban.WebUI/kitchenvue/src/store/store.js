@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import apiConfig from '../config/apiConfig'
+//import apiConfig from '../config/apiConfig'
 
 Vue.use(Vuex)
 
@@ -29,6 +29,7 @@ export default new Vuex.Store({
       logout(state){
         state.status = ''
         state.token = ''
+        
       },
   },
   actions: {
@@ -40,8 +41,8 @@ export default new Vuex.Store({
             const token = resp.data.token
                      
             localStorage.setItem('token', token)
-            apiConfig.defaults.headers.common['Authorization'] = token
-            //axios.defaults.headers.common['Authorization'] = token
+            //apiConfig.defaults.headers.common['Authorization'] = token
+            axios.defaults.headers.common['Authorization'] = token
             commit('auth_success',resp.data)
             resolve(resp)
           })
@@ -54,9 +55,11 @@ export default new Vuex.Store({
     },
     logout({commit}){
         return new Promise((resolve, reject) => {
+          //this.$router.push('/login')
           commit('logout')
           localStorage.removeItem('token')
           delete axios.defaults.headers.common['Authorization']
+         
           resolve()
           reject()
         })
