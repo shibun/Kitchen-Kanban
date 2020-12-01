@@ -1,5 +1,6 @@
 ﻿using KitchenKanban.BusinessServices.Interfaces;
 using KitchenKanban.DataServices.Context;
+using KitchenKanban.DataServices.UserInfo;
 using KitchenKanban.Models;
 using KitchenKanban.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,9 +14,11 @@ namespace KitchenKanban.BusinessServices
     {
         private readonly IServiceScope _scope;
         private readonly KitchenKanbanDB _databaseContext;
+        private IUserInfo _userInfo;
 
-        public KitchenService(IServiceProvider services)
+        public KitchenService(IServiceProvider services, IUserInfo userInfo)
         {
+            _userInfo = userInfo;
             _scope = services.CreateScope();
             _databaseContext = _scope.ServiceProvider.GetRequiredService<KitchenKanbanDB>();
         }
@@ -26,7 +29,7 @@ namespace KitchenKanban.BusinessServices
             {
                 KitchenId = Guid.NewGuid().ToString(),
                 CounterNumber = input.CounterNumber,
-                CreatedBy = _databaseContext.UserInfo.UserId,
+                CreatedBy = _userInfo.UserId,
                 CreatedOn = DateTime.Now
             };
 
