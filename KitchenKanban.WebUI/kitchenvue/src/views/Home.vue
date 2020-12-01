@@ -5,9 +5,9 @@
 </template>
 
 <script>
-//import TestService from '../services/testService'
+import testService from '../services/testService'
 import store from '../store/store'
-import axios from 'axios';
+//import axios from 'axios';
 export default {
   name: 'Home',
   components: {
@@ -17,7 +17,7 @@ export default {
   },
     methods:{ 
       getProducts () {
-          axios.get('kitchen').then(response =>  
+          testService.get().then(response =>  
           console.log(response.data),
           //console.log(store.getters.testData.name),
           console.log(store.getters.loggedUser)

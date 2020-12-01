@@ -1,9 +1,9 @@
 
-import apiconfig from '../config/apiConfig'
+import axios from 'axios'
 
 export default {
   get() {
     //return Vue.http.get('/api/posts');
-    return apiconfig.get('/Kitchen');
+    return axios.get('/Kitchen');
   }
 }
