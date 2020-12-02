@@ -17,12 +17,54 @@ namespace KitchenKanban.WebAPI.Controllers
             this._orderService = orderService;
         }
 
+        [HttpGet("{orderId}")]
+        public IActionResult GetOrderById(string orderId)
+        {
+            if (!String.IsNullOrEmpty(orderId))
+            {
+                var result = _orderService.GetOrder(orderId);
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPost]
         public IActionResult Post(OrderDetailViewModel model)
         {
             try
             {
                 var item = _orderService.Create(model);
+                return Ok(item);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult ChangeOrderStatus(OrderStatusInputViewModel model)
+        {
+            try
+            {
+                var item = _orderService.ChangeOrderStatus(model);
+                return Ok(item);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public IActionResult ChangeOrderLineStatus(OrderLineStatusInputViewModel model)
+        {
+            try
+            {
+                var item = _orderService.ChangeOrderLineStatus(model);
                 return Ok(item);
             }
             catch (Exception ex)

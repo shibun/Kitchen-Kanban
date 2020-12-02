@@ -17,14 +17,16 @@
             Packed = 5,
             ReadyToBeServed = 6,
             ReadyToBeDelivered = 7,
-            Completed = 8
+            Completed = 8,
+            Cancelled = 9
         }
 
         public enum OrderLineStatus : int
         {
             NewOrder = 1,
             BeingPrepared = 2,
-            Prepared = 3
+            Prepared = 3,
+            Cancelled = 4
         }
     }
 }
