@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using static KitchenKanban.Models.Enums.OrderEnum;
 
-namespace KitchenKanban.Models
+namespace KitchenKanban.ViewModels.Dashboard
 {
-    public class Order : BaseModel
+    public class KanbanOrder
     {
         public string OrderId { get; set; }
         public string OrderNumber { get; set; }
@@ -14,9 +13,6 @@ namespace KitchenKanban.Models
         public decimal OrderAmount { get; set; }
         public OrderType OrderType { get; set; }
         public OrderStatus OrderStatus { get; set; }
-        public string OrderTakenBy { get; set; }
-        public string CancellationReason { get; set; }
-
-        public virtual List<OrderLine> OrderLines { get; set; }
+        public int OrderLineCount { get; set; }
     }
 }

@@ -16,7 +16,7 @@ namespace KitchenKanban.UnitTests
 
         public string UserName => throw new NotImplementedException();
 
-        public UserViewModel GetAppUser()
+        public UserViewModel GetLoggedInUser()
         {
             throw new NotImplementedException();
         }

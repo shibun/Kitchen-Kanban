@@ -48,6 +48,7 @@ namespace KitchenKanban.BusinessServices
                 LastName = input.LastName,
                 UserName = input.UserName,
                 Password = input.Password,
+                UserType = input.UserType,
                 CreatedBy = _userInfo.UserId,
                 CreatedOn = DateTime.Now
             };

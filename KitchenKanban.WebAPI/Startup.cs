@@ -40,6 +40,7 @@ namespace KitchenKanban.WebAPI
             services.AddTransient<IItemService, ItemService>();
             services.AddTransient<IDocumentSequenceService, DocumentSequenceService>();
             services.AddTransient<IOrderService, OrderService>();
+            services.AddTransient<IDashboardService, DashboardService>();
         }
 
         private static void ConfigureEntityFramework(IServiceCollection services)
