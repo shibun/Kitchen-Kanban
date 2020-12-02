@@ -21,7 +21,7 @@ namespace KitchenKanban.WebAPI
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        // Use this method to add services to the container. This method gets called by the runtime. 
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
@@ -37,6 +37,9 @@ namespace KitchenKanban.WebAPI
             services.AddTransient<IUserInfo, UserInfo>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IKitchenService, KitchenService>();
+            services.AddTransient<IItemService, ItemService>();
+            services.AddTransient<IDocumentSequenceService, DocumentSequenceService>();
+            services.AddTransient<IOrderService, OrderService>();
         }
 
         private static void ConfigureEntityFramework(IServiceCollection services)
@@ -44,7 +47,7 @@ namespace KitchenKanban.WebAPI
             services.AddDbContext<KitchenKanbanDB>(context => { context.UseInMemoryDatabase("KitchenKanbanDB"); });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // Use this method to configure the HTTP request pipeline and this method gets called by the runtime.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
