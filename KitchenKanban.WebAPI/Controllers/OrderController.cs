@@ -46,6 +46,7 @@ namespace KitchenKanban.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Route("OrderStatus")]
         public IActionResult ChangeOrderStatus(OrderStatusInputViewModel model)
         {
             try
@@ -60,6 +61,7 @@ namespace KitchenKanban.WebAPI.Controllers
         }
 
         [HttpPost]
+        [Route("OrderLineStatus")]
         public IActionResult ChangeOrderLineStatus(OrderLineStatusInputViewModel model)
         {
             try
