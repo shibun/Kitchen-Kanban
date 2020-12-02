@@ -2,10 +2,23 @@ import Vue from 'vue'
 import App from './App.vue'
 
 import './assets/styles/kitchenstyles.css';
+import './assets/styles/bootstrap.css';
+
+import 'jquery/src/jquery.js'
+//import './assets/js/jquery.min.js'
+window.$ = window.jQuery = require('jquery');
+import './assets/js/bootstrap.min.js'
+
+
+//import 'bootstrap/dist/css/bootstrap.css'
+//import 'jquery/src/jquery.js'
+//import 'bootstrap/dist/js/bootstrap.min.js'
+
 import router from './router/router'
 import store from './store/store'
 
 import axios from 'axios'
+
 
 Vue.prototype.$http = axios;
 axios.defaults.baseURL = 'http://localhost:64464/WebApi/api/';
