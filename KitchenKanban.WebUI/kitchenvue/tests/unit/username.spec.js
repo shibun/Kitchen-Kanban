@@ -42,10 +42,8 @@ describe('Login.vue', () => {
      const Password = wrapper.find('#Password') 
     Password.element.value = '123456'   
     wrapper.find("form").trigger("submit.prevent")
- 
-       expect(actions.login({ login: jest.fn() }, {
-         
-       }))
+     
+       expect(actions.login).toHaveBeenCalledTimes(1)
     
  })
 })
