@@ -5,7 +5,7 @@ namespace KitchenKanban.DataServices.UserInfo
 {
     public interface IUserInfo
     {
-        UserViewModel GetAppUser();
+        UserViewModel GetLoggedInUser();
         string UserId { get; }
         string FirstName { get; }
         string LastName { get; }

@@ -13,7 +13,7 @@ namespace KitchenKanban.WebAPI.Providers
         public UserInfo(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
-            var usermodel = GetAppUser();
+            var usermodel = GetLoggedInUser();
             if (usermodel != null)
             {
                 _iuser = usermodel;
@@ -60,7 +60,7 @@ namespace KitchenKanban.WebAPI.Providers
             }
         }
 
-        public UserViewModel GetAppUser()
+        public UserViewModel GetLoggedInUser()
         {
             var user = (UserViewModel)_httpContextAccessor.HttpContext.Items["User"];
             return user;
