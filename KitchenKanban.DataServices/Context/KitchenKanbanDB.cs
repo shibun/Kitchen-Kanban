@@ -16,6 +16,7 @@ namespace KitchenKanban.DataServices.Context
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderLine> OrderLines { get; set; }
         public DbSet<TaxDetail> TaxDetails { get; set; }
+        public DbSet<DocumentSequence> DocumentSequences { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,6 +31,7 @@ namespace KitchenKanban.DataServices.Context
             modelBuilder.Entity<Order>().HasKey(x => x.OrderId);
             modelBuilder.Entity<OrderLine>().HasKey(x => x.OrderLineId);
             modelBuilder.Entity<TaxDetail>().HasKey(x => x.TaxDetailId);
+            modelBuilder.Entity<DocumentSequence>().HasKey(x => x.DocumentSequenceId);
         }
     }
 }

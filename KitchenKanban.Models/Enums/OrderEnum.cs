@@ -22,11 +22,9 @@
 
         public enum OrderLineStatus : int
         {
-            BeingPrepared = 1,
-            Prepared = 2,
-            BeingPacked = 3,
-            Packed = 4,
-            Completed = 5
+            NewOrder = 1,
+            BeingPrepared = 2,
+            Prepared = 3
         }
     }
 }

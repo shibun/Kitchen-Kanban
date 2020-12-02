@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
+using static KitchenKanban.Models.Enums.DocumentEnum;
 using static KitchenKanban.Models.Enums.UserEnum;
 
 namespace KitchenKanban.WebAPI
@@ -40,6 +41,20 @@ namespace KitchenKanban.WebAPI
                         SGSTPercentage = 2.5M
                     }
                     );
+                context.SaveChanges();
+            }
+            if (!context.DocumentSequences.Any())
+            {
+                context.DocumentSequences.AddRange(
+                    new DocumentSequence
+                    {
+                        DocumentSequenceId = Guid.NewGuid().ToString(),
+                        CurrentSequenceNumber = 0,
+                        DocumentPrefix = "",
+                        DocumentType = DocumentType.Order,
+                        SequenceLength = 4,
+                        SequenceNumberLastResetOn = DateTime.Now
+                    });
                 context.SaveChanges();
             }
         }
