@@ -3,12 +3,13 @@
    <form class="login" @submit.prevent="login">
      <h1>Sign in</h1>
      <label>User Name</label>
-     <input required v-model="Username" placeholder="Username"/>
+     <input required v-model="Username" placeholder="Username" id="Username"/>
      <label>Password</label>
-     <input required v-model="password" type="password" placeholder="Password"/>
+     <input required v-model="password" type="password" placeholder="Password" id="Password"/>
      <hr/>
      <button type="submit">Login</button>
-     <div v-if="!loginsuccess"><span>Username or password is wrong</span></div>
+     <div v-if="!loginsuccess" id="validation1"><span>Username or password is wrong</span></div>
+ 
    </form>
  </div>
 </template>
