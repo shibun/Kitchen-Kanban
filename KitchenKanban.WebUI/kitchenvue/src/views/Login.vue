@@ -1,17 +1,30 @@
 <template>
- <div>
-   <form class="login" @submit.prevent="login">
-     <h1>Sign in</h1>
-     <label>User Name</label>
-     <input required v-model="Username" placeholder="Username" id="Username"/>
-     <label>Password</label>
-     <input required v-model="password" type="password" placeholder="Password" id="Password"/>
-     <hr/>
-     <button type="submit">Login</button>
-     <div v-if="!loginsuccess" id="validation1"><span>Username or password is wrong</span></div>
- 
-   </form>
- </div>
+ <div class="login-sec">
+        <div class="login-flex">
+            <div class="login-left-sec">
+                <div class="welcome-text">Welcome to My Kitchen</div>
+                <p class="welcome-des">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,</p>
+            </div>
+            <div class="login-right-sec">
+                <h3 class="login-header">Login</h3>
+                <form class="top50 bottom50" @submit.prevent="login">
+                    <div class="form-group">
+                        <label>User Name</label>
+                        <input type="text" class="form-control" v-model="Username" id="Username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-control" v-model="password" id="Password">
+                    </div>
+                    <div class="text-center">
+                        <button class="login-btn" type="submit">Login</button>
+                         <div v-if="!loginsuccess" id="validation1"><span>Username or password is wrong</span></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
 </template>
 <script>
   export default {

@@ -1,13 +1,29 @@
 <template>
-<header class="header">
-    <h2>Kitchen-Kanban</h2>
-     <div id="nav"  v-if="isLoggedIn">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/menu">Menu</router-link> |
-      <router-link to="/about">About</router-link>
-      <span> | <a @click="logout">Logout</a></span>
+<div>
+   <nav class="navbar navbar-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <router-link to="/" class="navbar-brand">My Kitchen</router-link>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a><img class="user-img" src="../assets/images/user_img.png"/> Pramod Karkera</a></li>
+                <li><a @click="logout" >Sign Out</a></li>
+            </ul>
+        </div>
+    </nav>
+
+     <div>
+        <aside>
+            <ul class="nav-menu-ul">
+                <li><router-link to="/user">User List</router-link></li>
+                <li><a href="kitchenCounterList.html">Kitchen Counter List</a></li>
+                <li><a href="itemList.html">Item List</a></li>
+                <li> <router-link to="/about">About</router-link></li>
+            </ul>
+        </aside>
+        <div class="clearfix"></div>
     </div>
-</header>
+    </div>
 </template>
 <script>
 export default {

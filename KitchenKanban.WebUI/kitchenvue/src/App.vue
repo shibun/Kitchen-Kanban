@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <Header/>
-    <router-view/>
+    <Header v-if="isLoggedIn"/>
+    <router-view />
   </div>
 </template>
 <script>
@@ -11,6 +11,9 @@ import axios from 'axios';
 
 export default {
   name:"app",
+   computed : {
+      isLoggedIn : function(){ return this.$store.getters.isLoggedIn}
+    },
   components:{
     Header
   },
