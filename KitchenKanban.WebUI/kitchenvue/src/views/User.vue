@@ -19,12 +19,12 @@
                             <th class="text-center">Edit</th>
                             <th class="text-center">Delete</th>
                         </tr>
-                        <tr>
-                            <td class="text-center">1</td>
+                        <tr v-bind:key="user.userId" v-for="(user,index) in users">
+                            <td class="text-center">{{index+1}}</td>
                             <td class="text-center"><img src="../assets/images/user_img.png" /></td>
-                            <td>Pramod Karkera</td>
-                            <td>123456</td>
-                            <td>Front Office</td>
+                            <td>{{user.firstName}} {{user.lastName}}</td>
+                            <td>{{user.userName}}</td>
+                            <td>{{user.userType}}</td>
                             <td class="text-center">
                                 <button class="trans-btn"><img src="../assets/images/edit.png" /></button>
                             </td>
@@ -32,45 +32,7 @@
                                 <button class="trans-btn"><img src="../assets/images/delete.png" /></button>
                             </td>
                         </tr>
-                        <tr>
-                            <td class="text-center">2</td>
-                            <td class="text-center"><img src="../assets/images/user_img.png" /></td>
-                            <td>Shibu Narayan</td>
-                            <td>123456</td>
-                            <td>chef</td>
-                            <td class="text-center">
-                                <button class="trans-btn"><img src="../assets/images/edit.png" /></button>
-                            </td>
-                            <td class="text-center">
-                                <button class="trans-btn"><img src="../assets/images/delete.png" /></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-center">3</td>
-                            <td class="text-center"><img src="../assets/images/user_img.png" /></td>
-                            <td>Sujeesh Soman</td>
-                            <td>123456</td>
-                            <td>Delivery</td>
-                            <td class="text-center">
-                                <button class="trans-btn"><img src="../assets/images/edit.png" /></button>
-                            </td>
-                            <td class="text-center">
-                                <button class="trans-btn"><img src="../assets/images/delete.png" /></button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="text-center">4</td>
-                            <td class="text-center"><img src="../assets/images/user_img.png" /></td>
-                            <td>Jayanth Soman</td>
-                            <td>123456</td>
-                            <td>Back Office</td>
-                            <td class="text-center">
-                                <button class="trans-btn"><img src="../assets/images/edit.png" /></button>
-                            </td>
-                            <td class="text-center">
-                                <button class="trans-btn"><img src="../assets/images/delete.png" /></button>
-                            </td>
-                        </tr>
+                        
                     </tbody>
                 </table>
             </div>
@@ -86,19 +48,19 @@
                     <h4 class="modal-title">Add User</h4>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form >
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-xs-6">
                                     <div class="form-group">
                                         <label>First Name <span class="asterisk">*</span></label>
-                                        <input type="text" class="form-control">
+                                        <input v-model="user.FirstName" type="text" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-xs-6">
                                     <div class="form-group">
                                         <label>Last Name <span class="asterisk">*</span></label>
-                                        <input type="text" class="form-control">
+                                        <input v-model="user.LastName" type="text" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -106,21 +68,37 @@
                                 <div class="col-xs-6">
                                     <div class="form-group">
                                         <label>User Type <span class="asterisk">*</span></label>
-                                        <select class="form-control">
-                                            <option>Front Office</option>
-                                            <option>Chef</option>
-                                            <option>Delivery</option>
-                                            <option>Back Office</option>
+                                        <select class="form-control" v-model="user.UserType">
+                                             <option disabled value="">--select--</option>
+                                             <option v-bind:key="index" v-for="(item,index ) in userTypes" v-bind:value="item.id">{{item.value}}</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-xs-6"></div>
+                                <div class="col-xs-6">
+
+                                      <div class="form-group">
+                                        <label>User Name <span class="asterisk">*</span></label>
+                                        <input v-model="user.UserName" type="text" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="row">
+                                <div class="col-xs-6">
+                                    <div class="form-group">
+                                        <label>Password<span class="asterisk">*</span></label>
+                                        <input v-model="user.Password" type="password" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col-xs-6">
+
+                                    
+                                </div>
                             </div>
                             <div class="row">
                                 <div class="col-xs-4">
                                     <div class="form-group">
                                         <label>User Image</label>
-                                        <img src="images/no_user_img.png" />
+                                        <img src="../assets/images/no_user_img.png" />
                                     </div>
                                 </div>
                                 <div class="col-xs-8">
@@ -132,7 +110,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default left-btn" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-active" data-dismiss="modal">Add</button>
+                    <button type="submit"  @click="addUser" class="btn btn-active" data-dismiss="modal">Add</button>
                 </div>
             </div>
         </div>
@@ -140,7 +118,45 @@
     </div>
 </template>
 <script>
+import userService from '../services/userService'
+//import appDataMixin from '../mixins/appDataMixin'
 export default {
-    
+    name: 'User',
+    //mixins:[appDataMixin],
+    data(){
+       return {
+           users:[],
+           userTypes:[{id:1,value:'Administrator'},{id:2,value:'FrontDesk'},{id:3,value:'Chef'},{id:4,value:'BackOffice'},{id:5,value:'Service'}],
+           user:{
+               UserId:'',
+               FirstName:'',
+               LastName:'',
+               UserName:'',
+               UserType:'',
+               Password:''
+           }
+       }
+    },
+  components: {
+  },
+   created() {
+        this.getUsers()
+        //this.userTypes=this.$data
+  },
+    methods:{ 
+      getUsers () {
+          userService.getUsers().then(response =>
+            this.users=response.data,
+            console.log("mixin data",this.$data)
+            //console.log('users',response.data),           
+          )
+        },
+      addUser(){
+          console.log(this.user);
+           userService.addUser(this.user).then(response =>
+            console.log(response.data),         
+          )
+      }
+  }
 }
 </script>

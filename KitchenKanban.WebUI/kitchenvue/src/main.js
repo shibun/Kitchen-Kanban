@@ -6,7 +6,10 @@ import './assets/styles/bootstrap.css';
 
 import 'jquery/src/jquery.js'
 //import './assets/js/jquery.min.js'
-window.$ = window.jQuery = require('jquery');
+//window.$ = window.jQuery = require('jquery');
+const { $, jQuery } = require('jquery');
+global.$ = $;
+global.jQuery = jQuery;
 import './assets/js/bootstrap.min.js'
 
 
@@ -21,11 +24,12 @@ import axios from 'axios'
 
 
 Vue.prototype.$http = axios;
+
 axios.defaults.baseURL = 'http://localhost:64464/WebApi/api/';
 const token = localStorage.getItem('token')
 if (token) {
   Vue.prototype.$http.defaults.headers.common['Authorization'] = token
- 
+  Vue.prototype.$http.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8'
 }
 
 Vue.config.productionTip = false
