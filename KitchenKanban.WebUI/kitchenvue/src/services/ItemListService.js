@@ -7,8 +7,14 @@ export default {
     //return Vue.http.get('/api/posts');
     return axios.get('/Item');
   },
-  post(itemname,itemcharge){
-    const article = { ItemName:itemname,ItemCharge:itemcharge };
+  post(Item){
+    
+    const article = { ItemName:Item.ItemName,ItemCharge:parseFloat(Item.ItemCharge) };
+    return axios.post('/Item',article)
+  },
+    patch(Item){
+    
+    const article = { ItemName:Item.ItemName,ItemCharge:parseFloat(Item.ItemCharge) };
     return axios.post('/Item',article)
   }
 }

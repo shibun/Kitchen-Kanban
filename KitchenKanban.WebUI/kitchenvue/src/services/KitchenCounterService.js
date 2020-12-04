@@ -7,8 +7,14 @@ export default {
     //return Vue.http.get('/api/posts');
     return axios.get('/Kitchen');
   },
-  post(kcounternumber){
-      const article = { CounterNumber:kcounternumber };
+  post(CounterNumber){
+      const article = { CounterNumber:CounterNumber };
+    return axios.post('/Kitchen',article)
+  },
+  
+    patch(kcounternumber){
+    
+    const article = { CounterNumber:kcounternumber };
     return axios.post('/Kitchen',article)
   }
 }

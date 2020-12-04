@@ -24,7 +24,7 @@
                             <td>{{data.itemName}}</td>                            
                             <td class="text-right">{{data.itemCharge |toFixed |toUSD}}</td>
                             <td class="text-center">
-                                <button class="trans-btn"><img src="../assets/images/edit.png" /></button>
+                                <button class="trans-btn" @click="edititem(data)" data-toggle="modal" data-target="#addItem"><img src="../assets/images/edit.png" /></button>
                             </td>
                             <td class="text-center">
                                 <button class="trans-btn"><img src="../assets/images/delete.png" /></button>
@@ -55,13 +55,13 @@
                                 <div class="col-xs-6">
                                     <div class="form-group">
                                         <label>Item Name <span class="asterisk">*</span></label>
-                                        <input type="text" class="form-control" v-model="ItemName">
+                                        <input type="text" class="form-control" v-model="Item.ItemName">
                                     </div>
                                 </div>
                                 <div class="col-xs-6">
                                     <div class="form-group">
                                         <label>Item Price <span class="asterisk">*</span></label>
-                                        <input type="number" class="form-control" v-model="ItemCharge">
+                                        <input type="number" class="form-control" v-model="Item.ItemCharge">
                                     </div>
                                 </div>
                             </div>
@@ -81,7 +81,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default left-btn" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-active" data-dismiss="modal" @click="addItem">Add</button>
+                    <button type="button" class="btn btn-active" v-if="!editmode" data-dismiss="modal" @click="addItem">Add</button>
+                    <button type="button" class="btn btn-active" v-if="editmode" data-dismiss="modal" @click="updateItem">Update</button>
                 </div>
             </div>
         </div>
@@ -107,14 +108,18 @@ import MessageError from '@/components/MessageError.vue'
              },
         data() {
             return {
-                ItemName : "",
-                ItemCharge : "",
+                Item:
+                { ItemName : "",
+                ItemCharge : 0,
+                },
+               
                  itemadded:false,
                  erroroccured:false,
                  Items:[],
                  itemsnotfound:false,
                  successmsg:"",
-                 errormsg:""
+                 errormsg:"",
+                 editmode:false
             }
         },
         filters: {
@@ -144,12 +149,36 @@ import MessageError from '@/components/MessageError.vue'
          
                   )
               },
-              addItem:function(){                
-                  ItemListService.post(this.ItemName,parseFloat(this.ItemCharge)).then(response=>
+              addItem:function(){     
+                  console.log('item is in add',this.Item),           
+                  ItemListService.post(this.Item).then(response=>
                   
                   {
                        console.log('response',response.data),
                        this.successmsg="Item added",
+                        this.itemadded=true                 
+                       // this.$router.go()
+                  } 
+                  )
+                  .catch(err=>{
+                      this.erroroccured=true,
+                      this.errormsg=err.message,
+                      console.log(err.message)
+                  })
+              },
+              edititem:function(data){
+                  this.editmode=true,
+                  console.log('datais',data),
+                  this.Item.ItemName=data.itemName,
+                  this.Item.ItemCharge=data.itemCharge
+              },
+              updateItem:function(){
+                console.log('item is in add',this.Item),           
+                  ItemListService.patch(this.Item).then(response=>
+                  
+                  {
+                       console.log('response',response.data),
+                       this.successmsg="Item updated",
                         this.itemadded=true                 
                        // this.$router.go()
                   } 
