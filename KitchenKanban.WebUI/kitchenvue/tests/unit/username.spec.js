@@ -33,16 +33,20 @@ describe('Login.vue', () => {
   })*/
 
 it('renders props.loginsuccess when passed', () => {
-  const loginsuccess = ''    
-   const wrapper = shallowMount(Login, {
-      propsData: { loginsuccess }
+ const wrapper = shallowMount(Login, {
+      propsData: { loginsuccess:true }
     })
+   
      const Username = wrapper.find('#Username') 
     Username.element.value != 'admin'
      const Password = wrapper.find('#Password') 
-    Password.element.value != '123456'   
-    
-    expect(wrapper.find('#validation1').text()).toContain('Username or password is wrong')
+    Password.element.value != '123456'  
+     wrapper.setProps({ loginsuccess: false })
+
+ if (wrapper.props('loginsucess')!=true) {
+    expect(wrapper.find('#validation1').exists()).toBe(true)
+ }
+   
   })
 
  it('calls store action "actionClick" when button is clicked', () => {

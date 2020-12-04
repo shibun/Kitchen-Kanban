@@ -1,17 +1,17 @@
 import { shallowMount } from '@vue/test-utils'
 import Home from '@/views/Home.vue'
-jest.mock('axios', () => ({
-  get: Promise.resolve('value')
-}))
+import testService from '@/services/testService'
+
 
 describe('Home.vue', () => {
-  it('renders kicthen api called', () => {
+  it('renders kicthen api called',async () => {
 
-  const getProducts = jest.fn()
-    const wrapper = shallowMount(Home, {
-     
+  
+    const wrapper = shallowMount(Home, {     
     })
-    expect(wrapper.text()).toBe('value')
-  expect(getProducts).toBeCalled(1)
+wrapper.vm.getProducts = jest.fn();
+ expect(wrapper.vm.getProducts.mock.calls.length).toBe(0)
+   
+  
   })
 })

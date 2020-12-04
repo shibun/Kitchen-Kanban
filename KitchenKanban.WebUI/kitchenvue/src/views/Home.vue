@@ -12,15 +12,17 @@ export default {
   name: 'Home',
   components: {
   },
+ 
    created() {
    this.getProducts()
   },
     methods:{ 
       getProducts () {
-          testService.get().then(response =>  
-          console.log(response.data),
+          testService.get().then(response =>
+          console.log('response',response.data),
           //console.log(store.getters.testData.name),
-          console.log(store.getters.loggedUser)
+          console.log('loogedin user',store.getters.loggedUser)              
+         
           )
         },
   }
