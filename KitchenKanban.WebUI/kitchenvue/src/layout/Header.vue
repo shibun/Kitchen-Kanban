@@ -16,8 +16,8 @@
         <aside>
             <ul class="nav-menu-ul">
                 <li><router-link to="/user">User List</router-link></li>
-                <li><a href="kitchenCounterList.html">Kitchen Counter List</a></li>
-                <li><a href="itemList.html">Item List</a></li>
+                <li><router-link to="/kitchencounterlist">Kitchen Counter List</router-link></li>
+                <li><router-link to="/itemsList">Item List</router-link></li>
                 <li> <router-link to="/about">About</router-link></li>
             </ul>
         </aside>
