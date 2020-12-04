@@ -8,7 +8,7 @@
                     <div class="text-center pop-header">Error!</div>
                     <div class="text-center">{{msg}}</div>
                     <div class="text-center">
-                        <button class="error-btn">Continue</button>
+                        <button class="error-btn" @click="onContinue">Continue</button>
                     </div>
             </div>
     </div>

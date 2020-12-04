@@ -21,7 +21,7 @@
                             <td>{{data.counterNumber}}</td>
                            
                             <td class="text-center">
-                                <button class="trans-btn"><img src="../assets/images/edit.png" /></button>
+                                <button class="trans-btn" @click="editKCounter(data)" data-toggle="modal" data-target="#addKitchenCounter"><img src="../assets/images/edit.png" /></button>
                             </td>
                             <td class="text-center">
                                 <button class="trans-btn"><img src="../assets/images/delete.png" /></button>
@@ -52,7 +52,7 @@
                                 <div class="col-xs-6">
                                     <div class="form-group">
                                         <label>Kitchen Counter Name <span class="asterisk">*</span></label>
-                                        <input type="text" class="form-control" v-model="KCounterNumber">
+                                        <input type="text" class="form-control" v-model="CounterNumber">
                                     </div>
                                 </div>
                             </div>
@@ -61,7 +61,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default left-btn" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-active" data-dismiss="modal" @click="addKCounter">Add</button>
+                    <button type="button" class="btn btn-active" v-if="!editmode" data-dismiss="modal" @click="addKCounter">Add</button>
+                    <button type="button" class="btn btn-active" v-if="editmode" data-dismiss="modal" @click="updateKCounter">Update</button>
                 </div>
             </div>
         </div>
@@ -81,13 +82,14 @@ import MessageError from '@/components/MessageError.vue'
   },
         data() {
             return {
-              KCounterNumber:"",
+              CounterNumber:"",
               KCounters:[],
               showkcounters:false,
               counteradded:false,
               erroroccured:false,
               successmsg:"",
-              errormsg:""
+              errormsg:"",
+              editmode:false
             }
         },
           components: {
@@ -96,7 +98,7 @@ import MessageError from '@/components/MessageError.vue'
 
              },
         methods: {
-               getKitchenCounters () {
+      getKitchenCounters () {
           KitchenCounterService.get().then(response =>
 
           {
@@ -115,11 +117,31 @@ import MessageError from '@/components/MessageError.vue'
           )
         },
         addKCounter:function(){
-            KitchenCounterService.post(this.KCounterNumber).then(response=>
+            KitchenCounterService.post(this.CounterNumber).then(response=>
                     {               
                         this.counteradded=true,
                         this.successmsg="Counter added",
                         console.log('Kitchen counter added',response.data)
+                        // this.$router.go() 
+
+                    }       
+            )
+            .catch(err=>{
+                this.errormsg=err.messge,
+                this.erroroccured=true,
+                console.log(err.message)
+            })
+        },
+        editKCounter:function(data){
+            this.editmode=true,
+            this.CounterNumber=data.counterNumber
+        },
+        updateKCounter:function(){
+            KitchenCounterService.patch(this.CounterNumber).then(response=>
+                    {               
+                        this.counteradded=true,
+                        this.successmsg="Counter updated",
+                        console.log('Kitchen counter updated',response.data)
                         // this.$router.go() 
 
                     }       
