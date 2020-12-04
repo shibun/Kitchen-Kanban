@@ -115,16 +115,24 @@
             </div>
         </div>
     </div>
+
+      <MessageSuccess :msg="successmsg" v-on:on-success="getUsers"/>
+       <MessageError :msg="errormsg" v-on:on-error="onError"/>
     </div>
+    
 </template>
 <script>
 import userService from '../services/userService'
 //import appDataMixin from '../mixins/appDataMixin'
+import MessageSuccess from '@/components/MessageSuccess.vue'
+import MessageError from '@/components/MessageError.vue'
 export default {
     name: 'User',
     //mixins:[appDataMixin],
     data(){
        return {
+           successmsg:"",
+           errormsg:"",
            users:[],
            userTypes:[{id:1,value:'Administrator'},{id:2,value:'FrontDesk'},{id:3,value:'Chef'},{id:4,value:'BackOffice'},{id:5,value:'Service'}],
            user:{
@@ -138,24 +146,52 @@ export default {
        }
     },
   components: {
-  },
+        MessageSuccess,
+        MessageError
+    },
    created() {
         this.getUsers()
         //this.userTypes=this.$data
   },
     methods:{ 
       getUsers () {
+           this.successmsg=false,
           userService.getUsers().then(response =>
             this.users=response.data,
-            console.log("mixin data",this.$data)
-            //console.log('users',response.data),           
+            console.log("mixin data",this.$data)      
           )
         },
       addUser(){
+          this.errormsg='';
+          if(!this.user.FirstName){
+              this.errormsg="Please enter First Name"
+              return
+          }
+           if(!this.user.LastName){
+              this.errormsg="Please enter Last Name"
+              return
+          }
           console.log(this.user);
            userService.addUser(this.user).then(response =>
-            console.log(response.data),         
+                console.log(response.data),  
+                 this.successmsg="user added",
+                  this.clearForm()
           )
+      },
+      onError(){
+          console.log("onError parent");
+          this.errormsg='';
+          this.iserror=false
+      },
+      clearForm(){
+        this.user={
+                    UserId:'',
+                    FirstName:'',
+                    LastName:'',
+                    UserName:'',
+                    UserType:'',
+                    Password:''
+                }
       }
   }
 }

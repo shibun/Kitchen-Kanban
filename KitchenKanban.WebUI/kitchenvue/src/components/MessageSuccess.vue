@@ -1,5 +1,5 @@
 <template>
-<div>
+<div v-if="msg">
 <div class="overlay">
 <div class="pop-overlay">
             <div class="success-header">
@@ -17,12 +17,21 @@
 <script>
 export default {
   name: 'MessageSuccess',
-  props: {
-    msg: String
-  },
+ props:['msg'],
   methods:{
     onContinue:function(){
-      this.$router.go()
+        this.$emit("on-success");
+    }
+  },
+   watch: {
+      msg:{
+        immediate: true,
+        handler(newVal, oldVal) {
+          if(newVal){
+            console.log(oldVal,newVal);
+            setTimeout(() => this.$emit("on-success"), 2000);
+        }
+      }
     }
   }
 }

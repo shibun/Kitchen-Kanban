@@ -1,5 +1,5 @@
 <template>
-<div>
+<div v-if="msg">
     <div class="overlay">
         <div class="pop-overlay">
                     <div class="error-header">
@@ -8,7 +8,7 @@
                     <div class="text-center pop-header">Error!</div>
                     <div class="text-center">{{msg}}</div>
                     <div class="text-center">
-                        <button class="error-btn">Continue</button>
+                        <button class="error-btn" @click="onContinue">Continue</button>
                     </div>
             </div>
     </div>
@@ -17,12 +17,27 @@
 <script>
 export default {
   name: 'MessageError',
-  props: {
-    msg: String
+  props:['msg'],
+  data(){
+    return {
+      hasMessage:false
+    }
   },
   methods:{
     onContinue:function(){
-      this.$router.go()
+      console.log("onContinue called");
+     this.$emit("on-error");
+    }
+  },
+  watch: {
+      msg:{
+        immediate: true,
+        handler(newVal, oldVal) {
+          if(newVal){
+            console.log(oldVal,newVal);
+            setTimeout(() => this.$emit("on-error"), 2000);
+        }
+      }
     }
   }
 }
