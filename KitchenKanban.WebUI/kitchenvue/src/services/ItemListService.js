@@ -16,5 +16,10 @@ export default {
     
     const article = { ItemName:Item.ItemName,ItemCharge:parseFloat(Item.ItemCharge) };
     return axios.post('/Item',article)
+  },
+   delete(itemid){
+    
+    
+    return null
   }
 }

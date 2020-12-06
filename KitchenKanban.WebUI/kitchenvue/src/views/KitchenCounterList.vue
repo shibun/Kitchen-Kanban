@@ -24,7 +24,7 @@
                                 <button class="trans-btn" @click="editKCounter(data)" data-toggle="modal" data-target="#addKitchenCounter"><img src="../assets/images/edit.png" /></button>
                             </td>
                             <td class="text-center">
-                                <button class="trans-btn"><img src="../assets/images/delete.png" /></button>
+                                <button class="trans-btn" @click="deleteCounter(data.counterId)"><img src="../assets/images/delete.png" /></button>
                             </td>
                         </tr>
                         <tr v-if="showkcounters">
@@ -60,15 +60,15 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default left-btn" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-default left-btn" data-dismiss="modal" @click="clearKCounter">Cancel</button>
                     <button type="button" class="btn btn-active" v-if="!editmode" data-dismiss="modal" @click="addKCounter">Add</button>
                     <button type="button" class="btn btn-active" v-if="editmode" data-dismiss="modal" @click="updateKCounter">Update</button>
                 </div>
             </div>
         </div>
     </div>
-       <MessageSuccess v-if="counteradded" :msg="successmsg"/>
-       <MessageError v-if="erroroccured" :msg="errormsg"/>
+     <MessageSuccess :msg="successmsg" v-on:on-success="getKitchenCounters" />
+        <MessageError :msg="errormsg" v-on:on-error="onError" />
 </div>
 </template>
 <script>
@@ -78,15 +78,13 @@ import MessageError from '@/components/MessageError.vue'
     export default {
         name:'KitchenCounterService',
           created() {
-   this.getKitchenCounters()
-  },
+         this.getKitchenCounters()
+                 },
         data() {
             return {
               CounterNumber:"",
               KCounters:[],
-              showkcounters:false,
-              counteradded:false,
-              erroroccured:false,
+              showkcounters:false,             
               successmsg:"",
               errormsg:"",
               editmode:false
@@ -99,6 +97,7 @@ import MessageError from '@/components/MessageError.vue'
              },
         methods: {
       getKitchenCounters () {
+           this.successmsg=false,
           KitchenCounterService.get().then(response =>
 
           {
@@ -110,25 +109,23 @@ import MessageError from '@/components/MessageError.vue'
                 {
                     this.showkcounters=true
                 }
-          }
-         
-         // console.log('kitchen counters',response.data)            
-         
-          )
+          })
         },
         addKCounter:function(){
+            this.errormsg='';
+             if (!this.CounterNumber) {
+                    this.errormsg = "Please enter Counter Name"
+                    return
+                }
             KitchenCounterService.post(this.CounterNumber).then(response=>
-                    {               
-                        this.counteradded=true,
-                        this.successmsg="Counter added",
-                        console.log('Kitchen counter added',response.data)
-                        // this.$router.go() 
-
+                    {    
+                        this.successmsg="Counter added" ,         
+                       this.clearKCounter()
+                                           
                     }       
             )
             .catch(err=>{
-                this.errormsg=err.messge,
-                this.erroroccured=true,
+                this.errormsg="error occured",                
                 console.log(err.message)
             })
         },
@@ -137,20 +134,43 @@ import MessageError from '@/components/MessageError.vue'
             this.CounterNumber=data.counterNumber
         },
         updateKCounter:function(){
+             if (!this.CounterNumber) {
+                    this.errormsg = "Please enter Counter Name"
+                    return
+                }
             KitchenCounterService.patch(this.CounterNumber).then(response=>
-                    {               
-                        this.counteradded=true,
+                    {              
+                        this.clearKCounter(),
                         this.successmsg="Counter updated",
-                        console.log('Kitchen counter updated',response.data)
-                        // this.$router.go() 
-
+                        console.log('Kitchen counter updated',response.data)                  
                     }       
             )
             .catch(err=>{
-                this.errormsg=err.messge,
+                this.errormsg="error occured",
                 this.erroroccured=true,
                 console.log(err.message)
             })
+        },
+        deleteCounter:function(counterid){
+              KitchenCounterService.delete(counterid).then(response=>
+                    { 
+                        this.successmsg="Counter deleted"              
+                    }       
+            )
+            .catch(err=>{
+                this.errormsg="error occured",
+                this.erroroccured=true,
+                console.log(err.message)
+            })
+        
+        },
+         onError() {
+                console.log("onError parent");
+                this.errormsg = '';
+                this.iserror = false
+            },
+        clearKCounter:function(){
+            this.CounterNumber=""
         }
     }
 }
