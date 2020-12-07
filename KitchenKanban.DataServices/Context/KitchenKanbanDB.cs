@@ -11,6 +11,7 @@ namespace KitchenKanban.DataServices.Context
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Image> Images { get; set; }
         public DbSet<DocumentSequence> DocumentSequences { get; set; }
         public DbSet<Kitchen> Kitchens { get; set; }
         public DbSet<Item> Items { get; set; }
@@ -20,6 +21,7 @@ namespace KitchenKanban.DataServices.Context
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>().HasKey(x => x.UserId);
+            modelBuilder.Entity<Image>().HasKey(x => x.ImageId);
             modelBuilder.Entity<Kitchen>().HasKey(x => x.KitchenId);
             modelBuilder.Entity<Item>().HasKey(x => x.ItemId);
             modelBuilder.Entity<Order>().HasKey(x => x.OrderId);

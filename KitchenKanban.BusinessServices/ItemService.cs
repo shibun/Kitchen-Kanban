@@ -52,7 +52,8 @@ namespace KitchenKanban.BusinessServices
             {
                 ItemId = item.ItemId,
                 ItemName = item.ItemName,
-                ItemCharge = item.ItemCharge
+                ItemCharge = item.ItemCharge,
+                ImageId = item.ImageId
             };
         }
 
@@ -63,7 +64,8 @@ namespace KitchenKanban.BusinessServices
             {
                 ItemId = item.ItemId,
                 ItemName = item.ItemName,
-                ItemCharge = item.ItemCharge
+                ItemCharge = item.ItemCharge,
+                ImageId = item.ImageId
             }).ToList();
         }
 

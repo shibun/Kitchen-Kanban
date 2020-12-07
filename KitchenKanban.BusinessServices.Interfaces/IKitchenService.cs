@@ -8,5 +8,6 @@ namespace KitchenKanban.BusinessServices.Interfaces
         List<KitchenViewModel> GetKitchens();
         KitchenViewModel Create(KitchenViewModel input);
         KitchenViewModel GetKitchenById(string kitchenId);
+        bool Update(KitchenViewModel input);
     }
 }

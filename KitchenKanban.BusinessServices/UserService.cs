@@ -78,7 +78,8 @@ namespace KitchenKanban.BusinessServices
                     LastName = user.LastName,
                     UserId = user.UserId,
                     UserName = user.UserName,
-                    UserType = user.UserType
+                    UserType = user.UserType,
+                    ImageId = user.ImageId
                 };
         }
 
@@ -91,7 +92,8 @@ namespace KitchenKanban.BusinessServices
                 LastName = user.LastName,
                 UserId = user.UserId,
                 UserName = user.UserName,
-                UserType = user.UserType
+                UserType = user.UserType,
+                ImageId = user.ImageId
             }).ToList();
         }
     }
