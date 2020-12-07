@@ -7,19 +7,18 @@ export default {
     //return Vue.http.get('/api/posts');
     return axios.get('/Kitchen');
   },
-  post(CounterNumber){
-      const article = { CounterNumber:CounterNumber };
-    return axios.post('/Kitchen',article)
+  post(Kitchen){
+      
+    return axios.post('/Kitchen',Kitchen)
   },
   
-    patch(kcounternumber){
+    patch(Kitchen){
     
-    const article = { CounterNumber:kcounternumber };
-    return axios.post('/Kitchen',article)
+    
+    return axios.put('/Kitchen',Kitchen)
   },
-  delete(counterid){
-    
-    return null
+  deletecounter(KitchenId){
+     return axios.delete('/Kitchen',KitchenId)
   },
 
 }

@@ -24,7 +24,7 @@
                                 <button class="trans-btn" @click="editKCounter(data)" data-toggle="modal" data-target="#addKitchenCounter"><img src="../assets/images/edit.png" /></button>
                             </td>
                             <td class="text-center">
-                                <button class="trans-btn" @click="deleteCounter(data.counterId)"><img src="../assets/images/delete.png" /></button>
+                                <button class="trans-btn" @click="deleteCounter(data.kitchenId)"><img src="../assets/images/delete.png" /></button>
                             </td>
                         </tr>
                         <tr v-if="showkcounters">
@@ -52,7 +52,7 @@
                                 <div class="col-xs-6">
                                     <div class="form-group">
                                         <label>Kitchen Counter Name <span class="asterisk">*</span></label>
-                                        <input type="text" class="form-control" v-model="CounterNumber">
+                                        <input type="text" class="form-control" v-model="Kitchen.CounterNumber">
                                     </div>
                                 </div>
                             </div>
@@ -82,7 +82,11 @@ import MessageError from '@/components/MessageError.vue'
                  },
         data() {
             return {
+                Kitchen:{
+                KitchenId:"",
               CounterNumber:"",
+                },
+             
               KCounters:[],
               showkcounters:false,             
               successmsg:"",
@@ -113,11 +117,11 @@ import MessageError from '@/components/MessageError.vue'
         },
         addKCounter:function(){
             this.errormsg='';
-             if (!this.CounterNumber) {
+             if (!this.Kitchen.CounterNumber) {
                     this.errormsg = "Please enter Counter Name"
                     return
                 }
-            KitchenCounterService.post(this.CounterNumber).then(response=>
+            KitchenCounterService.post(this.Kitchen).then(response=>
                     {    
                         this.successmsg="Counter added" ,         
                        this.clearKCounter()
@@ -131,14 +135,15 @@ import MessageError from '@/components/MessageError.vue'
         },
         editKCounter:function(data){
             this.editmode=true,
-            this.CounterNumber=data.counterNumber
+            this.Kitchen.CounterNumber=data.counterNumber,
+            this.Kitchen.KitchenId=data.kitchenId
         },
         updateKCounter:function(){
-             if (!this.CounterNumber) {
+             if (!this.Kitchen.CounterNumber) {
                     this.errormsg = "Please enter Counter Name"
                     return
                 }
-            KitchenCounterService.patch(this.CounterNumber).then(response=>
+            KitchenCounterService.patch(this.Kitchen).then(response=>
                     {              
                         this.clearKCounter(),
                         this.successmsg="Counter updated",
@@ -146,20 +151,18 @@ import MessageError from '@/components/MessageError.vue'
                     }       
             )
             .catch(err=>{
-                this.errormsg="error occured",
-                this.erroroccured=true,
+                this.errormsg="error occured",                
                 console.log(err.message)
             })
         },
-        deleteCounter:function(counterid){
-              KitchenCounterService.delete(counterid).then(response=>
+        deleteCounter:function(KitchenId){
+              KitchenCounterService.deletecounter(KitchenId).then(response=>
                     { 
                         this.successmsg="Counter deleted"              
                     }       
             )
             .catch(err=>{
-                this.errormsg="error occured",
-                this.erroroccured=true,
+                this.errormsg="error occured",                
                 console.log(err.message)
             })
         

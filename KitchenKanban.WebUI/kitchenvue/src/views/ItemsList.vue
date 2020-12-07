@@ -110,6 +110,7 @@
             return {
                 Item:
                 {
+                    ItemId:0,
                     ItemName: "",
                     ItemCharge: 0,
                 },
@@ -171,7 +172,8 @@
                 this.editmode = true,
                     console.log('datais', data),
                     this.Item.ItemName = data.itemName,
-                    this.Item.ItemCharge = data.itemCharge
+                    this.Item.ItemCharge = data.itemCharge,
+                    this.Item.ItemId=data.itemId
             },
             updateItem: function () {
                  if (!this.Item.ItemName) {
@@ -196,7 +198,7 @@
                         })
             },
             deleteItem: function (itemid) {
-                ItemListService.delete(itemid).then(response => {
+                ItemListService.deleteitem(itemid).then(response => {
                     console.log('response', response.data),
                         this.successmsg = "Item deleted"
                 })
