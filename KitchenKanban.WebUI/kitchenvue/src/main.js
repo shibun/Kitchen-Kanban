@@ -29,7 +29,7 @@ axios.defaults.baseURL = 'http://localhost:64464/WebApi/api/';
 const token = localStorage.getItem('token')
 if (token) {
   Vue.prototype.$http.defaults.headers.common['Authorization'] = token
-  Vue.prototype.$http.defaults.headers.common['Content-Type'] = 'application/json;charset=UTF-8'
+  Vue.prototype.$http.defaults.headers.common['Content-Type'] = 'application/json;'
 }
 
 Vue.config.productionTip = false

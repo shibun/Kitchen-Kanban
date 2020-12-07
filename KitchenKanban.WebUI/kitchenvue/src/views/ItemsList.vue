@@ -87,8 +87,8 @@
             </div>
         </div>
     </div>
-  <MessageSuccess v-if="itemadded" :msg="successmsg"/>
-       <MessageError v-if="erroroccured" :msg="errormsg"/>
+    <MessageSuccess :msg="successmsg" v-on:on-success="getItems"/>
+       <MessageError :msg="errormsg" v-on:on-error="onError"/>
     </div>
 </template>
 
@@ -113,8 +113,6 @@ import MessageError from '@/components/MessageError.vue'
                 ItemCharge : 0,
                 },
                
-                 itemadded:false,
-                 erroroccured:false,
                  Items:[],
                  itemsnotfound:false,
                  successmsg:"",
@@ -134,6 +132,7 @@ import MessageError from '@/components/MessageError.vue'
 
         methods: {
               getItems(){
+                   this.successmsg=''
                   ItemListService.get().then(response =>  
                   {
                        if(response.data.length>0){
@@ -155,13 +154,11 @@ import MessageError from '@/components/MessageError.vue'
                   
                   {
                        console.log('response',response.data),
-                       this.successmsg="Item added",
-                        this.itemadded=true                 
+                       this.successmsg="Item added"       
                        // this.$router.go()
                   } 
                   )
                   .catch(err=>{
-                      this.erroroccured=true,
                       this.errormsg=err.message,
                       console.log(err.message)
                   })
@@ -178,17 +175,18 @@ import MessageError from '@/components/MessageError.vue'
                   
                   {
                        console.log('response',response.data),
-                       this.successmsg="Item updated",
-                        this.itemadded=true                 
+                       this.successmsg="Item updated"          
                        // this.$router.go()
                   } 
                   )
                   .catch(err=>{
-                      this.erroroccured=true,
                       this.errormsg=err.message,
                       console.log(err.message)
                   })
-              }
+              },
+               onError(){
+                    this.errormsg='';
+                },
             }
         }
     

@@ -19,14 +19,14 @@
                             <th class="text-center">Edit</th>
                             <th class="text-center">Delete</th>
                         </tr>
-                        <tr v-bind:key="user.userId" v-for="(user,index) in users">
+                        <tr v-bind:key="data.userId" v-for="(data,index) in users">
                             <td class="text-center">{{index+1}}</td>
                             <td class="text-center"><img src="../assets/images/user_img.png" /></td>
-                            <td>{{user.firstName}} {{user.lastName}}</td>
-                            <td>{{user.userName}}</td>
-                            <td>{{user.userType}}</td>
+                            <td>{{data.firstName}} {{data.lastName}}</td>
+                            <td>{{data.userName}}</td>
+                            <td>{{data.userType}}</td>
                             <td class="text-center">
-                                <button class="trans-btn"><img src="../assets/images/edit.png" /></button>
+                                <button  @click="editUser(data)" data-toggle="modal" data-target="#addUser" class="trans-btn"><img src="../assets/images/edit.png" /></button>
                             </td>
                             <td class="text-center">
                                 <button class="trans-btn"><img src="../assets/images/delete.png" /></button>
@@ -54,13 +54,13 @@
                                 <div class="col-xs-6">
                                     <div class="form-group">
                                         <label>First Name <span class="asterisk">*</span></label>
-                                        <input v-model="user.FirstName" type="text" class="form-control">
+                                        <input v-model="user.firstName" type="text" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-xs-6">
                                     <div class="form-group">
                                         <label>Last Name <span class="asterisk">*</span></label>
-                                        <input v-model="user.LastName" type="text" class="form-control">
+                                        <input v-model="user.lastName" type="text" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -68,7 +68,7 @@
                                 <div class="col-xs-6">
                                     <div class="form-group">
                                         <label>User Type <span class="asterisk">*</span></label>
-                                        <select class="form-control" v-model="user.UserType">
+                                        <select class="form-control" v-model="user.userType">
                                              <option disabled value="">--select--</option>
                                              <option v-bind:key="index" v-for="(item,index ) in userTypes" v-bind:value="item.id">{{item.value}}</option>
                                         </select>
@@ -78,7 +78,7 @@
 
                                       <div class="form-group">
                                         <label>User Name <span class="asterisk">*</span></label>
-                                        <input v-model="user.UserName" type="text" class="form-control">
+                                        <input v-model="user.userName" type="text" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -86,7 +86,7 @@
                                 <div class="col-xs-6">
                                     <div class="form-group">
                                         <label>Password<span class="asterisk">*</span></label>
-                                        <input v-model="user.Password" type="password" class="form-control">
+                                        <input v-model="user.password" type="password" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-xs-6">
@@ -126,6 +126,7 @@ import userService from '../services/userService'
 //import appDataMixin from '../mixins/appDataMixin'
 import MessageSuccess from '@/components/MessageSuccess.vue'
 import MessageError from '@/components/MessageError.vue'
+import Vue from 'vue'
 export default {
     name: 'User',
     //mixins:[appDataMixin],
@@ -133,15 +134,15 @@ export default {
        return {
            successmsg:"",
            errormsg:"",
-           users:[],
+           users:null,
            userTypes:[{id:1,value:'Administrator'},{id:2,value:'FrontDesk'},{id:3,value:'Chef'},{id:4,value:'BackOffice'},{id:5,value:'Service'}],
            user:{
                UserId:'',
-               FirstName:'',
-               LastName:'',
-               UserName:'',
-               UserType:'',
-               Password:''
+               firstName:'',
+               lastName:'',
+               userName:'',
+               userType:'',
+               password:''
            }
        }
     },
@@ -155,19 +156,22 @@ export default {
   },
     methods:{ 
       getUsers () {
-           this.successmsg=false,
+          this.successmsg='';
           userService.getUsers().then(response =>
             this.users=response.data,
-            console.log("mixin data",this.$data)      
-          )
+            //console.log(response.data)      
+          ).catch(err=>{
+                this.errormsg=err.messge,
+                console.log(err.message)
+            })
         },
       addUser(){
           this.errormsg='';
-          if(!this.user.FirstName){
+          if(!this.user.firstName){
               this.errormsg="Please enter First Name"
               return
           }
-           if(!this.user.LastName){
+           if(!this.user.lastName){
               this.errormsg="Please enter Last Name"
               return
           }
@@ -176,12 +180,23 @@ export default {
                 console.log(response.data),  
                  this.successmsg="user added",
                   this.clearForm()
-          )
+          ).catch(err=>{
+                this.errormsg=err.messge,
+                console.log(err.message)
+            })
+      },
+      editUser:function(data){
+          //var usr=JSON.parse(JSON.stringify(data)) //data;
+          console.log(data);
+          //this.user.firstName=data.firstName
+          
+          this.user=data;
+           //this.user=Object.assign({}, usr)
+          //console.log(usr);
       },
       onError(){
           console.log("onError parent");
           this.errormsg='';
-          this.iserror=false
       },
       clearForm(){
         this.user={

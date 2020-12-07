@@ -67,8 +67,8 @@
             </div>
         </div>
     </div>
-       <MessageSuccess v-if="counteradded" :msg="successmsg"/>
-       <MessageError v-if="erroroccured" :msg="errormsg"/>
+         <MessageSuccess :msg="successmsg" v-on:on-success="getKitchenCounters"/>
+       <MessageError :msg="errormsg" v-on:on-error="onError"/>
 </div>
 </template>
 <script>
@@ -85,8 +85,6 @@ import MessageError from '@/components/MessageError.vue'
               CounterNumber:"",
               KCounters:[],
               showkcounters:false,
-              counteradded:false,
-              erroroccured:false,
               successmsg:"",
               errormsg:"",
               editmode:false
@@ -99,6 +97,7 @@ import MessageError from '@/components/MessageError.vue'
              },
         methods: {
       getKitchenCounters () {
+          this.successmsg='';
           KitchenCounterService.get().then(response =>
 
           {
@@ -118,8 +117,7 @@ import MessageError from '@/components/MessageError.vue'
         },
         addKCounter:function(){
             KitchenCounterService.post(this.CounterNumber).then(response=>
-                    {               
-                        this.counteradded=true,
+                    {        
                         this.successmsg="Counter added",
                         console.log('Kitchen counter added',response.data)
                         // this.$router.go() 
@@ -128,7 +126,6 @@ import MessageError from '@/components/MessageError.vue'
             )
             .catch(err=>{
                 this.errormsg=err.messge,
-                this.erroroccured=true,
                 console.log(err.message)
             })
         },
@@ -138,8 +135,7 @@ import MessageError from '@/components/MessageError.vue'
         },
         updateKCounter:function(){
             KitchenCounterService.patch(this.CounterNumber).then(response=>
-                    {               
-                        this.counteradded=true,
+                    {              
                         this.successmsg="Counter updated",
                         console.log('Kitchen counter updated',response.data)
                         // this.$router.go() 
@@ -148,10 +144,12 @@ import MessageError from '@/components/MessageError.vue'
             )
             .catch(err=>{
                 this.errormsg=err.messge,
-                this.erroroccured=true,
                 console.log(err.message)
             })
-        }
+        },
+         onError(){
+                    this.errormsg='';
+                },
     }
 }
     
