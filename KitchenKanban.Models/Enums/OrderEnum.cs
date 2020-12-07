@@ -13,20 +13,10 @@
             NewOrder = 1,
             BeingPrepared = 2,
             Prepared = 3,
-            BeingPacked = 4,
-            Packed = 5,
-            ReadyToBeServed = 6,
-            ReadyToBeDelivered = 7,
-            Completed = 8,
-            Cancelled = 9
-        }
-
-        public enum OrderLineStatus : int
-        {
-            NewOrder = 1,
-            BeingPrepared = 2,
-            Prepared = 3,
-            Cancelled = 4
+            Packing = 4,
+            ReadyToBeDelivered = 5,
+            Completed = 6,
+            Cancelled = 7
         }
     }
 }

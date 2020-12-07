@@ -59,20 +59,5 @@ namespace KitchenKanban.WebAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-
-        [HttpPost]
-        [Route("OrderLineStatus")]
-        public IActionResult ChangeOrderLineStatus(OrderLineStatusInputViewModel model)
-        {
-            try
-            {
-                var item = _orderService.ChangeOrderLineStatus(model);
-                return Ok(item);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
     }
 }
