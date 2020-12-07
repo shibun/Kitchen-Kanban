@@ -48,119 +48,7 @@
       </div>
     </section>
     <div class="clearfix"></div>
-
-    <div class="add-overlay" v-if="isAddUser">
-      <div class="add-pop-overlay">
-        <div class="modal-header">
-          <button
-            type="button"
-            class="close"
-            data-dismiss="modal"
-            @click="hideAddUser"
-          >
-            ×
-          </button>
-          <h4 class="modal-title">Add User</h4>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="container-fluid">
-              <div class="row">
-                <div class="col-xs-6">
-                  <div class="form-group">
-                    <label>First Name <span class="asterisk">*</span></label>
-                    <input
-                      v-model="user.firstName"
-                      type="text"
-                      class="form-control"
-                    />
-                  </div>
-                </div>
-                <div class="col-xs-6">
-                  <div class="form-group">
-                    <label>Last Name <span class="asterisk">*</span></label>
-                    <input
-                      v-model="user.lastName"
-                      type="text"
-                      class="form-control"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-xs-6">
-                  <div class="form-group">
-                    <label>User Type <span class="asterisk">*</span></label>
-                    <select class="form-control" v-model="user.userType">
-                      <option disabled value="">--select--</option>
-                      <option
-                        v-bind:key="index"
-                        v-for="(item, index) in userTypes"
-                        v-bind:value="item.id"
-                      >
-                        {{ item.value }}
-                      </option>
-                    </select>
-                  </div>
-                </div>
-                <div class="col-xs-6">
-                  <div class="form-group">
-                    <label>User Name <span class="asterisk">*</span></label>
-                    <input
-                      v-model="user.userName"
-                      type="text"
-                      class="form-control"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-xs-6">
-                  <div class="form-group">
-                    <label>Password<span class="asterisk">*</span></label>
-                    <input
-                      v-model="user.password"
-                      type="password"
-                      class="form-control"
-                    />
-                  </div>
-                </div>
-                <div class="col-xs-6"></div>
-              </div>
-              <div class="row">
-                <div class="col-xs-4">
-                  <div class="form-group">
-                    <label>User Image</label>
-                    <img src="../assets/images/no_user_img.png" />
-                  </div>
-                </div>
-                <div class="col-xs-8">
-                  <button class="user-img-upload-btn">Upload</button>
-                </div>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            @click="clearForm"
-            class="btn btn-default left-btn"
-            data-dismiss="modal"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            @click="addUser"
-            class="btn btn-active"
-            data-dismiss="modal"
-          >
-            Add
-          </button>
-        </div>
-      </div>
-    </div>
+    <AddUser :isAddUser.sync="isAddUser" v-bind:edituser="edituser" v-on:clear-add-user="clearAddForm" v-on:add-user="addUser" />
     <MessageSuccess :msg="successmsg" v-on:on-success="getUsers" />
     <MessageError :msg="errormsg" v-on:on-error="onError" />
   </div>
@@ -170,6 +58,7 @@ import userService from "../services/userService";
 //import appDataMixin from '../mixins/appDataMixin'
 import MessageSuccess from "@/components/MessageSuccess.vue";
 import MessageError from "@/components/MessageError.vue";
+import AddUser from '../components/AddUser.vue'
 import Vue from "vue";
 export default {
   name: "User",
@@ -180,6 +69,7 @@ export default {
       errormsg: "",
       users: null,
       isAddUser: false,
+      edituser:{},
       userTypes: [
         { id: 1, value: "Administrator" },
         { id: 2, value: "FrontDesk" },
@@ -188,7 +78,7 @@ export default {
         { id: 5, value: "Service" },
       ],
       user: {
-        UserId: "",
+        userId: 0,
         firstName: "",
         lastName: "",
         userName: "",
@@ -199,7 +89,7 @@ export default {
   },
   components: {
     MessageSuccess,
-    MessageError,
+    MessageError,AddUser
   },
   created() {
     this.getUsers();
@@ -218,46 +108,34 @@ export default {
     showAddUser() {
       this.isAddUser = true;
     },
-    hideAddUser() {
-      this.isAddUser = false;
-    },
-    addUser() {
-      this.errormsg = "";
-      if (!this.user.firstName) {
-        this.errormsg = "Please enter First Name";
-        return;
-      }
-      if (!this.user.lastName) {
-        this.errormsg = "Please enter Last Name";
-        return;
-      }
+     addUser(data) {
+       this.errormsg = "";
+       if(!data.firstName){
+        this.errormsg = "Please enter first name";
+         return;
+       }
+      
       userService
-        .addUser(this.user)
-        .then((response) => (this.successmsg = "user added"), this.clearForm())
+        .addUser(data)
+        .then((response) => (this.successmsg = "user added",this.isAddUser=false)
+        )
         .catch((err) => {
           (this.errormsg = err.messge), console.log(err.message);
         });
     },
     editUser: function (data) {
       console.log(data);
-      this.user = data;
+      this.edituser = data;
       this.isAddUser = true;
     },
     onError() {
       console.log("onError parent");
       this.errormsg = "";
     },
-    clearForm() {
-      this.isAddUser = false;
-      this.user = {
-        UserId: "",
-        FirstName: "",
-        LastName: "",
-        UserName: "",
-        UserType: "",
-        Password: "",
-      };
-    },
+    clearAddForm(){
+       this.isAddUser = false;
+     
+    }
   },
 };
 </script>
