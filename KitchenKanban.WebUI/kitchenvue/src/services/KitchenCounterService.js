@@ -16,5 +16,10 @@ export default {
     
     const article = { CounterNumber:kcounternumber };
     return axios.post('/Kitchen',article)
-  }
+  },
+  delete(counterid){
+    
+    return null
+  },
+
 }
