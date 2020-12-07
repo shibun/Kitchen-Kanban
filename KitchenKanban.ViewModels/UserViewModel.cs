@@ -9,5 +9,6 @@ namespace KitchenKanban.ViewModels
         public string LastName { get; set; }
         public string UserName { get; set; }
         public UserType UserType { get; set; }
+        public string ImageId { get; set; }
     }
 }

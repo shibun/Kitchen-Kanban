@@ -63,5 +63,19 @@ namespace KitchenKanban.BusinessServices
                 CounterNumber = x.CounterNumber
             }).ToList();
         }
+
+        public bool Update(KitchenViewModel input)
+        {
+            var kitchen = _databaseContext.Kitchens.Where(x => x.KitchenId == input.KitchenId).FirstOrDefault();
+            if (kitchen == null)
+                throw new Exception("Kitchen not found.");
+            kitchen.CounterNumber = input.CounterNumber;
+            kitchen.UpdatedBy = _userInfo.UserId;
+            kitchen.UpdatedOn = DateTime.Now;
+
+            _databaseContext.Kitchens.Update(kitchen);
+            _databaseContext.SaveChanges();
+            return true;
+        }
     }
 }

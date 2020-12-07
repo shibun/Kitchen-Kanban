@@ -110,70 +110,16 @@ namespace KitchenKanban.BusinessServices
             }
 
             //BeingPacked
-            var beingPackedOrders = _databaseContext.Orders.Include(x => x.OrderLines).Where(x => x.OrderStatus == OrderStatus.BeingPacked).ToList();
-            if (beingPackedOrders.Count() > 0)
+            var packingOrders = _databaseContext.Orders.Include(x => x.OrderLines).Where(x => x.OrderStatus == OrderStatus.Packing).ToList();
+            if (packingOrders.Count() > 0)
             {
                 flowOrder = flowOrder + 1;
                 var bucket = new KanbanBucket()
                 {
-                    BucketName = "Being Packed",
+                    BucketName = "Packing",
                     FlowOrder = flowOrder,
-                    OrderCount = beingPackedOrders.Count(),
-                    Orders = beingPackedOrders.Select(order => new KanbanOrder()
-                    {
-                        CustomerContactNumber = order.CustomerContactNumber,
-                        CustomerName = order.CustomerName,
-                        OrderAmount = order.OrderAmount,
-                        OrderDate = order.OrderDate,
-                        OrderId = order.OrderId,
-                        OrderLineCount = order.OrderLines.Count(),
-                        OrderNumber = order.OrderNumber,
-                        OrderStatus = order.OrderStatus,
-                        OrderType = order.OrderType
-                    }).ToList()
-                };
-
-                bucketList.Add(bucket);
-            }
-
-            //Packed
-            var packedOrders = _databaseContext.Orders.Include(x => x.OrderLines).Where(x => x.OrderStatus == OrderStatus.Packed).ToList();
-            if (packedOrders.Count() > 0)
-            {
-                flowOrder = flowOrder + 1;
-                var bucket = new KanbanBucket()
-                {
-                    BucketName = "Packed",
-                    FlowOrder = flowOrder,
-                    OrderCount = packedOrders.Count(),
-                    Orders = packedOrders.Select(order => new KanbanOrder()
-                    {
-                        CustomerContactNumber = order.CustomerContactNumber,
-                        CustomerName = order.CustomerName,
-                        OrderAmount = order.OrderAmount,
-                        OrderDate = order.OrderDate,
-                        OrderId = order.OrderId,
-                        OrderLineCount = order.OrderLines.Count(),
-                        OrderNumber = order.OrderNumber,
-                        OrderStatus = order.OrderStatus,
-                        OrderType = order.OrderType
-                    }).ToList()
-                };
-
-                bucketList.Add(bucket);
-            }
-
-            //ReadyToBeServed
-            var readyToBeServedOrders = _databaseContext.Orders.Include(x => x.OrderLines).Where(x => x.OrderStatus == OrderStatus.ReadyToBeServed).ToList();
-            if (readyToBeServedOrders.Count() > 0)
-            {
-                flowOrder = flowOrder + 1;
-                var bucket = new KanbanBucket()
-                {
-                    BucketName = "Ready To Be Served",
-                    FlowOrder = flowOrder,
-                    OrderCount = readyToBeServedOrders.Count(),
-                    Orders = readyToBeServedOrders.Select(order => new KanbanOrder()
+                    OrderCount = packingOrders.Count(),
+                    Orders = packingOrders.Select(order => new KanbanOrder()
                     {
                         CustomerContactNumber = order.CustomerContactNumber,
                         CustomerName = order.CustomerName,

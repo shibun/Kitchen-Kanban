@@ -34,7 +34,8 @@ namespace KitchenKanban.WebAPI
 
         private static void ConfigureTransientServices(IServiceCollection services)
         {
-            services.AddTransient<IUserInfo, UserInfo>();
+            services.AddTransient<IUserInfo, UserInfo>(); 
+            services.AddTransient<IImageService, ImageService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IKitchenService, KitchenService>();
             services.AddTransient<IItemService, ItemService>();

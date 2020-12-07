@@ -57,7 +57,6 @@ namespace KitchenKanban.BusinessServices
                     ItemId = item.ItemId,
                     OrderId = newOrder.OrderId,
                     OrderLineId = Guid.NewGuid().ToString(),
-                    OrderLineStatus = OrderLineStatus.NewOrder,
                     OrderQuantity = item.OrderQuantity                    
                 };
                 _databaseContext.OrderLines.Add(newOrderLine);
@@ -98,7 +97,6 @@ namespace KitchenKanban.BusinessServices
                     KitchenId = x.KitchenId,
                     OrderId = x.OrderId,
                     OrderLineId = x.OrderLineId,
-                    OrderLineStatus = x.OrderLineStatus,
                     OrderQuantity = x.OrderQuantity,
                     PreparedById = x.PreparedById
                 }).ToList());
@@ -114,47 +112,39 @@ namespace KitchenKanban.BusinessServices
             if(order != null)
             {
                 switch (input.OrderStatus)
-                {                    
-                    case OrderStatus.BeingPacked:
+                {
+                    case OrderStatus.BeingPrepared:
+                        if (order.OrderStatus != OrderStatus.NewOrder)
+                        {
+                            throw new Exception("Status Being Prepared is applicable only for New Order.");
+                        }
+                        order.OrderStatus = OrderStatus.BeingPrepared;
+                        order.UpdatedBy = _userInfo.UserId;
+                        order.UpdatedOn = DateTime.Now;
+                        _databaseContext.Orders.Update(order);
+                        _databaseContext.SaveChanges();
+                        break;
+                    case OrderStatus.Prepared:
+                        if (order.OrderStatus != OrderStatus.BeingPrepared)
+                        {
+                            throw new Exception("Status Prepared is applicable only for the items which are already Being Prepared.");
+                        }
+                        order.OrderStatus = OrderStatus.Prepared;
+                        order.UpdatedBy = _userInfo.UserId;
+                        order.UpdatedOn = DateTime.Now;
+                        _databaseContext.Orders.Update(order);
+                        _databaseContext.SaveChanges();
+                        break;
+                    case OrderStatus.Packing:
                         if(order.OrderType != OrderType.TakeAway)
                         {
                             throw new Exception("This status is invalid for DineIn orders.");
                         }
                         else if (order.OrderStatus != OrderStatus.Prepared)
                         {
-                            throw new Exception("Status BeingPacked is applicable only for the items which are already Prepared.");
+                            throw new Exception("Status Packing is applicable only for the items which are already Prepared.");
                         }
-                        order.OrderStatus = OrderStatus.BeingPacked;
-                        order.UpdatedBy = _userInfo.UserId;
-                        order.UpdatedOn = DateTime.Now;
-                        _databaseContext.Orders.Update(order);
-                        _databaseContext.SaveChanges();
-                        break;
-                    case OrderStatus.Packed:
-                        if (order.OrderType != OrderType.TakeAway)
-                        {
-                            throw new Exception("This status is invalid for DineIn orders.");
-                        }
-                        else if (order.OrderStatus != OrderStatus.BeingPacked)
-                        {
-                            throw new Exception("Status Packed is applicable only for the items which are already BeingPacked.");
-                        }
-                        order.OrderStatus = OrderStatus.Packed;
-                        order.UpdatedBy = _userInfo.UserId;
-                        order.UpdatedOn = DateTime.Now;
-                        _databaseContext.Orders.Update(order);
-                        _databaseContext.SaveChanges();
-                        break;
-                    case OrderStatus.ReadyToBeServed:
-                        if (order.OrderType != OrderType.DineIn)
-                        {
-                            throw new Exception("This status is invalid for TakeAway orders.");
-                        }
-                        else if (!(order.OrderStatus >= OrderStatus.Prepared && order.OrderStatus <= OrderStatus.Packed))
-                        {
-                            throw new Exception("Status Ready To Be Served is applicable only for the items which are Prepared or already BeingPacked.");
-                        }
-                        order.OrderStatus = OrderStatus.ReadyToBeServed;
+                        order.OrderStatus = OrderStatus.Packing;
                         order.UpdatedBy = _userInfo.UserId;
                         order.UpdatedOn = DateTime.Now;
                         _databaseContext.Orders.Update(order);
@@ -166,7 +156,7 @@ namespace KitchenKanban.BusinessServices
                         {
                             throw new Exception("This status is invalid for DineIn orders.");
                         }
-                        else if (!(order.OrderStatus >= OrderStatus.Prepared && order.OrderStatus <= OrderStatus.Packed))
+                        else if (!(order.OrderStatus >= OrderStatus.Prepared && order.OrderStatus <= OrderStatus.Packing))
                         {
                             throw new Exception("Status Ready To Be Delivered is applicable only for the items which are Prepared or already BeingPacked.");
                         }
@@ -184,7 +174,11 @@ namespace KitchenKanban.BusinessServices
                         _databaseContext.SaveChanges();
                         break;
                     case OrderStatus.Cancelled:
-                        if (input.CancellationReason == string.Empty)
+                        if(order.OrderStatus != OrderStatus.NewOrder)
+                        {
+                            throw new Exception("Only new order can be cancelled.");
+                        }
+                        else if (input.CancellationReason == string.Empty)
                         {
                             throw new Exception("Cancellation reason is mandatory.");
                         }
@@ -192,16 +186,6 @@ namespace KitchenKanban.BusinessServices
                         order.UpdatedBy = _userInfo.UserId;
                         order.UpdatedOn = DateTime.Now;
                         _databaseContext.Orders.Update(order);
-
-                        var orderLines = _databaseContext.OrderLines.Where(x => x.OrderId == input.OrderId).ToList();
-                        foreach (var item in orderLines)
-                        {
-                            item.OrderLineStatus = OrderLineStatus.Cancelled;
-                            item.UpdatedBy = _userInfo.UserId;
-                            item.UpdatedOn = DateTime.Now;
-                            _databaseContext.OrderLines.Update(item);
-                        }
-
                         _databaseContext.SaveChanges();
                         break;
                     default:
@@ -212,82 +196,6 @@ namespace KitchenKanban.BusinessServices
             else
             {
                 throw new Exception("Order not found");
-            }
-        }
-
-        public bool ChangeOrderLineStatus(OrderLineStatusInputViewModel input)
-        {
-            var orderLine = _databaseContext.OrderLines.Where(x => x.OrderLineId == input.OrderLineId).FirstOrDefault();
-            if(orderLine != null)
-            {
-                switch (input.OrderLineStatus)
-                {
-                    case OrderLineStatus.BeingPrepared:
-                        if(input.KitchenId == null)
-                        {
-                            throw new Exception("Kitchen detail is mandatory for changing status to Being Prepared");
-                        }
-                        else if(input.PreparedById == null)
-                        {
-                            throw new Exception("Chef detail is mandatory for changing status to Being Prepared");
-                        }
-                        var order = _databaseContext.Orders.Where(x => x.OrderId == orderLine.OrderId).FirstOrDefault();
-                        if(order.OrderStatus == OrderStatus.BeingPrepared)
-                        {
-                            order.OrderStatus = OrderStatus.BeingPrepared;
-                            order.UpdatedBy = _userInfo.UserId;
-                            order.UpdatedOn = DateTime.Now;
-
-                            _databaseContext.Orders.Update(order);
-                        }
-                        orderLine.OrderLineStatus = OrderLineStatus.BeingPrepared;
-                        orderLine.UpdatedBy = _userInfo.UserId;
-                        orderLine.UpdatedOn = DateTime.Now;
-                        _databaseContext.OrderLines.Update(orderLine);
-                        _databaseContext.SaveChanges();
-                        break;
-                    case OrderLineStatus.Prepared:
-                        if (orderLine.OrderLineStatus != OrderLineStatus.BeingPrepared)
-                        {
-                            throw new Exception("Status can be changed to Prepared only if the order line is Being Prepared");
-                        }
-                        orderLine.OrderLineStatus = OrderLineStatus.Prepared;
-                        orderLine.UpdatedBy = _userInfo.UserId;
-                        orderLine.UpdatedOn = DateTime.Now;
-                        _databaseContext.OrderLines.Update(orderLine);
-                        _databaseContext.SaveChanges();
-
-                        var orderLines = _databaseContext.OrderLines.Where(x => x.OrderId == orderLine.OrderId).ToList();
-
-                        var preparedCount = orderLines.Where(x => x.OrderLineStatus == OrderLineStatus.Prepared || x.OrderLineStatus == OrderLineStatus.Cancelled).ToList().Count();
-
-                        if (orderLines.Count() == preparedCount)
-                        {
-                            order = _databaseContext.Orders.Where(x => x.OrderId == orderLine.OrderId).FirstOrDefault();
-                            order.OrderStatus = OrderStatus.Prepared;
-                            order.UpdatedBy = _userInfo.UserId;
-                            order.UpdatedOn = DateTime.Now;
-
-                            _databaseContext.Orders.Update(order);
-                            _databaseContext.SaveChanges();
-                        }
-
-                        break;
-                    case OrderLineStatus.Cancelled:
-                        orderLine.OrderLineStatus = OrderLineStatus.Cancelled;
-                        orderLine.UpdatedBy = _userInfo.UserId;
-                        orderLine.UpdatedOn = DateTime.Now;
-                        _databaseContext.OrderLines.Update(orderLine);
-                        _databaseContext.SaveChanges();
-                        break;
-                    default:
-                        throw new NotImplementedException("The inputed status is invalid.");
-                }
-                return true;
-            }
-            else
-            {
-                throw new Exception("Order Line not found");
             }
         }
     }
