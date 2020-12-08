@@ -4,10 +4,8 @@ using KitchenKanban.WebAPI.Providers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Threading.Tasks;
 using static KitchenKanban.Models.Enums.DocumentEnum;
 using static KitchenKanban.Models.Enums.ImageEnum;
 
