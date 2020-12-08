@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using static KitchenKanban.Models.Enums.DocumentEnum;
+using static KitchenKanban.Models.Enums.ImageEnum;
 
 namespace KitchenKanban.BusinessServices
 {
@@ -81,6 +82,30 @@ namespace KitchenKanban.BusinessServices
         public bool Delete(string imageId)
         {
             throw new NotImplementedException();
+        }
+
+        public byte[] GetImage(string imageId, ImageType imageType)
+        {
+            switch (imageType)
+            {
+                case ImageType.Original:
+                    var originalImage = _databaseContext.Images.Where(x => x.ImageId == imageId && x.ImageType == ImageType.Original).FirstOrDefault();
+                    if(originalImage != null)
+                    {
+                        return originalImage.ImageContent;
+                    }
+                    break;
+                case ImageType.Icon:
+                    var iconImage = _databaseContext.Images.Where(x => x.ParentId == imageId && x.ImageType == ImageType.Icon).FirstOrDefault();
+                    if (iconImage != null)
+                    {
+                        return iconImage.ImageContent;
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            return null;
         }
 
         public ImageViewModel GetImageById(string imageId)

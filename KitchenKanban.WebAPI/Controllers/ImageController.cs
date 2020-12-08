@@ -8,12 +8,14 @@ using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using static KitchenKanban.Models.Enums.DocumentEnum;
 using static KitchenKanban.Models.Enums.ImageEnum;
 
 namespace KitchenKanban.WebAPI.Controllers
 {
     [Route("api/Image")]
+    [Authorize]
     [ApiController]
     public class ImageController : ControllerBase
     {
@@ -73,9 +75,20 @@ namespace KitchenKanban.WebAPI.Controllers
         [HttpGet]
         public HttpResponseMessage GetImage(string imageId, ImageType imageType = ImageType.Icon)
         {
-
-            var result = new HttpResponseMessage(HttpStatusCode.BadRequest);
-            return result;
+            HttpResponseMessage result;
+            byte[] b = _imageService.GetImage(imageId, imageType);
+            if (b != null)
+            {
+                result = new HttpResponseMessage(HttpStatusCode.OK);
+                result.Content = new ByteArrayContent(b);
+                result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpg");
+                return result;
+            }
+            else
+            {
+                result = new HttpResponseMessage(HttpStatusCode.NoContent);
+                return result;
+            }
         }
 
         private byte[] ImageToByteArray(Image imageIn)
