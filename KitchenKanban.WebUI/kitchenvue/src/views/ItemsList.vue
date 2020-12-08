@@ -94,8 +94,7 @@
                 <div class="col-xs-4">
                   <div class="form-group">
                     <label>Item Image</label>
-                    <!-- <img src="../assets/images/no_item_img.png" /> -->
-                    <img :src='getItemImage(Item.ImageId)' />
+                    <img src="../assets/images/no_item_img.png" />
                   </div>
                 </div>
                 <div class="col-xs-8">
@@ -162,7 +161,7 @@ export default {
         ItemName: "",
         ItemCharge: 0,
       },
-      files: new FormData(),
+      files: "",
       Items: [],
       itemsnotfound: false,
       successmsg: "",
@@ -198,7 +197,7 @@ export default {
         });
     },
     addItem: function() {
-      //console.log('item is in add', this.Item),
+      console.log('item is in add', this.files);
       if (!this.Item.ItemName) {
         this.errormsg = "Please enter Item Name";
         return;
@@ -210,15 +209,17 @@ export default {
       ItemListService.post(this.Item)
         .then((response) => {
             this.clearItem();
-            console.log("response", response.data.itemId);
-            const files = this.files;
-            ItemListService.uploadfile(files, response.data.itemId, 2)
-              .then((response) => {            
-                console.log("response", response);
-              })
-            .catch((err) => {
-              (this.errormsg = "error occured"), console.log(err.message);
-            });
+            if(this.files != '')
+            {
+              const files = this.files;
+              ItemListService.uploadfile(files, response.data.itemId, 2)
+                .then((response) => {            
+                  console.log("response", response);
+                })
+              .catch((err) => {
+                (this.errormsg = "error occured"), console.log(err.message);
+              });
+            }
             this.successmsg = "Item added";
 
             
@@ -280,6 +281,7 @@ export default {
       this.editmode=false;
     },
     fileChange(fileList) {
+      this.files = new FormData();
       this.files.append("file", fileList[0], fileList[0].name);
     }
   },
