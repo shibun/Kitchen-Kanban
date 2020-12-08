@@ -112,7 +112,7 @@
     import MessageError from "@/components/MessageError.vue";
     export default {
         name: 'NewOrder',
-        props: ['showform'],
+        props: ['isAddUser'],
         components: {
             MessageError,
             MessageSuccess
@@ -163,13 +163,14 @@
         },
         created() {
             console.log('create method called');
-            this.showneworderform = this.$props.showform;
+            this.showneworderform = this.$props.isAddUser;
             console.log('showneworderform status', this.showneworderform);
             this.getItems();
         },
         methods: {
             hideForm() {
-                this.showneworderform = false;
+                this.$props.isAddOrder = false;
+                 this.showneworderform = false;
             },
             getItems() {
                 (this.successmsg = false),

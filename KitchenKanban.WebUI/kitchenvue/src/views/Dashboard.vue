@@ -25,7 +25,11 @@
                 <span class="order-count" >{{neworders.orderCount || 0 }}</span>
               </div>
               <div class="float-right">
+<<<<<<< HEAD
                 <button class="add-order" @click="showForm ">+</button>
+=======
+                <button class="add-order" @click="showform">+</button>
+>>>>>>> ff94e320ad1678edbca5a021202451c73e0b5d77
               </div>
               <div class="clearfix"></div>
             </div>
@@ -484,7 +488,7 @@
       </div>
     </section>
     <div class="clearfix"></div>
-    <NewOrder :showform="true" v-if="isShowForm" />
+    <NewOrder :isAddOrder.sync="isAddOrder" />
   </div>
 </template>
 <script>
@@ -516,7 +520,11 @@ export default {
       readyorders: [],
       successmsg: "",
       errormsg: "",
+<<<<<<< HEAD
       isShowForm: true,
+=======
+      isAddOrder: false,
+>>>>>>> ff94e320ad1678edbca5a021202451c73e0b5d77
       orderdetails: {},
       editorder: null,
 
@@ -531,8 +539,14 @@ export default {
   },
   methods: {
     showForm() {
+<<<<<<< HEAD
       this.isShowForm = true;
       console.log('showForm');
+=======
+      console.log("showForm method called");
+      this.isAddOrder = true;
+      console.log(this.isAddOrder)
+>>>>>>> ff94e320ad1678edbca5a021202451c73e0b5d77
     },
     getKanboard() {
       this.successmsg = "";
