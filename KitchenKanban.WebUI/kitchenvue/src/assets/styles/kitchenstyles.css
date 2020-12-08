@@ -519,3 +519,86 @@ section {
 {
     color:#ff0000;
 }
+
+.report-tbl
+{
+    width:100%;
+    margin:auto;
+}
+
+.report-tbl th, .report-tbl td
+{
+    border:1px solid #ccc;
+    padding:8px;
+}
+
+.report-tbl th
+{
+    background-color:#dbece8;
+    font-weight:normal;
+}
+
+.top30
+{
+    margin-top:30px;
+}
+
+.current-date {
+    font-size: 18px;
+    line-height: 35px;
+}
+
+.order-dtls {
+    font-size: 15px;
+    margin-top: 40px;
+    font-weight: bold;
+}
+
+button:focus, button:active, button:visited, button:link
+{
+    outline:none;
+}
+
+.cancelled-order-status
+{
+    color:#ff0000;
+}
+
+.custom-btl-row:hover {
+    background-color: #eaeaea;
+}
+
+.tkt-left-btn
+{
+    margin-right:10px;
+}
+
+.dropup
+{
+    display:inline-block;
+}
+
+.move-order-btn {
+    background-color: #d1cde8;
+    border: 0px;
+    border-radius: 4px;
+    padding: 2px 8px;
+    line-height: 22px;
+    font-size: 11px;
+    outline: none;
+}
+
+.move-order-btn:hover
+{
+    background-color:#9b95bb;
+}
+
+.dropup .dropdown-menu, .navbar-fixed-bottom .dropdown .dropdown-menu
+{
+    margin-bottom:-2px!important;
+}
+
+.dropdown-menu > li > a {
+    padding: 6px 20px;
+    font-size:12px;
+}

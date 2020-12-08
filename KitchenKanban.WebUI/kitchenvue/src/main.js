@@ -6,10 +6,10 @@ import './assets/styles/bootstrap.css';
 
 import 'jquery/src/jquery.js'
 //import './assets/js/jquery.min.js'
-//window.$ = window.jQuery = require('jquery');
-const { $, jQuery } = require('jquery');
-global.$ = $;
-global.jQuery = jQuery;
+window.$ = window.jQuery = require('jquery');
+//const { $, jQuery } = require('jquery');
+//global.$ = $;
+//global.jQuery = jQuery;
 import './assets/js/bootstrap.min.js'
 
 
@@ -21,7 +21,7 @@ import router from './router/router'
 import store from './store/store'
 
 import axios from 'axios'
-
+import moment from 'moment';
 
 Vue.prototype.$http = axios;
 
@@ -33,6 +33,17 @@ if (token) {
 }
 
 Vue.config.productionTip = false
+
+Vue.filter('formatDate', function(value) {
+  if (value) {
+      return moment(String(value)).format('MM/DD/YYYY hh:mm')
+  }
+});
+Vue.filter('formatTime', function(value) {
+  if (value) {
+      return moment(String(value)).format('hh:mm a')
+  }
+});
 
 new Vue({
   router,

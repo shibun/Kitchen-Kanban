@@ -98,8 +98,10 @@ namespace KitchenKanban.BusinessServices
                     OrderId = x.OrderId,
                     OrderLineId = x.OrderLineId,
                     OrderQuantity = x.OrderQuantity,
-                    PreparedById = x.PreparedById
-                }).ToList());
+                    PreparedById = x.PreparedById,
+                    ItemName = _databaseContext.Items.Find(x.ItemId).ItemName,
+                    ItemCharge= _databaseContext.Items.Find(x.ItemId).ItemCharge
+                }).ToList()) ;
 
                 return result;
             }
