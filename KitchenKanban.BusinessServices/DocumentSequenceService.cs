@@ -33,8 +33,8 @@ namespace KitchenKanban.BusinessServices
                 _databaseContext.SaveChanges();
 
                 string zeroAppender = "D" + documentSequence.SequenceLength;
-                string monthPrefix = currentDate.Year.ToString() + currentDate.Month.ToString("D2");
-                string documentNumber = documentSequence.DocumentPrefix + monthPrefix + "-" + currentDate.Day.ToString("D2") + runningSequence.ToString(zeroAppender);
+                string monthPrefix = currentDate.Day.ToString("D2") + currentDate.Month.ToString("D2") + currentDate.Year.ToString();
+                string documentNumber = documentSequence.DocumentPrefix + monthPrefix + "-" +  runningSequence.ToString(zeroAppender);
 
                 return documentNumber;
             }

@@ -2,12 +2,14 @@
 using KitchenKanban.DataServices.Context;
 using KitchenKanban.DataServices.UserInfo;
 using KitchenKanban.Models;
+using KitchenKanban.Models.Enums;
 using KitchenKanban.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using static KitchenKanban.Models.Enums.DocumentEnum;
+using static KitchenKanban.Models.Enums.ImageEnum;
 
 namespace KitchenKanban.BusinessServices
 {
@@ -24,9 +26,57 @@ namespace KitchenKanban.BusinessServices
             _databaseContext = _scope.ServiceProvider.GetRequiredService<KitchenKanbanDB>();
         }
 
-        public long Create(Image input)
+        public string Create(ImageViewModel input)
         {
-            throw new NotImplementedException();
+            var newImage = new Image()
+            {
+                ImageId = Guid.NewGuid().ToString(),
+                ImageContent = input.ImageContent,
+                Length = input.Length,
+                ImageType = input.ImageType,
+                ParentId = input.ParentId,
+                CreatedBy = _userInfo.UserId,
+                CreatedOn = DateTime.Now
+            };
+
+            _databaseContext.Images.Add(newImage);
+            _databaseContext.SaveChanges();
+
+            return newImage.ImageId;
+        }
+
+        public string CreateWithReference(ImageViewModel input, string referenceId, FileType fileType)
+        {
+            var imageId = Create(input);
+            switch (fileType)
+            {
+                case FileType.UserImage:
+                    var user = _databaseContext.Users.Where(x => x.UserId == referenceId).FirstOrDefault();
+                    if(user != null)
+                    {
+                        user.ImageId = imageId;
+                        user.UpdatedBy = _userInfo.UserId;
+                        user.UpdatedOn = DateTime.Now;
+                        _databaseContext.Users.Update(user);
+                        _databaseContext.SaveChanges();
+                    }
+                    break;
+                case FileType.ItemImage:
+                    var item = _databaseContext.Items.Where(x => x.ItemId == referenceId).FirstOrDefault();
+                    if (item != null)
+                    {
+                        item.ImageId = imageId;
+                        item.UpdatedBy = _userInfo.UserId;
+                        item.UpdatedOn = DateTime.Now;
+                        _databaseContext.Items.Update(item);
+                        _databaseContext.SaveChanges();
+                    }
+                    break;
+                default:
+                    break;
+            }
+            
+            return imageId;
         }
 
         public bool Delete(string imageId)
@@ -34,12 +84,36 @@ namespace KitchenKanban.BusinessServices
             throw new NotImplementedException();
         }
 
-        public Image GetImageById(string imageId)
+        public byte[] GetImage(string imageId, ImageType imageType)
+        {
+            switch (imageType)
+            {
+                case ImageType.Original:
+                    var originalImage = _databaseContext.Images.Where(x => x.ImageId == imageId && x.ImageType == ImageType.Original).FirstOrDefault();
+                    if(originalImage != null)
+                    {
+                        return originalImage.ImageContent;
+                    }
+                    break;
+                case ImageType.Icon:
+                    var iconImage = _databaseContext.Images.Where(x => x.ParentId == imageId && x.ImageType == ImageType.Icon).FirstOrDefault();
+                    if (iconImage != null)
+                    {
+                        return iconImage.ImageContent;
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+            return null;
+        }
+
+        public ImageViewModel GetImageById(string imageId)
         {
             throw new NotImplementedException();
         }
 
-        public bool Update(Image input)
+        public bool Update(ImageViewModel input)
         {
             throw new NotImplementedException();
         }

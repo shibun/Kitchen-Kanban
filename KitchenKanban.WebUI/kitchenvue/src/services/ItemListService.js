@@ -21,5 +21,18 @@ export default {
     
     
     return axios.delete('/Item',ItemId)
+  },
+  uploadfile(files, referenceId, fileType)
+  {
+    return axios.post(
+        '/Image?referenceId=' + referenceId + '&fileType=' + fileType,
+        files,
+        )  
+        .then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+      }); 
   }
 }

@@ -1,12 +1,16 @@
-﻿using KitchenKanban.Models;
+﻿using KitchenKanban.ViewModels;
+using static KitchenKanban.Models.Enums.DocumentEnum;
+using static KitchenKanban.Models.Enums.ImageEnum;
 
 namespace KitchenKanban.BusinessServices.Interfaces
 {
     public interface IImageService
     {
-        Image GetImageById(string imageId);
-        long Create(Image input);
-        bool Update(Image input);
+        ImageViewModel GetImageById(string imageId);
+        string CreateWithReference(ImageViewModel input, string referenceId, FileType fileType);
+        byte[] GetImage(string imageId, ImageType imageType);
+        string Create(ImageViewModel input);
+        bool Update(ImageViewModel input);
         bool Delete(string imageId);
     }
 }

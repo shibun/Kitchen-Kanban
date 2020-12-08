@@ -6,5 +6,11 @@
         {
             Order = 1
         }
+
+        public enum FileType : int
+        {
+            UserImage = 1,
+            ItemImage = 2
+        }
     }
 }

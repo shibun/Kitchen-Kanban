@@ -17,7 +17,8 @@ namespace KitchenKanban.WebAPI.Controllers
             this._orderService = orderService;
         }
 
-        [HttpGet("{orderId}")]
+        //[HttpGet("{orderId}")]
+        [Route("GetOrderById")]
         public IActionResult GetOrderById(string orderId)
         {
             if (!String.IsNullOrEmpty(orderId))
