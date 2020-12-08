@@ -174,7 +174,8 @@ export default {
       }
       KitchenCounterService.post(this.Kitchen)
         .then((response) => {
-          (this.successmsg = "Counter added"), this.clearKCounter();
+          this.successmsg = "Counter added",
+           this.clearKCounter();
         })
         .catch((err) => {
           (this.errormsg = "error occured"), console.log(err.message);
@@ -195,6 +196,7 @@ export default {
         .then((response) => {
           this.clearKCounter(),
             (this.successmsg = "Counter updated"),
+             (this.editmode = false),
             console.log("Kitchen counter updated", response.data);
         })
         .catch((err) => {
@@ -218,7 +220,11 @@ export default {
       this.iserror = false;
     },
     clearKCounter: function() {
-      (this.CounterNumber = ""), (this.isShowForm = false);
+      this.Kitchen={
+        CounterNumber :"",
+      },     
+      this.isShowForm = false,
+      this.editmode=false;
     },
   },
 };

@@ -32,14 +32,10 @@
                 {{ data.itemCharge | toFixed | toUSD }}
               </td>
               <td class="text-center">
-                <button
-                  class="trans-btn"
-                  @click="edititem(data)"
-                  data-toggle="modal"
-                  data-target="#addItem"
-                >
-                  <img src="../assets/images/edit.png" />
-                </button>
+                <button class="trans-btn" @click="edititem(data)">
+            <img src="../assets/images/edit.png" />
+          </button>
+                 
               </td>
               <td class="text-center">
                 <button class="trans-btn" @click="deleteItem(data.itemId)">
@@ -170,7 +166,7 @@ export default {
       successmsg: "",
       errormsg: "",
       editmode: false,
-      isShowForm: true,
+      isShowForm: false,
     };
   },
   filters: {
@@ -211,15 +207,17 @@ export default {
       }
       ItemListService.post(this.Item)
         .then((response) => {
+            this.clearItem(),
           console.log("response", response.data),
-            (this.successmsg = "Item added"),
-            this.clearItem();
+            this.successmsg = "Item added";
+            
         })
         .catch((err) => {
           (this.errormsg = "error occured"), console.log(err.message);
         });
     },
     edititem: function(data) {
+        this.showForm(),
       (this.editmode = true),
         console.log("datais", data),
         (this.Item.ItemName = data.itemName),
@@ -239,8 +237,9 @@ export default {
         ItemListService.patch(this.Item)
           .then((response) => {
             console.log("response", response.data),
-              (this.successmsg = "Item updated");
-            (this.editmode = false), this.clearItem();
+              this.successmsg = "Item updated",
+            this.editmode = false,
+             this.clearItem();
           })
           .catch((err) => {
             (this.errormsg = "error occured"), console.log(err.message);
@@ -266,7 +265,8 @@ export default {
         ItemCharge: 0,
         ItemName: "",
       };
-      this.isShowForm = false;
+      this.isShowForm = false,
+      this.editmode=false;
     },
   },
 };
