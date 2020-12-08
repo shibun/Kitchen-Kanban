@@ -26,7 +26,7 @@ export default {
   methods:{
     onContinue:function(){
       console.log("onContinue called");
-     this.$emit("on-error");
+       this.$emit("on-error");
     }
   },
   watch: {

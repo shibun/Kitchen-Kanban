@@ -7,7 +7,7 @@
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li><a><img class="user-img" src="../assets/images/user_img.png"/> Pramod Karkera</a></li>
-                <li><a @click="logout" >Sign Out</a></li>
+                <li><a href="" @click="logout" ><i class="glyphicon glyphicon-log-out"></i></a></li>
             </ul>
         </div>
     </nav>
@@ -43,9 +43,4 @@ export default {
 }
 </script>
 <style scoped>
-.header{
-    background-color: black;
-    color: blanchedalmond;
-    text-align: center;
-}
 </style>

@@ -14,12 +14,12 @@ export default {
   },
     patch(Item){
     
-    const article = { ItemName:Item.ItemName,ItemCharge:parseFloat(Item.ItemCharge) };
-    return axios.post('/Item',article)
+    const article = { ItemId:Item.ItemId,ItemName:Item.ItemName,ItemCharge:parseFloat(Item.ItemCharge) };
+    return axios.put('/Item',article)
   },
-   delete(itemid){
+   deleteitem(ItemId){
     
     
-    return null
+    return axios.delete('/Item',ItemId)
   }
 }
