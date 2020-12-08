@@ -59,5 +59,13 @@ namespace KitchenKanban.WebAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        [Route("OrderReport")]
+        public IActionResult OrderReport()
+        {
+            var result = _orderService.GetAllOrders();
+            return Ok(result);            
+        }
     }
 }
