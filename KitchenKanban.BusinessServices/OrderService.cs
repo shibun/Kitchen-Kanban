@@ -98,13 +98,15 @@ namespace KitchenKanban.BusinessServices
                     OrderId = x.OrderId,
                     OrderLineId = x.OrderLineId,
                     OrderQuantity = x.OrderQuantity,
-                    PreparedById = x.PreparedById
-                }).ToList());
+                    PreparedById = x.PreparedById,
+                    ItemName = _databaseContext.Items.Find(x.ItemId).ItemName,
+                    ItemCharge= _databaseContext.Items.Find(x.ItemId).ItemCharge
+                }).ToList()) ;
 
                 return result;
             }
             return null;
-        }
+        }        
 
         public bool ChangeOrderStatus(OrderStatusInputViewModel input)
         {
@@ -197,6 +199,25 @@ namespace KitchenKanban.BusinessServices
             {
                 throw new Exception("Order not found");
             }
+        }
+
+        public List<OrderViewModel> GetAllOrders()
+        {
+            var orders = _databaseContext.Orders.Include(x => x.OrderLines).ToList();
+            return orders.Select(x => new OrderViewModel()
+            {
+                CancellationReason = x.CancellationReason,
+                CustomerContactNumber = x.CustomerContactNumber,
+                CustomerName = x.CustomerName,
+                NoOfItemsInOrder = x.OrderLines.Count(),
+                OrderAmount = x.OrderAmount,
+                OrderDate = x.OrderDate,
+                OrderId = x.OrderId,
+                OrderNumber = x.OrderNumber,
+                OrderStatus = x.OrderStatus,
+                OrderTakenBy = x.OrderTakenBy,
+                OrderType = x.OrderType
+            }).ToList();
         }
     }
 }
