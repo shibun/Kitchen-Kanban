@@ -19,7 +19,7 @@
                         <div class="kb-column-header">
                             <div class="float-left">New Order <span class="order-count">{{neworders.orderCount}}</span></div>
                             <div class="float-right">
-                                <button class="add-order">+</button>
+                             <button class="add-order" @click="showForm">+</button>
                             </div>
                             <div class="clearfix"></div>
                         </div>
@@ -214,7 +214,7 @@
             </div>
         </section>
     <div class="clearfix"></div>
-    <NewOrder :showform="true" v-if="isShowForm" />
+    <NewOrder :isAddOrder.sync="isAddOrder" />
   </div>
 </template>
 <script>
@@ -244,14 +244,15 @@ export default {
         readyorders:[],
         successmsg: "",
         errormsg: "",
-        isShowForm: false,
+        isAddOrder: false,
         showorderdetails:false,
     };
   },
   methods: {
     showForm() {
       console.log("showForm method called");
-      this.isShowForm = true;
+      this.isAddOrder = true;
+      console.log(this.isAddOrder)
     },
     getKanboard() {
       this.successmsg = "";
