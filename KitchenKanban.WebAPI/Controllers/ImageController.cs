@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
 using System.Net.Http;
@@ -95,7 +96,7 @@ namespace KitchenKanban.WebAPI.Controllers
         {
             using (var memoryStream = new MemoryStream())
             {
-                imageIn.Save(memoryStream, imageIn.RawFormat);
+                imageIn.Save(memoryStream, ImageFormat.Png);
                 return memoryStream.ToArray();
             }
         }
