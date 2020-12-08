@@ -98,7 +98,8 @@
                   </div>
                 </div>
                 <div class="col-xs-8">
-                  <button class="user-img-upload-btn">Upload</button>
+                  <input class="user-img-upload-btn" type="file" name="file" multiple="" v-on:change="fileChange($event.target.files)"/>
+                  <!-- <button class="user-img-upload-btn" >Upload</button> -->
                 </div>
               </div>
             </div>
@@ -160,7 +161,7 @@ export default {
         ItemName: "",
         ItemCharge: 0,
       },
-
+      files: "",
       Items: [],
       itemsnotfound: false,
       successmsg: "",
@@ -196,7 +197,7 @@ export default {
         });
     },
     addItem: function() {
-      //console.log('item is in add', this.Item),
+      console.log('item is in add', this.files);
       if (!this.Item.ItemName) {
         this.errormsg = "Please enter Item Name";
         return;
@@ -207,9 +208,20 @@ export default {
       }
       ItemListService.post(this.Item)
         .then((response) => {
-            this.clearItem(),
-          console.log("response", response.data),
+            this.clearItem();
+            if(this.files != '')
+            {
+              const files = this.files;
+              ItemListService.uploadfile(files, response.data.itemId, 2)
+                .then((response) => {            
+                  console.log("response", response);
+                })
+              .catch((err) => {
+                (this.errormsg = "error occured"), console.log(err.message);
+              });
+            }
             this.successmsg = "Item added";
+
             
         })
         .catch((err) => {
@@ -268,6 +280,10 @@ export default {
       this.isShowForm = false,
       this.editmode=false;
     },
+    fileChange(fileList) {
+      this.files = new FormData();
+      this.files.append("file", fileList[0], fileList[0].name);
+    }
   },
 };
 </script>

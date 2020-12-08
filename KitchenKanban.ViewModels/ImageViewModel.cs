@@ -1,8 +1,8 @@
 ﻿using static KitchenKanban.Models.Enums.ImageEnum;
 
-namespace KitchenKanban.Models
+namespace KitchenKanban.ViewModels
 {
-    public class Image : BaseModel
+    public class ImageViewModel
     {
         public string ImageId { get; set; }
         public byte[] ImageContent { get; set; }
