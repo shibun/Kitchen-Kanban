@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Drawing;
 using System.IO;
+using System.Net;
+using System.Net.Http;
 using static KitchenKanban.Models.Enums.DocumentEnum;
 using static KitchenKanban.Models.Enums.ImageEnum;
 
@@ -66,6 +68,14 @@ namespace KitchenKanban.WebAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetImage(string imageId, ImageType imageType = ImageType.Icon)
+        {
+
+            var result = new HttpResponseMessage(HttpStatusCode.BadRequest);
+            return result;
         }
 
         private byte[] ImageToByteArray(Image imageIn)
