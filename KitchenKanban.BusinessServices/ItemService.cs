@@ -63,6 +63,7 @@ namespace KitchenKanban.BusinessServices
 
         public List<ItemViewModel> GetItems()
         {
+            List<ItemViewModel> output = new List<ItemViewModel>();
             var result = _databaseContext.Items;
             foreach (var item in result)
             {
@@ -79,15 +80,10 @@ namespace KitchenKanban.BusinessServices
                     var image = _imageService.GetImage(item.ImageId, ImageType.Icon);
                     itemResult.ImageContent = image.ImageContent;
                 }
+
+                output.Add(itemResult);
             }
-            return result.Select(item => new ItemViewModel()
-            {
-                ItemId = item.ItemId,
-                ItemName = item.ItemName,
-                ItemCharge = item.ItemCharge,
-                ImageId = item.ImageId,
-                ImageContent = (item.ImageId ==null ? null : item.Image.ImageContent)                
-            }).ToList();
+            return output;
         }
 
         public bool Update(ItemViewModel input)

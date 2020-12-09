@@ -126,7 +126,8 @@ namespace KitchenKanban.UnitTests
                 UserId = "95632324-a9f8-44ba-9b3d-4c90dd5d9650",
                 UserType = Models.Enums.UserEnum.UserType.Administrator
             };
-            IUserService userService = new UserService(serviceProvider, userInfo);
+            IImageService imageService = new ImageService(serviceProvider, userInfo);
+            IUserService userService = new UserService(serviceProvider, imageService, userInfo);
             var input = new UserInputViewModel()
             {
                 FirstName = "Peggy",
@@ -150,7 +151,8 @@ namespace KitchenKanban.UnitTests
                 UserId = "95632324-a9f8-44ba-9b3d-4c90dd5d9650",
                 UserType = Models.Enums.UserEnum.UserType.Administrator
             };
-            IUserService userService = new UserService(serviceProvider, userInfo);
+            IImageService imageService = new ImageService(serviceProvider, userInfo);
+            IUserService userService = new UserService(serviceProvider, imageService, userInfo);
             var input = new UserInputViewModel()
             {
                 FirstName = "Gordon",
@@ -174,7 +176,8 @@ namespace KitchenKanban.UnitTests
                 UserId = "95632324-a9f8-44ba-9b3d-4c90dd5d9650",
                 UserType = Models.Enums.UserEnum.UserType.Administrator
             };
-            IUserService userService = new UserService(serviceProvider, userInfo);
+            IImageService imageService = new ImageService(serviceProvider, userInfo);
+            IUserService userService = new UserService(serviceProvider, imageService, userInfo);
             var input = new UserInputViewModel()
             {
                 FirstName = "Richard",

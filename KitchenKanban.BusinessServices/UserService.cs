@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static KitchenKanban.Models.Enums.ImageEnum;
 
 namespace KitchenKanban.BusinessServices
 {
@@ -15,12 +16,14 @@ namespace KitchenKanban.BusinessServices
         private readonly IServiceScope _scope;
         private readonly KitchenKanbanDB _databaseContext;
         private IUserInfo _userInfo;
+        private readonly IImageService _imageService;
 
-        public UserService(IServiceProvider services, IUserInfo userInfo)
+        public UserService(IServiceProvider services, IImageService imageService, IUserInfo userInfo)
         {
             _userInfo = userInfo;
             _scope = services.CreateScope();
             _databaseContext = _scope.ServiceProvider.GetRequiredService<KitchenKanbanDB>();
+            _imageService = imageService;
         }
 
         public UserViewModel Authenticate(AuthenticateRequest input)
@@ -85,7 +88,28 @@ namespace KitchenKanban.BusinessServices
 
         public List<UserViewModel> GetUsers()
         {
+            List<UserViewModel> output = new List<UserViewModel>();
             var result = _databaseContext.Users;
+            foreach (var user in result)
+            {
+                var itemResult = new UserViewModel()
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    UserId = user.UserId,
+                    UserName = user.UserName,
+                    UserType = user.UserType,
+                    ImageId = user.ImageId
+                };
+
+                if (user.ImageId != null)
+                {
+                    var image = _imageService.GetImage(user.ImageId, ImageType.Icon);
+                    itemResult.ImageContent = image.ImageContent;
+                }
+
+                output.Add(itemResult);
+            }
             return result.Select(user => new UserViewModel()
             {
                 FirstName = user.FirstName,
