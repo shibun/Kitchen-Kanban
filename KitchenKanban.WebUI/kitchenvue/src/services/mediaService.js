@@ -5,7 +5,7 @@ export default {
     name: 'MediaService';
   getImage(imageId) {
     //return Vue.http.get('/api/posts');
-     const article = { imageId:imageId);
+     const article = { imageId:imageId };
     return axios.get('/Image',article).then(function (response) {
           console.log(response);
         })
