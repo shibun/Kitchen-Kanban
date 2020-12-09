@@ -161,7 +161,7 @@ export default {
          this.$emit("add-user",this.user,this.files);
     },
     updateUser(){
-      this.$emit("update-user",this.user);
+      this.$emit("update-user",this.user,this.files);
     },
     clearForm() {
        this.user = {

@@ -135,7 +135,7 @@ export default {
         .then(
           (response) => 
             {
-    if(this.files != '')
+        if(this.files != '')
             {
               const files = this.files;
               MediarelatedService.uploadfile(files, response.data.userId, 1)
@@ -164,6 +164,17 @@ export default {
         .updateUser(data)
         .then(
           (response) => {
+             if(this.files != '')
+            {
+              const files = this.files;
+              MediarelatedService.uploadfile(files, data.userId, 1)
+                .then((response) => {            
+                  console.log("response", response);
+                })
+              .catch((err) => {
+                (this.errormsg = "error occured"), console.log(err.message);
+              });
+            }
             this.successmsg = "user updated";
             this.isAddUser = false
             }
