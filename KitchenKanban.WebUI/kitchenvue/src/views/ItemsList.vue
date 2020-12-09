@@ -25,7 +25,7 @@
             >
               <td class="text-center">{{ index + 1 }}</td>
               <td class="text-center">
-                <img src="../assets/images/pizza.png" />
+                <img v-bind:src="getItemImage(data.imageId)" />
               </td>
               <td>{{ data.itemName }}</td>
               <td class="text-right">
@@ -94,7 +94,8 @@
                 <div class="col-xs-4">
                   <div class="form-group">
                     <label>Item Image</label>
-                    <img src="../assets/images/no_item_img.png" />
+                    <img src="../assets/images/no_item_img.png"  v-if="imagedata.length<=0">
+                    <img :src="imagedata" v-if="imagedata.length>0" />
                   </div>
                 </div>
                 <div class="col-xs-8">
@@ -145,6 +146,7 @@
 import ItemListService from "../services/ItemListService";
 import MessageSuccess from "@/components/MessageSuccess.vue";
 import MessageError from "@/components/MessageError.vue";
+//import MediaService from "../services/MediaService";
 export default {
   name: "ItemList",
   created() {
@@ -168,6 +170,7 @@ export default {
       errormsg: "",
       editmode: false,
       isShowForm: false,
+      imagedata:"",
     };
   },
   filters: {
@@ -190,7 +193,8 @@ export default {
       (this.successmsg = false),
         ItemListService.get().then((response) => {
           if (response.data.length > 0) {
-            (this.Items = response.data), (this.itemsnotfound = false);
+            (this.Items = response.data);
+             (this.itemsnotfound = false);
           } else {
             this.itemsnotfound = true;
           }
@@ -279,10 +283,20 @@ export default {
       };
       this.isShowForm = false,
       this.editmode=false;
+      this.imagedata="";
     },
-    fileChange(fileList) {
-      this.files = new FormData();
+    fileChange(fileList) {      
+      var reader = new FileReader();                
+                reader.onload = (e) => {                    
+                    this.imagedata = e.target.result;
+                }
+        reader.readAsDataURL(fileList[0]);
+      this.files = new FormData();    
       this.files.append("file", fileList[0], fileList[0].name);
+    },
+    getItemImage:function(imageId){
+      return ItemListService.getImage(imageId);
+      
     }
   },
 };
