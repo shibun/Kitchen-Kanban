@@ -9,4 +9,7 @@ export default {
         return axios.get('/Order/GetOrderById',{ 
             params: { orderId: id}});
     },
+    updateOrderStatus(data) {
+        return axios.post('/Order/OrderStatus',data);
+    },
   }
