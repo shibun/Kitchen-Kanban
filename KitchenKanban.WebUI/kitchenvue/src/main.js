@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
-
-import './assets/styles/kitchenstyles.css';
 import './assets/styles/bootstrap.css';
+import './assets/styles/kitchenstyles.css';
+
 
 import 'jquery/src/jquery.js'
 //import './assets/js/jquery.min.js'

@@ -95,12 +95,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default left-btn" data-dismiss="modal" @click="clearOrder">Cancel</button>
+                    <button type="button" class="btn btn-default left-btn" data-dismiss="modal" @click="cancelForm">Cancel</button>
                     <button type="button" class="btn btn-active" data-dismiss="modal" @click="addOrder">Add</button>
                 </div>
             </div>
         </div>
-        <MessageSuccess :msg="successmsg" v-on:on-success="getItems" />
+        <MessageSuccess :msg="successmsg" v-on:on-success="hideForm" />
         <MessageError :msg="errormsg" v-on:on-error="onError" />
     </div>
 </template>
@@ -161,15 +161,14 @@
             };
         },
         created() {
-            console.log('create method called');
             this.showneworderform = this.isAddOrder;
-            console.log('showneworderform status', this.showneworderform);
             this.getItems();
         },
         watch:{
             'isAddOrder'(){
-                console.log('watch new');
+                this.successmsg = "";
                  this.showneworderform = this.isAddOrder;
+                 console.log('watch',this.showneworderform);
             }
             },
         methods: {
@@ -189,8 +188,7 @@
                 this.iserror = false;
             },
             selectionChanged: function (e) {
-                console.log("new value = " + e.target.value);              
-
+               
                 this.Items.forEach((value, index) => {
                     if (value.itemName === e.target.value) {
                             this.OrderLine = {},
@@ -249,9 +247,11 @@
                 console.log(this.Orderdetail);
                 this.Orderdetail.Order.OrderType = parseInt(this.Orderdetail.Order.OrderType);
                 OrderService.post(this.Orderdetail).then((response) => {
-                    this.clearOrder();
-                    console.log("response", response.data);
+                    
                     this.successmsg = "Order created";
+                    this.$emit('order-update')
+                    this.clearOrder();
+                    //this.$emit('update:isAddOrder',false)
                     })
                     .catch((err) => {
                         (this.errormsg = "error occured"), console.log(err.message);
@@ -267,7 +267,11 @@
                 });
 
                 this.totalamount = this.Orderdetail.Order.OrderAmount;
-         },   
+         },
+        cancelForm(){
+            this.clearOrder();
+            this.hideForm();
+        },
         clearOrder: function () {
                 this.Orderdetail.Order = {
                     OrderId: "",
@@ -297,7 +301,6 @@
                 };
                 this.list = [];
                 this.selecteditem = '';
-                this.hideForm();
             }
         }
 
