@@ -22,7 +22,10 @@
             <tr v-bind:key="data.userId" v-for="(data, index) in users">
               <td class="text-center">{{ index + 1 }}</td>
               <td class="text-center">
-                <img src="../assets/images/user_img.png"  class="display-user-img" />
+                <img
+                  src="../assets/images/user_img.png"
+                  class="display-user-img"
+                />
                 <!-- <img v-bind:src="'data:image/jpeg;base64,'+ data.imageContent" v-if="data.imageId!=null" class="display-user-img"/> -->
               </td>
               <td>{{ data.firstName }} {{ data.lastName }}</td>
@@ -49,7 +52,13 @@
       </div>
     </section>
     <div class="clearfix"></div>
-    <AddUser :isAddUser.sync="isAddUser" v-bind:edituser="edituser" v-on:clear-add-user="clearAddForm" v-on:add-user="addUser" />
+    <AddUser
+      :isAddUser.sync="isAddUser"
+      v-bind:edituser="edituser"
+      v-on:clear-add-user="clearAddForm"
+      v-on:add-user="addUser"
+      v-on:update-user="updateUser"
+    />
     <MessageSuccess :msg="successmsg" v-on:on-success="getUsers" />
     <MessageError :msg="errormsg" v-on:on-error="onError" />
   </div>
@@ -71,7 +80,7 @@ export default {
       errormsg: "",
       users: null,
       isAddUser: false,
-      edituser:{},
+      edituser: {},
       userTypes: [
         { id: 1, value: "Administrator" },
         { id: 2, value: "FrontDesk" },
@@ -80,7 +89,7 @@ export default {
         { id: 5, value: "Service" },
       ],
       user: {
-        userId: 0,
+        userId: "",
         firstName: "",
         lastName: "",
         userName: "",
@@ -92,7 +101,8 @@ export default {
   },
   components: {
     MessageSuccess,
-    MessageError,AddUser
+    MessageError,
+    AddUser,
   },
   created() {
     this.getUsers();
@@ -105,7 +115,8 @@ export default {
         .getUsers()
         .then((response) => (this.users = response.data))
         .catch((err) => {
-          (this.errormsg = err.messge), console.log(err.message);
+          this.errormsg = err.messge;
+          console.log(err.message);
         });
     },
     showAddUser() {
@@ -121,8 +132,10 @@ export default {
       
       userService
         .addUser(data)
-        .then((response) => {
-           if(this.files != '')
+        .then(
+          (response) => 
+            {
+    if(this.files != '')
             {
               const files = this.files;
               MediarelatedService.uploadfile(files, response.data.userId, 1)
@@ -133,14 +146,58 @@ export default {
                 (this.errormsg = "error occured"), console.log(err.message);
               });
             }
-          this.successmsg = "user added";
-        this.isAddUser=false}
+         
+    this.successmsg = "user added";
+    this.isAddUser = false;
+          }
         )
         .catch((err) => {
           (this.errormsg = err.messge), console.log(err.message);
         });
     },
-    editUser: function (data) {
+    updateUser(data) {
+      this.errormsg = "";
+      if(!this.validateUser(data,false)){
+        return;
+      }
+      userService
+        .updateUser(data)
+        .then(
+          (response) => {
+            this.successmsg = "user updated";
+            this.isAddUser = false
+            }
+        )
+        .catch((err) => {
+          (this.errormsg = err.messge), console.log(err.message);
+        });
+    },
+    validateUser(data,isadd) {
+      //var isValid=true;
+      if (!data.firstName) {
+        this.errormsg = "Please enter first name";
+         return false;
+      }
+      if (!data.lastName) {
+        this.errormsg = this.errormsg + "Please enter last name";
+         return false;
+      }
+      if (!data.userType) {
+        this.errormsg = this.errormsg + "Please select user type";
+          return false;
+      }
+       if (!data.userName) {
+        this.errormsg = this.errormsg + "Please enter user name";
+          return false;
+      }
+       if (isadd && !data.password ) {
+        this.errormsg = this.errormsg + "Please enter password";
+          return false;
+      }
+      return true;
+      
+    },
+    editUser: function(data) {
       console.log(data);
       this.edituser = data;
       this.isAddUser = true;
@@ -149,10 +206,9 @@ export default {
       console.log("onError parent");
       this.errormsg = "";
     },
-    clearAddForm(){
-       this.isAddUser = false;
-     
-    }
+    clearAddForm() {
+      this.isAddUser = false;
+    },
   },
 };
 </script>
