@@ -20,16 +20,18 @@
         <div class="kb-main">
           <div class="kb-column">
             <div class="kb-column-header">
-              <div class="float-left" v-if="neworders">
+              <div class="float-left">
                 New Order
-                <span class="order-count" >{{neworders.orderCount || 0 }}</span>
+                <span class="order-count">{{
+                  (neworders && neworders.orderCount) || 0
+                }}</span>
               </div>
               <div class="float-right">
                 <button class="add-order" @click="showForm">+</button>
               </div>
               <div class="clearfix"></div>
             </div>
-            <div class="ticket-sec">
+            <div class="ticket-sec" v-if="neworders">
               <div
                 id="ordermaindivno"
                 class="ticket-main"
@@ -38,11 +40,11 @@
               >
                 <div
                   class="order-detail"
-                  @click="toggleOrderDetails(order, index,'no')"
+                  @click="toggleOrderDetails(order, index, 'no',neworders.bucketName)"
                 >
                   <div>
                     <div class="float-left">
-                      {{ order.orderId }} [ {{ order.orderDate | formatTime }}]
+                      {{ order.orderNumber.split("-")[1]}} [ {{ order.orderDate | formatTime }}]
                     </div>
                     <div class="float-right" v-if="order.orderType == 1">
                       DineIn
@@ -73,7 +75,7 @@
                         <td class="text-center">Qty</td>
                         <td class="text-center">Price</td>
                       </tr>
-                      <tr 
+                      <tr
                         v-bind:key="index"
                         v-for="(orderline, index) in order.orderLines"
                       >
@@ -96,13 +98,19 @@
                           Move To
                           <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" v-if="order.orderStatus">
                           <li
                             v-bind:key="index"
-                            v-for="(item, index) in orderStatus"
+                            v-for="(item, index) in order.orderStatus"
                             v-bind:value="item.id"
                           >
-                            <a href="#" @click="changeOrderStatus(order.orderId,item.id,'')">{{ item.value }}</a>
+                            <a
+                              href="#"
+                              @click="
+                                changeOrderStatus(order.orderId, item.id, '')
+                              "
+                              >{{ item.value }}</a
+                            >
                           </li>
                         </ul>
                       </div>
@@ -112,7 +120,14 @@
                       >
                         Edit Order
                       </button>
-                      <button class="cancel-order-btn"  @click="changeOrderStatus(order.orderId,7,'Incorrect order')">Cancel Order</button>
+                      <button
+                        class="cancel-order-btn"
+                        @click="
+                          changeOrderStatus(order.orderId, 7, 'Incorrect order')
+                        "
+                      >
+                        Cancel Order
+                      </button>
                     </div>
                     <div class="clearfix"></div>
                   </div>
@@ -122,18 +137,26 @@
           </div>
           <div class="kb-column">
             <div class="kb-column-header">
-              Being Prepared <span class="order-count">0</span>
+              Being Prepared
+              <span class="order-count">{{
+                (beingpreparedorders && beingpreparedorders.rowCount) || 0
+              }}</span>
             </div>
             <div class="ticket-sec" v-if="beingpreparedorders">
-              <div class="ticket-main"
-               id="ordermaindivbp"
-                v-bind:key="bpindex+5"
+              <div
+                class="ticket-main"
+                id="ordermaindivbp"
+                v-bind:key="bpindex + 5"
                 v-for="(bporder, bpindex) in beingpreparedorders.orders"
               >
-                <div class="order-detail"  @click="toggleOrderDetails(bporder, bpindex,'bp')">
-                <div>
+                <div
+                  class="order-detail"
+                  @click="toggleOrderDetails(bporder, bpindex, 'bp',beingpreparedorders.bucketName)"
+                >
+                  <div>
                     <div class="float-left">
-                      {{ bporder.orderId }} [ {{ bporder.orderDate | formatTime }}]
+                      {{ bporder.orderNumber.split("-")[1]}} [
+                      {{ bporder.orderDate | formatTime }}]
                     </div>
                     <div class="float-right" v-if="bporder.orderType == 1">
                       DineIn
@@ -187,13 +210,19 @@
                           Move To
                           <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" v-if="bporder.orderStatus">
                           <li
                             v-bind:key="index"
-                            v-for="(item, index) in orderStatus"
+                            v-for="(item, index) in bporder.orderStatus"
                             v-bind:value="item.id"
                           >
-                            <a href="#" @click="changeOrderStatus(bporder.orderId,item.id,'')">{{ item.value }}</a>
+                            <a
+                              href="#"
+                              @click="
+                                changeOrderStatus(bporder.orderId, item.id, '')
+                              "
+                              >{{ item.value }}</a
+                            >
                           </li>
                         </ul>
                       </div>
@@ -203,7 +232,18 @@
                       >
                         Edit Order
                       </button>
-                      <button class="cancel-order-btn"  @click="changeOrderStatus(bporder.orderId,7,'Incorrect order')">Cancel Order</button>
+                      <button
+                        class="cancel-order-btn"
+                        @click="
+                          changeOrderStatus(
+                            bporder.orderId,
+                            7,
+                            'Incorrect order'
+                          )
+                        "
+                      >
+                        Cancel Order
+                      </button>
                     </div>
                     <div class="clearfix"></div>
                   </div>
@@ -213,19 +253,25 @@
           </div>
           <div class="kb-column">
             <div class="kb-column-header">
-              Prepared <span class="order-count">{{ preparedorders && preparedorders.orderCount || 0}}</span>
+              Prepared
+              <span class="order-count">{{
+                (preparedorders && preparedorders.orderCount) || 0
+              }}</span>
             </div>
             <div class="ticket-sec" v-if="preparedorders">
-              <div class="ticket-main"
-              id="ordermaindivpo"
+              <div
+                class="ticket-main"
+                id="ordermaindivpo"
                 v-bind:key="index"
                 v-for="(order, index) in preparedorders.orders"
               >
-                <div class="order-detail" @click="toggleOrderDetails(order, index,'po')">
-                  
-                 <div>
+                <div
+                  class="order-detail"
+                  @click="toggleOrderDetails(order, index, 'po',preparedorders.bucketName)"
+                >
+                  <div>
                     <div class="float-left">
-                      {{ order.orderId }} [ {{ order.orderDate | formatTime }}]
+                      {{  order.orderNumber.split("-")[1] }} [ {{ order.orderDate | formatTime }}]
                     </div>
                     <div class="float-right" v-if="order.orderType == 1">
                       DineIn
@@ -256,7 +302,7 @@
                         <td class="text-center">Qty</td>
                         <td class="text-center">Price</td>
                       </tr>
-                      <tr 
+                      <tr
                         v-bind:key="index"
                         v-for="(orderline, index) in order.orderLines"
                       >
@@ -279,23 +325,42 @@
                           Move To
                           <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" v-if="order.orderStatus">
                           <li
                             v-bind:key="index"
-                            v-for="(item, index) in orderStatus"
+                            v-for="(item, index) in order.orderStatus"
                             v-bind:value="item.id"
                           >
-                            <a href="#" @click="changeOrderStatus(order.orderId,item.id,'')">{{ item.value }}</a>
+                            <a
+                              href="#"
+                              @click="
+                                changeOrderStatus(order.orderId, item.id, '')
+                              "
+                              >{{ item.value }}</a
+                            >
                           </li>
                         </ul>
                       </div>
-                      <button
+                       <button
+                        class="edit-order-btn"
+                        @click="changeOrderStatus(order.orderId, 6, '')"
+                      >
+                        Deliver
+                      </button>
+                      <button v-if="false"
                         @click="editOrder(order)"
                         class="edit-order-btn tkt-left-btn"
                       >
                         Edit Order
                       </button>
-                      <button class="cancel-order-btn"  @click="changeOrderStatus(order.orderId,7,'Incorrect order')">Cancel Order</button>
+                      <button v-if="false"
+                        class="cancel-order-btn"
+                        @click="
+                          changeOrderStatus(order.orderId, 7, 'Incorrect order')
+                        "
+                      >
+                        Cancel Order
+                      </button>
                     </div>
                     <div class="clearfix"></div>
                   </div>
@@ -305,18 +370,25 @@
           </div>
           <div class="kb-column">
             <div class="kb-column-header">
-              Packing <span class="order-count">{{packingorders && packingorders.orderCount}}</span>
+              Packing
+              <span class="order-count">{{
+                packingorders && packingorders.orderCount || 0
+              }}</span>
             </div>
             <div class="ticket-sec" v-if="packingorders">
-              <div class="ticket-main"
-               id="ordermaindivko"
+              <div
+                class="ticket-main"
+                id="ordermaindivko"
                 v-bind:key="index"
                 v-for="(order, index) in packingorders.orders"
               >
-                <div class="order-detail" @click="toggleOrderDetails(order, index,'ko')">
-              <div>
+                <div
+                  class="order-detail"
+                  @click="toggleOrderDetails(order, index, 'ko',packingorders.bucketName)"
+                >
+                  <div>
                     <div class="float-left">
-                      {{ order.orderId }} [ {{ order.orderDate | formatTime }}]
+                      {{  order.orderNumber.split("-")[1] }} [ {{ order.orderDate | formatTime }}]
                     </div>
                     <div class="float-right" v-if="order.orderType == 1">
                       DineIn
@@ -347,7 +419,7 @@
                         <td class="text-center">Qty</td>
                         <td class="text-center">Price</td>
                       </tr>
-                      <tr 
+                      <tr
                         v-bind:key="index"
                         v-for="(orderline, index) in order.orderLines"
                       >
@@ -370,23 +442,36 @@
                           Move To
                           <span class="caret"></span>
                         </button>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" v-if="order.orderStatus">
                           <li
                             v-bind:key="index"
-                            v-for="(item, index) in orderStatus"
+                            v-for="(item, index) in order.orderStatus"
                             v-bind:value="item.id"
                           >
-                            <a href="#" @click="changeOrderStatus(order.orderId,item.id,'')">{{ item.value }}</a>
+                            <a
+                              href="#"
+                              @click="
+                                changeOrderStatus(order.orderId, item.id, '')
+                              "
+                              >{{ item.value }}</a
+                            >
                           </li>
                         </ul>
                       </div>
-                      <button
+                      <button v-if="false"
                         @click="editOrder(order)"
                         class="edit-order-btn tkt-left-btn"
                       >
                         Edit Order
                       </button>
-                      <button class="cancel-order-btn"  @click="changeOrderStatus(order.orderId,7,'Incorrect order')">Cancel Order</button>
+                      <button v-if="false"
+                        class="cancel-order-btn"
+                        @click="
+                          changeOrderStatus(order.orderId, 7, 'Incorrect order')
+                        "
+                      >
+                        Cancel Order
+                      </button>
                     </div>
                     <div class="clearfix"></div>
                   </div>
@@ -395,22 +480,26 @@
             </div>
           </div>
 
-
           <div class="kb-column">
             <div class="kb-column-header">
-              Ready for Delivery<span class="order-count">{{readyorders && readyorders.orderCount || 0}}</span>
+              Ready for Delivery<span class="order-count">{{
+                (readyorders && readyorders.orderCount) || 0
+              }}</span>
             </div>
             <div class="ticket-sec" v-if="readyorders">
-              <div class="ticket-main"
-               id="ordermaindivro"
+              <div
+                class="ticket-main"
+                id="ordermaindivro"
                 v-bind:key="index"
                 v-for="(order, index) in readyorders.orders"
-      
               >
-                <div class="order-detail" @click="toggleOrderDetails(order, index,'ro')">
-                    <div>
+                <div
+                  class="order-detail"
+                  @click="toggleOrderDetails(order, index, 'ro',readyorders.bucketName)"
+                >
+                  <div>
                     <div class="float-left">
-                      {{ order.orderId }} [ {{ order.orderDate | formatTime }}]
+                      {{  order.orderNumber.split("-")[1] }} [ {{ order.orderDate | formatTime }}]
                     </div>
                     <div class="float-right" v-if="order.orderType == 1">
                       DineIn
@@ -441,7 +530,7 @@
                         <td class="text-center">Qty</td>
                         <td class="text-center">Price</td>
                       </tr>
-                      <tr 
+                      <tr
                         v-bind:key="index"
                         v-for="(orderline, index) in order.orderLines"
                       >
@@ -455,7 +544,12 @@
                   </table>
                   <div class="top6">
                     <div class="float-right">
-                      <button class="edit-order-btn" @click="changeOrderStatus(order.orderId,6,'')">Deliver</button>
+                      <button
+                        class="edit-order-btn"
+                        @click="changeOrderStatus(order.orderId, 6, '')"
+                      >
+                        Deliver
+                      </button>
                     </div>
                     <div class="clearfix"></div>
                   </div>
@@ -484,7 +578,7 @@
       </div>
     </section>
     <div class="clearfix"></div>
-    <NewOrder :isAddOrder.sync="isAddOrder" />
+    <NewOrder :isAddOrder.sync="isAddOrder" v-on:order-update="getKanboard" />
   </div>
 </template>
 <script>
@@ -493,7 +587,7 @@
 import NewOrder from "@/components/NewOrder.vue";
 import dashBoardService from "../services/dashboardService";
 import $ from "jquery";
-import Vue from 'vue'
+import Vue from "vue";
 export default {
   name: "Dashboard",
   components: {
@@ -503,6 +597,7 @@ export default {
   },
   created() {
     this.getKanboard();
+    this.orderStatus = this.orderStatusAll;
   },
   data() {
     return {
@@ -511,7 +606,7 @@ export default {
 
       beingpreparedorders: [],
       preparedorders: {},
-   
+
       packingorders: [],
       readyorders: [],
       successmsg: "",
@@ -520,23 +615,32 @@ export default {
       orderdetails: {},
       editorder: null,
 
-      orderStatus: [
+      orderStatusAll: [
         { id: 1, value: "New Order" },
         { id: 2, value: "Being Prepared" },
         { id: 3, value: "Prepared" },
         { id: 4, value: "Packing" },
         { id: 5, value: "Ready for Delivery" },
       ],
+      orderStatus: [],
     };
   },
   methods: {
     showForm() {
-      console.log("showForm method called");
       this.isAddOrder = true;
-      console.log(this.isAddOrder)
+      console.log(this.isAddOrder);
     },
-    getFilteredStatus(){
-
+    getFilteredStatus(bucketname, order) {
+      this.orderStatus =this.orderStatusAll; 
+      this.orderStatus = this.orderStatus.filter(
+            (item) => item.value != bucketname
+          );
+        if (order.orderType === 1) {
+          this.orderStatus = this.orderStatus.filter(
+            (item) => item.id != 4 && item.id != 5
+          );
+        } 
+       Vue.set(order, "orderStatus", this.orderStatus);
     },
     getKanboard() {
       this.successmsg = "";
@@ -544,27 +648,26 @@ export default {
         .getKanboard()
         .then((response) => {
           this.kanboards = response.data;
-           this.beingpreparedorders = response.data.filter(
-            (item) => item.bucketName === 'Being Prepared')[0];
-          if(response.data && response.data.length>0){
-              this.neworders = response.data.filter(
-                          (item) => item.bucketName === 'New Order'
-                        )[0];
-        
-          
-         
-          this.preparedorders = response.data.filter(
-            (item) => item.bucketName === 'Prepared'
+          this.beingpreparedorders = response.data.filter(
+            (item) => item.bucketName === "Being Prepared"
           )[0];
-          this.packingorders = response.data.filter(
-            (item) => item.bucketName === 'Packing'
-          )[0];
-          this.readyorders = response.data.filter(
-            (item) => item.bucketName === 'Ready To Be Delivered'
-          )[0];
+          if (response.data && response.data.length > 0) {
+            this.neworders = response.data.filter(
+              (item) => item.bucketName === "New Order"
+            )[0];
 
-          // console.log('bp',this.beingpreparedorders);
-          // console.log('no',this.neworders);
+            this.preparedorders = response.data.filter(
+              (item) => item.bucketName === "Prepared"
+            )[0];
+            this.packingorders = response.data.filter(
+              (item) => item.bucketName === "Packing"
+            )[0];
+            this.readyorders = response.data.filter(
+              (item) => item.bucketName === "Ready To Be Delivered"
+            )[0];
+
+            // console.log('bp',this.beingpreparedorders);
+            // console.log('no',this.neworders);
           }
         })
         .catch((err) => {
@@ -572,39 +675,34 @@ export default {
         });
     },
     getOrderDetails(data) {
+      this.isAddOrder = false;
       dashBoardService
         .getOrderDetails(data.orderId)
         .then((response) => {
           this.orderdetails = response.data;
-          console.log('assign',this.orderdetails);
-          //var obj = this.neworders.orders.filter(item=>item.orderId === id)[0];
-          //data.orderLines=response.data.orderLines
-          Vue.set(data, 'orderLines', response.data.orderLines)
-          
-          console.log('assign1',data);
+          Vue.set(data, "orderLines", response.data.orderLines);
         })
         .catch((err) => {
           (this.errormsg = err.messge), console.log(err.message);
         });
     },
-    toggleOrderDetails(order, index,dividentifier) {
+    toggleOrderDetails(order, index, dividentifier,bucketname) {
       this.showorderdetails = !this.showorderdetails;
       this.getOrderDetails(order);
-      console.log("#orderdetailsdiv" + dividentifier+index);
-      $("#orderdetailsdiv" + dividentifier+index).slideToggle();
+      this.getFilteredStatus(bucketname, order);
+      $("#orderdetailsdiv" + dividentifier + index).slideToggle();
     },
     editOrder(data) {
       this.editorder = data;
       console.log("editorder", data);
     },
-    changeOrderStatus(orderid,statusid,reason){
-
-       var orderStatus={
-         orderId:orderid,
-          OrderStatus:statusid,
-          cancellationReason:reason
-       }
-       dashBoardService
+    changeOrderStatus(orderid, statusid, reason) {
+      var orderStatus = {
+        orderId: orderid,
+        OrderStatus: statusid,
+        cancellationReason: reason,
+      };
+      dashBoardService
         .updateOrderStatus(orderStatus)
         .then((response) => {
           this.successmsg = "Order Updated.";
@@ -614,7 +712,7 @@ export default {
         .catch((err) => {
           (this.errormsg = err.messge), console.log(err.message);
         });
-    }
+    },
   },
 };
 </script>
