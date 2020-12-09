@@ -2,7 +2,7 @@
 import axios from 'axios'
 
 export default {
-    name: 'MediaService';
+    name: 'MediaService',
   getImage(imageId) {
     //return Vue.http.get('/api/posts');
      const article = { imageId:imageId };
