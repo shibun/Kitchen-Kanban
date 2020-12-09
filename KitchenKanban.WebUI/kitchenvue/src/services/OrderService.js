@@ -7,6 +7,12 @@ export default {
   post(Orderdetail){
     
        return axios.post('/Order',Orderdetail)
+  },
+  get(){
+    return axios.get('/Order/OrderReport')
+  },
+  getOrderById(orderId){
+    return axios.get('/Order/GetOrderById?orderId=' + orderId)
   }
    
 }
