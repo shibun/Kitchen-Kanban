@@ -25,11 +25,7 @@
                 <span class="order-count" >{{neworders.orderCount || 0 }}</span>
               </div>
               <div class="float-right">
-<<<<<<< HEAD
-                <button class="add-order" @click="showForm ">+</button>
-=======
-                <button class="add-order" @click="showform">+</button>
->>>>>>> ff94e320ad1678edbca5a021202451c73e0b5d77
+                <button class="add-order" @click="showForm">+</button>
               </div>
               <div class="clearfix"></div>
             </div>
@@ -538,6 +534,9 @@ export default {
       console.log("showForm method called");
       this.isAddOrder = true;
       console.log(this.isAddOrder)
+    },
+    getFilteredStatus(){
+
     },
     getKanboard() {
       this.successmsg = "";

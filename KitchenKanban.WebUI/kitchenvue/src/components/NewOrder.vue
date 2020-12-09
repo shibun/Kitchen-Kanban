@@ -1,7 +1,6 @@
 <template>
-    <div>
-
-        <div class="add-overlay" v-if="showneworderform">
+    <div v-if="showneworderform">
+        <div class="add-overlay" >
             <div class="add-pop-overlay">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" @click="hideForm">×</button>
@@ -112,7 +111,7 @@
     import MessageError from "@/components/MessageError.vue";
     export default {
         name: 'NewOrder',
-        props: ['isAddUser'],
+        props: ['isAddOrder'],
         components: {
             MessageError,
             MessageSuccess
@@ -163,13 +162,19 @@
         },
         created() {
             console.log('create method called');
-            this.showneworderform = this.$props.isAddUser;
+            this.showneworderform = this.isAddOrder;
             console.log('showneworderform status', this.showneworderform);
             this.getItems();
         },
+        watch:{
+            'isAddOrder'(){
+                console.log('watch new');
+                 this.showneworderform = this.isAddOrder;
+            }
+            },
         methods: {
             hideForm() {
-                this.$props.isAddOrder = false;
+                this.$emit('update:isAddOrder',false)
                  this.showneworderform = false;
             },
             getItems() {
