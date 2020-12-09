@@ -22,7 +22,8 @@ namespace KitchenKanban.UnitTests
                 UserId = "95632324-a9f8-44ba-9b3d-4c90dd5d9650",
                 UserType = Models.Enums.UserEnum.UserType.Administrator
             };
-            IItemService itemService = new ItemService(serviceProvider, userInfo);
+            IImageService imageService = new ImageService(serviceProvider, userInfo);
+            IItemService itemService = new ItemService(serviceProvider, imageService, userInfo);
             var input = new ItemViewModel()
             {
                 ItemName = "Pizza Margherita",
@@ -44,7 +45,8 @@ namespace KitchenKanban.UnitTests
                 UserId = "95632324-a9f8-44ba-9b3d-4c90dd5d9650",
                 UserType = Models.Enums.UserEnum.UserType.Administrator
             };
-            IItemService itemService = new ItemService(serviceProvider, userInfo);
+            IImageService imageService = new ImageService(serviceProvider, userInfo);
+            IItemService itemService = new ItemService(serviceProvider, imageService, userInfo);
             var input = new ItemViewModel()
             {
                 ItemName = "Pizza Margherita",

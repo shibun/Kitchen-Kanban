@@ -84,7 +84,7 @@ namespace KitchenKanban.BusinessServices
             throw new NotImplementedException();
         }
 
-        public byte[] GetImage(string imageId, ImageType imageType)
+        public ImageViewModel GetImage(string imageId, ImageType imageType)
         {
             switch (imageType)
             {
@@ -92,14 +92,22 @@ namespace KitchenKanban.BusinessServices
                     var originalImage = _databaseContext.Images.Where(x => x.ImageId == imageId && x.ImageType == ImageType.Original).FirstOrDefault();
                     if(originalImage != null)
                     {
-                        return originalImage.ImageContent;
+                        return new ImageViewModel()
+                        {
+                            ImageId = originalImage.ImageId,
+                            ImageContent = originalImage.ImageContent
+                        };
                     }
                     break;
                 case ImageType.Icon:
                     var iconImage = _databaseContext.Images.Where(x => x.ParentId == imageId && x.ImageType == ImageType.Icon).FirstOrDefault();
                     if (iconImage != null)
                     {
-                        return iconImage.ImageContent;
+                        return new ImageViewModel()
+                        {
+                            ImageId = iconImage.ImageId,
+                            ImageContent = iconImage.ImageContent
+                        };
                     }
                     break;
                 default:

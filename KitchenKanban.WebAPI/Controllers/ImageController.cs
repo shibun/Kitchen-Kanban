@@ -74,21 +74,16 @@ namespace KitchenKanban.WebAPI.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage GetImage(string imageId, ImageType imageType = ImageType.Icon)
+        public IActionResult GetImage(string imageId, ImageType imageType = ImageType.Icon)
         {
-            HttpResponseMessage result;
-            byte[] b = _imageService.GetImage(imageId, imageType);
-            if (b != null)
-            {
-                result = new HttpResponseMessage(HttpStatusCode.OK);
-                result.Content = new ByteArrayContent(b);
-                result.Content.Headers.ContentType = new MediaTypeHeaderValue("image/jpg");
-                return result;
+            var result = _imageService.GetImage(imageId, imageType);
+            if (result != null)
+            {                
+                return Ok(result);
             }
             else
             {
-                result = new HttpResponseMessage(HttpStatusCode.NoContent);
-                return result;
+                return BadRequest();
             }
         }
 
