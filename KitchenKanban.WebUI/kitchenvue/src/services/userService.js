@@ -7,5 +7,8 @@ export default {
   },
   addUser(data) {
     return axios.post('/User',data);
+  },
+  updateUser(data) {
+    return axios.put('/User',data);
   }
 }

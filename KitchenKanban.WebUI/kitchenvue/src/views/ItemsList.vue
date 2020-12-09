@@ -45,7 +45,7 @@
               </td>
             </tr>
             <tr v-show="itemsnotfound">
-             <td class="test-center"> No records found</td>
+             <td class="text-center" colspan="6"> No records found</td>
             </tr>
           </tbody>
         </table>
@@ -96,7 +96,7 @@
                   <div class="form-group">
                     <label>Item Image</label>
                    <img src="../assets/images/no_item_img.png" v-if="imagedata==''" class="uploaded-user-img">
-                    <img :src="imagedata" class="uploaded-user-img"  />
+                    <img :src="imagedata" v-if="imagedata!=''" class="uploaded-user-img"  />
                   </div>
                 </div>
                 <div class="col-xs-8">                 
@@ -174,7 +174,7 @@ export default {
       errormsg: "",
       editmode: false,
       isShowForm: false,
-      imagedata:"",
+      imagedata:'',
     };
   },
   filters: {
@@ -254,8 +254,7 @@ export default {
           console.log('image is not threse')
            this.imagedata='';
         }
-       
-        
+      
     },
     updateItem: function() {
       if (!this.Item.ItemName) {

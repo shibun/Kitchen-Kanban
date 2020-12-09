@@ -44,7 +44,7 @@
               </td>
             </tr>
             <tr v-if="showkcounters">
-             <td class="text-center"> No Records Found</td>
+             <td class="text-center" colspan="4"> No Records Found</td>
             </tr>
           </tbody>
         </table>
