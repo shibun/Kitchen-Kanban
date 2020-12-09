@@ -196,6 +196,14 @@ export default {
           if(newVal){
             console.log(oldVal,newVal);
             this.user=newVal;
+             if(this.user.imageContent!=null){
+              console.log('image is there');
+              this.imagedata='data:image/jpeg;base64,'+this.user.imageContent;
+               }
+              else{
+             console.log('image is not threse')
+              this.imagedata='';
+           }
         }
       }
     }

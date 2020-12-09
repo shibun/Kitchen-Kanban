@@ -322,20 +322,8 @@ export default {
         reader.readAsDataURL(fileList[0]);
       this.files = new FormData();    
       this.files.append("file", fileList[0], fileList[0].name);
-    },
-    getItemImage:function(imageId){
-      MediarelatedService.getImage(imageId)
-                .then((response) => {            
-                  console.log("imageData response : ", response);
-                  //return imageData.imageContent;
-                })
-              .catch((err) => {
-                (this.errormsg = "error occured"), console.log(err.message);
-              });
-      // var imageData = ItemListService.getImage(imageId);
-      // console.log("imageData : ", imageData);
-      // return imageData.imageContent;
     }
+  
   },
 };
 </script>
