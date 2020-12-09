@@ -11,6 +11,7 @@ namespace KitchenKanban.BusinessServices.Interfaces
         ImageViewModel GetImage(string imageId, ImageType imageType);
         string Create(ImageViewModel input);
         bool Update(ImageViewModel input);
+        bool UpdateWithReference(ImageViewModel input);
         bool Delete(string imageId);
     }
 }

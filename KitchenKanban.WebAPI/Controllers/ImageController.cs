@@ -73,6 +73,52 @@ namespace KitchenKanban.WebAPI.Controllers
             }
         }
 
+        [HttpPut]
+        public IActionResult Put([FromForm] IFormFile file, string imageId)
+        {
+            try
+            {
+                if (file != null)
+                {
+                    var fileName = Path.GetFileName(file.FileName);
+                    var fileExtension = Path.GetExtension(fileName);
+
+                    using (var target = new MemoryStream())
+                    {
+                        file.CopyTo(target);
+                        Image original = Image.FromStream(target);
+                        var iconResized = ImageToByteArray(ImageResizer.ResizeImage(original, new Size(50, 50)));
+
+                        var originalSizeImage = new ImageViewModel();
+                        originalSizeImage.ImageContent = target.ToArray();
+                        originalSizeImage.Length = target.ToArray().Length;
+                        originalSizeImage.ImageId = imageId;
+
+                        _imageService.Update(originalSizeImage);
+
+                        var iconSizedImage = new ImageViewModel();
+                        iconSizedImage.ImageContent = iconResized;
+                        iconSizedImage.Length = iconResized.Length;
+                        iconSizedImage.ImageType = ImageType.Icon;
+                        iconSizedImage.ParentId = imageId;
+
+                        var iconImageId = _imageService.UpdateWithReference(iconSizedImage);
+                    }
+
+                    return Ok(true);
+                }
+                else
+                {
+                    return BadRequest("No image data");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet]
         public IActionResult GetImage(string imageId, ImageType imageType = ImageType.Icon)
         {
