@@ -59,9 +59,10 @@ export default {
         .dispatch("login", { Username, password })
         .then(() => this.$router.push("/"))
         .catch(
-          (err) => console.log(err),
-          console.log("error"),
-          (this.loginsuccess = false)
+          (err) => {
+          console.log("login error",err);
+          this.loginsuccess = false;
+          }
         );
     },
   },
