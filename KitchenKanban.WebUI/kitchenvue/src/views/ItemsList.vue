@@ -162,6 +162,7 @@ export default {
       Item: {
         ItemName: "",
         ItemCharge: 0,
+        ImageId:""
       },
       files: "",
       Items: [],
@@ -239,6 +240,8 @@ export default {
         (this.Item.ItemName = data.itemName),
         (this.Item.ItemCharge = data.itemCharge),
         (this.Item.ItemId=data.itemId);
+        (this.Item.ImageId=data.imageId);
+        this.imagedata=this.getItemImage(this.Item.ImageId);
     },
     updateItem: function() {
       if (!this.Item.ItemName) {
@@ -297,7 +300,11 @@ export default {
     getItemImage:function(imageId){
       return ItemListService.getImage(imageId);
       
-    }
+    },
+    onimageerror(event) { 
+    event.target.src = "../assets/images/no_item_img.png" 
+    
+} 
   },
 };
 </script>
