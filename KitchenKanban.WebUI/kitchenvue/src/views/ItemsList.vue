@@ -45,7 +45,7 @@
               </td>
             </tr>
             <tr v-show="itemsnotfound">
-              No records found
+             <td class="test-center"> No records found</td>
             </tr>
           </tbody>
         </table>
@@ -95,8 +95,8 @@
                 <div class="col-xs-4">
                   <div class="form-group">
                     <label>Item Image</label>
-                    <img src="../assets/images/no_item_img.png"  v-if="imagedata.length<=0" class="uploaded-user-img" />
-                    <img :src="imagedata" v-if="imagedata.length>0" class="uploaded-user-img" />
+                   <img src="../assets/images/no_item_img.png" v-if="imagedata==''" class="uploaded-user-img">
+                    <img :src="imagedata" class="uploaded-user-img"  />
                   </div>
                 </div>
                 <div class="col-xs-8">                 
@@ -149,7 +149,7 @@
 import ItemListService from "../services/ItemListService";
 import MessageSuccess from "@/components/MessageSuccess.vue";
 import MessageError from "@/components/MessageError.vue";
-//import MediaService from "../services/MediaService";
+import MediarelatedService from "../services/MediarelatedService";
 export default {
   name: "ItemList",
   created() {
@@ -192,6 +192,7 @@ export default {
     },
     hideForm() {
       this.isShowForm = false;
+      this.clearItem();
     },
     getItems() {
       (this.successmsg = false),
@@ -216,12 +217,11 @@ export default {
         return;
       }
       ItemListService.post(this.Item)
-        .then((response) => {
-            this.clearItem();
+        .then((response) => {           
             if(this.files != '')
             {
               const files = this.files;
-              ItemListService.uploadfile(files, response.data.itemId, 2)
+              MediarelatedService.uploadfile(files, response.data.itemId, 2)
                 .then((response) => {            
                   console.log("response", response);
                 })
@@ -230,6 +230,7 @@ export default {
               });
             }
             this.successmsg = "Item added";
+             this.clearItem();
 
             
         })
@@ -245,7 +246,16 @@ export default {
         (this.Item.ItemCharge = data.itemCharge),
         (this.Item.ItemId=data.itemId);
         (this.Item.ImageId=data.imageId);
-        this.imagedata=this.getItemImage(this.Item.ImageId);
+        if(data.imageContent!=null){
+          console.log('image is there');
+          this.imagedata='data:image/jpeg;base64,'+data.imageContent;
+        }
+        else{
+          console.log('image is not threse')
+           this.imagedata='';
+        }
+       
+        
     },
     updateItem: function() {
       if (!this.Item.ItemName) {
@@ -260,9 +270,21 @@ export default {
         ItemListService.patch(this.Item)
           .then((response) => {
             console.log("response", response.data),
-              this.successmsg = "Item updated",
-            this.editmode = false,
-             this.clearItem();
+              this.successmsg = "Item updated";
+            this.editmode = false;
+           
+              if(this.files != '')
+            {
+              const files = this.files;
+              MediarelatedService.uploadfile(files,this.Item.ItemId, 2)
+                .then((response) => {            
+                  console.log("response", response);
+                })
+              .catch((err) => {
+                (this.errormsg = "error occured"), console.log(err.message);
+              });
+            }
+              this.clearItem();
           })
           .catch((err) => {
             (this.errormsg = "error occured"), console.log(err.message);
@@ -291,6 +313,7 @@ export default {
       this.isShowForm = false,
       this.editmode=false;
       this.imagedata="";
+       this.files= "";
     },
     fileChange(fileList) {      
       var reader = new FileReader();                
@@ -302,7 +325,7 @@ export default {
       this.files.append("file", fileList[0], fileList[0].name);
     },
     getItemImage:function(imageId){
-      ItemListService.getImage(imageId)
+      MediarelatedService.getImage(imageId)
                 .then((response) => {            
                   console.log("imageData response : ", response);
                   //return imageData.imageContent;

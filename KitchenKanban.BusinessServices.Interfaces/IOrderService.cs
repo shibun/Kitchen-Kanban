@@ -9,5 +9,6 @@ namespace KitchenKanban.BusinessServices.Interfaces
         OrderDetailViewModel GetOrder(string orderId);
         bool ChangeOrderStatus(OrderStatusInputViewModel input);
         List<OrderViewModel> GetAllOrders();
+        bool Update(OrderDetailViewModel input);
     }
 }
