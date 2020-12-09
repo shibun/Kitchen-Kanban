@@ -9,6 +9,6 @@ namespace KitchenKanban.BusinessServices.Interfaces
         UserViewModel GetUserById(string userId);
         UserViewModel Create(UserInputViewModel input);
         List<UserViewModel> GetUsers();
-        UserViewModel Update(UserInputViewModel input);
+        bool Update(UserInputViewModel input);
     }
 }

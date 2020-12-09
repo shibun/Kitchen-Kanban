@@ -66,7 +66,21 @@ namespace KitchenKanban.WebAPI.Controllers
         public IActionResult OrderReport()
         {
             var result = _orderService.GetAllOrders();
-            return Ok(result);            
+            return Ok(result);
+        }
+
+        [HttpPut]
+        public IActionResult Put(OrderDetailViewModel model)
+        {
+            try
+            {
+                var item = _orderService.Update(model);
+                return Ok(item);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

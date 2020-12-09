@@ -219,5 +219,69 @@ namespace KitchenKanban.BusinessServices
                 OrderType = x.OrderType
             }).ToList();
         }
+
+        public bool Update(OrderDetailViewModel input)
+        {
+            var order = _databaseContext.Orders.Include(x => x.OrderLines).Where(x => x.OrderId == input.Order.OrderId).FirstOrDefault();
+
+            if (order != null)
+            {
+                if(order.OrderStatus != OrderStatus.NewOrder)
+                {
+                    throw new Exception("Order can be modified only if new order.");
+                }
+
+                order.CustomerName = input.Order.CustomerName;
+                order.CustomerContactNumber = input.Order.CustomerContactNumber;
+                order.UpdatedBy = _userInfo.UserId;
+                order.UpdatedOn = DateTime.Now;
+                _databaseContext.Orders.Update(order);
+
+                var newItems = input.OrderLines.Where(x => x.OrderLineId == null).ToList();
+                var existingItems = input.OrderLines.Where(x => x.OrderLineId != null).ToList();
+
+                for (int i = 0; i < order.OrderLines.Count(); i++)
+                {
+                    var existingRecord = existingItems.Where(x => x.OrderLineId == order.OrderLines[i].OrderLineId).FirstOrDefault();
+                    if(existingRecord != null)
+                    {
+                        var orderLine = _databaseContext.OrderLines.Where(x => x.OrderLineId == existingRecord.OrderLineId).FirstOrDefault();
+                        orderLine.OrderQuantity = existingRecord.OrderQuantity;
+                        orderLine.UpdatedBy = _userInfo.UserId;
+                        orderLine.UpdatedOn = DateTime.Now;
+                        _databaseContext.OrderLines.Update(orderLine);
+                    }
+                    else
+                    {
+                        var recordToDelete = _databaseContext.OrderLines.Where(x => x.OrderLineId == order.OrderLines[i].OrderLineId).FirstOrDefault();
+                        if (recordToDelete != null)
+                        {
+                            _databaseContext.OrderLines.Remove(recordToDelete);
+                        }
+                    }
+                }
+                foreach (var item in newItems)
+                {
+                    var newOrderLine = new OrderLine()
+                    {
+                        CreatedBy = _userInfo.UserId,
+                        CreatedOn = DateTime.Now,
+                        ItemId = item.ItemId,
+                        OrderId = order.OrderId,
+                        OrderLineId = Guid.NewGuid().ToString(),
+                        OrderQuantity = item.OrderQuantity
+                    };
+                    _databaseContext.OrderLines.Add(newOrderLine);
+                }
+
+                _databaseContext.SaveChanges();
+
+                return true;
+            }
+            else
+            {
+                throw new Exception("Order not found.");
+            }
+        }
     }
 }
