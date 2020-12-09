@@ -25,7 +25,8 @@
             >
               <td class="text-center">{{ index + 1 }}</td>
               <td class="text-center">
-                <img v-bind:src="getItemImage(data.imageId)" />
+                <img src="../assets/images/no_item_img.png" v-if="data.imageId==null">
+                <img v-bind:src="'data:image/jpeg;base64,'+ data.imageContent" v-if="data.imageId!=null"/>
               </td>
               <td>{{ data.itemName }}</td>
               <td class="text-right">
@@ -194,6 +195,7 @@ export default {
       (this.successmsg = false),
         ItemListService.get().then((response) => {
           if (response.data.length > 0) {
+            console.log("Image : ", response.data);
             (this.Items = response.data);
              (this.itemsnotfound = false);
           } else {
@@ -298,13 +300,18 @@ export default {
       this.files.append("file", fileList[0], fileList[0].name);
     },
     getItemImage:function(imageId){
-      return ItemListService.getImage(imageId);
-      
-    },
-    onimageerror(event) { 
-    event.target.src = "../assets/images/no_item_img.png" 
-    
-} 
+      ItemListService.getImage(imageId)
+                .then((response) => {            
+                  console.log("imageData response : ", response);
+                  //return imageData.imageContent;
+                })
+              .catch((err) => {
+                (this.errormsg = "error occured"), console.log(err.message);
+              });
+      // var imageData = ItemListService.getImage(imageId);
+      // console.log("imageData : ", imageData);
+      // return imageData.imageContent;
+    }
   },
 };
 </script>
