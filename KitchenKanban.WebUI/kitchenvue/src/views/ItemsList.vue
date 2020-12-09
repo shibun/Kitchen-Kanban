@@ -25,8 +25,8 @@
             >
               <td class="text-center">{{ index + 1 }}</td>
               <td class="text-center">
-                <img src="../assets/images/no_item_img.png" v-if="data.imageId==null">
-                <img v-bind:src="'data:image/jpeg;base64,'+ data.imageContent" v-if="data.imageId!=null"/>
+                <img src="../assets/images/no_item_img.png" v-if="data.imageId==null" class="display-user-img" />
+                <img v-bind:src="'data:image/jpeg;base64,'+ data.imageContent" v-if="data.imageId!=null" class="display-user-img"/>
               </td>
               <td>{{ data.itemName }}</td>
               <td class="text-right">
@@ -95,13 +95,15 @@
                 <div class="col-xs-4">
                   <div class="form-group">
                     <label>Item Image</label>
-                   <img src="../assets/images/no_item_img.png" v-if="imagedata==''">
-                    <img :src="imagedata"  />
+                   <img src="../assets/images/no_item_img.png" v-if="imagedata==''" class="uploaded-user-img">
+                    <img :src="imagedata" class="uploaded-user-img"  />
                   </div>
                 </div>
-                <div class="col-xs-8">
-                  <input class="user-img-upload-btn" type="file" name="file" multiple="" v-on:change="fileChange($event.target.files)"/>
-                  <!-- <button class="user-img-upload-btn" >Upload</button> -->
+                <div class="col-xs-8">                 
+                  <label class="user-img-upload-btn" >
+                     <input type="file" name="file" multiple="" v-on:change="fileChange($event.target.files)"/>
+                     Upload
+                  </label>
                 </div>
               </div>
             </div>

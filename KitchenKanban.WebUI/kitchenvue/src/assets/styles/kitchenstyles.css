@@ -173,6 +173,7 @@ section {
     padding: 6px 30px;
     border-radius: 8px;
     margin-top: 60px;
+    cursor: pointer;
 }
 
 .left-btn
@@ -601,4 +602,22 @@ button:focus, button:active, button:visited, button:link
 .dropdown-menu > li > a {
     padding: 6px 20px;
     font-size:12px;
+}
+
+.display-user-img
+{
+height:25px;
+width:25px;
+border-radius:50%;
+}
+
+.uploaded-user-img
+{
+width:100px;
+height:100px;
+border-radius:50%;
+}
+
+input[type="file"] {
+display: none!important;
 }

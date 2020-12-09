@@ -123,7 +123,40 @@ namespace KitchenKanban.BusinessServices
 
         public bool Update(ImageViewModel input)
         {
-            throw new NotImplementedException();
+            var image = _databaseContext.Images.Where(x => x.ImageId == input.ImageId).FirstOrDefault();
+            if(image != null)
+            {
+                image.ImageContent = input.ImageContent;
+                image.Length = input.Length;
+                image.UpdatedBy = _userInfo.UserId;
+                image.UpdatedOn = DateTime.Now;
+
+                _databaseContext.Images.Update(image);
+                _databaseContext.SaveChanges();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool UpdateWithReference(ImageViewModel input)
+        {
+            var image = _databaseContext.Images.Where(x => x.ParentId == input.ParentId).FirstOrDefault();
+            if (image != null)
+            {
+                image.ImageContent = input.ImageContent;
+                image.Length = input.Length;
+                image.UpdatedBy = _userInfo.UserId;
+                image.UpdatedOn = DateTime.Now;
+
+                _databaseContext.Images.Update(image);
+                _databaseContext.SaveChanges();
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

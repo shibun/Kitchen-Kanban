@@ -29,7 +29,8 @@ export default {
         handler(newVal, oldVal) {
           if(newVal){
             console.log(oldVal,newVal);
-            setTimeout(() => this.$emit("on-success"), 2000);
+            setTimeout(() => this.$emit("on-success"), 
+            1000);
         }
       }
     }

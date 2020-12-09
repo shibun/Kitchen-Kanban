@@ -41,7 +41,7 @@ namespace KitchenKanban.BusinessServices
                 OrderId = Guid.NewGuid().ToString(),
                 OrderNumber = documentNumber,
                 OrderStatus = OrderStatus.NewOrder,
-                OrderTakenBy = input.Order.OrderTakenBy,
+                OrderTakenBy = _userInfo.UserId,
                 OrderType = input.Order.OrderType,
                 CreatedBy = _userInfo.UserId,
                 CreatedOn = DateTime.Now
