@@ -64,7 +64,7 @@
                   </div>
                 </div>
               </div>
-              <div class="row">
+              <div class="row" v-if="!user.userId">
                 <div class="col-xs-6">
                   <div class="form-group">
                     <label>Password<span class="asterisk">*</span></label>
@@ -100,13 +100,21 @@
           >
             Cancel
           </button>
-          <button
+          <button v-if="!user.userId"
             type="submit"
             @click="addUser"
             class="btn btn-active"
             data-dismiss="modal"
           >
             Add
+          </button>
+           <button v-if="user.userId"
+            type="submit"
+            @click="updateUser"
+            class="btn btn-active"
+            data-dismiss="modal"
+          >
+            Update
           </button>
         </div>
       </div>
@@ -144,6 +152,9 @@ export default {
     },
     addUser(){
          this.$emit("add-user",this.user);
+    },
+    updateUser(){
+      this.$emit("update-user",this.user);
     },
     clearForm() {
        this.user = {
