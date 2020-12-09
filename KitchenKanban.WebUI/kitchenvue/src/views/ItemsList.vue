@@ -163,6 +163,7 @@ export default {
       Item: {
         ItemName: "",
         ItemCharge: 0,
+        ImageId:""
       },
       files: "",
       Items: [],
@@ -241,6 +242,8 @@ export default {
         (this.Item.ItemName = data.itemName),
         (this.Item.ItemCharge = data.itemCharge),
         (this.Item.ItemId=data.itemId);
+        (this.Item.ImageId=data.imageId);
+        this.imagedata=this.getItemImage(this.Item.ImageId);
     },
     updateItem: function() {
       if (!this.Item.ItemName) {
