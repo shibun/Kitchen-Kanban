@@ -44,5 +44,19 @@ namespace KitchenKanban.WebAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut]
+        public IActionResult Put(UserInputViewModel model)
+        {
+            try
+            {
+                var user = _userService.Update(model);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

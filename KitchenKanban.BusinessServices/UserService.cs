@@ -96,5 +96,19 @@ namespace KitchenKanban.BusinessServices
                 ImageId = user.ImageId
             }).ToList();
         }
+
+        public bool Update(UserInputViewModel input)
+        {
+            var user = _databaseContext.Users.Where(x => x.UserId == input.UserId).FirstOrDefault();
+            if (user == null)
+                return false;
+            user.FirstName = input.FirstName;
+            user.LastName = input.LastName;
+            user.UserType = input.UserType;
+            _databaseContext.Users.Update(user);
+            _databaseContext.SaveChanges();
+
+            return true;
+        }
     }
 }
