@@ -22,7 +22,8 @@
             <tr v-bind:key="data.userId" v-for="(data, index) in users">
               <td class="text-center">{{ index + 1 }}</td>
               <td class="text-center">
-                <img src="../assets/images/user_img.png" />
+                <img src="../assets/images/user_img.png"  class="display-user-img" />
+                <!-- <img v-bind:src="'data:image/jpeg;base64,'+ data.imageContent" v-if="data.imageId!=null" class="display-user-img"/> -->
               </td>
               <td>{{ data.firstName }} {{ data.lastName }}</td>
               <td>{{ data.userName }}</td>

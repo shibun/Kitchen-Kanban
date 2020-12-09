@@ -25,7 +25,8 @@
             >
               <td class="text-center">{{ index + 1 }}</td>
               <td class="text-center">
-                <img src="../assets/images/pizza.png" />
+                <img src="../assets/images/no_item_img.png" v-if="data.imageId==null" class="display-user-img" />
+                <img v-bind:src="'data:image/jpeg;base64,'+ data.imageContent" v-if="data.imageId!=null" class="display-user-img"/>
               </td>
               <td>{{ data.itemName }}</td>
               <td class="text-right">
@@ -94,12 +95,15 @@
                 <div class="col-xs-4">
                   <div class="form-group">
                     <label>Item Image</label>
-                    <img src="../assets/images/no_item_img.png" />
+                    <img src="../assets/images/no_item_img.png"  v-if="imagedata.length<=0" class="uploaded-user-img" />
+                    <img :src="imagedata" v-if="imagedata.length>0" class="uploaded-user-img" />
                   </div>
                 </div>
-                <div class="col-xs-8">
-                  <input class="user-img-upload-btn" type="file" name="file" multiple="" v-on:change="fileChange($event.target.files)"/>
-                  <!-- <button class="user-img-upload-btn" >Upload</button> -->
+                <div class="col-xs-8">                 
+                  <label class="user-img-upload-btn" >
+                     <input type="file" name="file" multiple="" v-on:change="fileChange($event.target.files)"/>
+                     Upload
+                  </label>
                 </div>
               </div>
             </div>
@@ -145,6 +149,7 @@
 import ItemListService from "../services/ItemListService";
 import MessageSuccess from "@/components/MessageSuccess.vue";
 import MessageError from "@/components/MessageError.vue";
+//import MediaService from "../services/MediaService";
 export default {
   name: "ItemList",
   created() {
@@ -160,6 +165,7 @@ export default {
       Item: {
         ItemName: "",
         ItemCharge: 0,
+        ImageId:""
       },
       files: "",
       Items: [],
@@ -168,6 +174,7 @@ export default {
       errormsg: "",
       editmode: false,
       isShowForm: false,
+      imagedata:"",
     };
   },
   filters: {
@@ -190,7 +197,9 @@ export default {
       (this.successmsg = false),
         ItemListService.get().then((response) => {
           if (response.data.length > 0) {
-            (this.Items = response.data), (this.itemsnotfound = false);
+            console.log("Image : ", response.data);
+            (this.Items = response.data);
+             (this.itemsnotfound = false);
           } else {
             this.itemsnotfound = true;
           }
@@ -235,6 +244,8 @@ export default {
         (this.Item.ItemName = data.itemName),
         (this.Item.ItemCharge = data.itemCharge),
         (this.Item.ItemId=data.itemId);
+        (this.Item.ImageId=data.imageId);
+        this.imagedata=this.getItemImage(this.Item.ImageId);
     },
     updateItem: function() {
       if (!this.Item.ItemName) {
@@ -279,10 +290,29 @@ export default {
       };
       this.isShowForm = false,
       this.editmode=false;
+      this.imagedata="";
     },
-    fileChange(fileList) {
-      this.files = new FormData();
+    fileChange(fileList) {      
+      var reader = new FileReader();                
+                reader.onload = (e) => {                    
+                    this.imagedata = e.target.result;
+                }
+        reader.readAsDataURL(fileList[0]);
+      this.files = new FormData();    
       this.files.append("file", fileList[0], fileList[0].name);
+    },
+    getItemImage:function(imageId){
+      ItemListService.getImage(imageId)
+                .then((response) => {            
+                  console.log("imageData response : ", response);
+                  //return imageData.imageContent;
+                })
+              .catch((err) => {
+                (this.errormsg = "error occured"), console.log(err.message);
+              });
+      // var imageData = ItemListService.getImage(imageId);
+      // console.log("imageData : ", imageData);
+      // return imageData.imageContent;
     }
   },
 };

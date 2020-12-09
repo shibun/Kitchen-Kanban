@@ -8,9 +8,10 @@ namespace KitchenKanban.BusinessServices.Interfaces
     {
         ImageViewModel GetImageById(string imageId);
         string CreateWithReference(ImageViewModel input, string referenceId, FileType fileType);
-        byte[] GetImage(string imageId, ImageType imageType);
+        ImageViewModel GetImage(string imageId, ImageType imageType);
         string Create(ImageViewModel input);
         bool Update(ImageViewModel input);
+        bool UpdateWithReference(ImageViewModel input);
         bool Delete(string imageId);
     }
 }
