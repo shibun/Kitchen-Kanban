@@ -1,6 +1,7 @@
 ﻿using KitchenKanban.BusinessServices.Interfaces;
 using KitchenKanban.DataServices.Context;
 using KitchenKanban.DataServices.UserInfo;
+using KitchenKanban.Models;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
@@ -25,21 +26,42 @@ namespace KitchenKanban.BusinessServices
         {
             DateTime currentDate = DateTime.Now;
             var documentSequence = _databaseContext.DocumentSequences.Where(x => x.DocumentType == documentType).FirstOrDefault();
-            if (documentSequence != null)
+            if (documentSequence == null)
             {
-                var runningSequence = documentSequence.CurrentSequenceNumber + 1;
-                documentSequence.CurrentSequenceNumber = runningSequence;
-                _databaseContext.DocumentSequences.Update(documentSequence);
-                _databaseContext.SaveChanges();
-
-                string zeroAppender = "D" + documentSequence.SequenceLength;
-                string monthPrefix = currentDate.Day.ToString("D2") + currentDate.Month.ToString("D2") + currentDate.Year.ToString();
-                string documentNumber = documentSequence.DocumentPrefix + monthPrefix + "-" +  runningSequence.ToString(zeroAppender);
-
-                return documentNumber;
+                documentSequence = Initialize(documentType);
             }
+            var runningSequence = documentSequence.CurrentSequenceNumber + 1;
+            documentSequence.CurrentSequenceNumber = runningSequence;
+            _databaseContext.DocumentSequences.Update(documentSequence);
+            _databaseContext.SaveChanges();
 
-            return null;
+            string zeroAppender = "D" + documentSequence.SequenceLength;
+            string monthPrefix = currentDate.Day.ToString("D2") + currentDate.Month.ToString("D2") + currentDate.Year.ToString();
+            string documentNumber = documentSequence.DocumentPrefix + monthPrefix + "-" + runningSequence.ToString(zeroAppender);
+
+            return documentNumber;
+        }
+
+        private DocumentSequence Initialize(DocumentType documentType)
+        {
+            switch (documentType)
+            {
+                case DocumentType.Order:
+                    var documentSequence = new DocumentSequence
+                    {
+                        DocumentSequenceId = Guid.NewGuid().ToString(),
+                        CurrentSequenceNumber = 0,
+                        DocumentPrefix = "",
+                        DocumentType = DocumentType.Order,
+                        SequenceLength = 4,
+                        SequenceNumberLastResetOn = DateTime.Now
+                    };
+                    _databaseContext.DocumentSequences.Add(documentSequence);
+                    _databaseContext.SaveChanges();
+                    return documentSequence;
+                default:
+                    throw new NotImplementedException("Document number configuration not found.");
+            }
         }
     }
 }
