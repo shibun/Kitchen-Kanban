@@ -34,5 +34,16 @@ export default {
         .catch(function (error) {
           console.log(error);
       }); 
-  }
+  },
+  getImage(imageId) {
+    //return Vue.http.get('/api/posts');
+    console.log(imageId);
+     const article = { imageId:imageId};
+    return axios.get('/Image?imageId=' + imageId).then(function (response) {
+          console.log(response);
+        })
+        .catch(function (error) {
+          console.log(error);
+      }); 
+  },
 }
