@@ -59,7 +59,8 @@ import userService from "../services/userService";
 //import appDataMixin from '../mixins/appDataMixin'
 import MessageSuccess from "@/components/MessageSuccess.vue";
 import MessageError from "@/components/MessageError.vue";
-import AddUser from '../components/AddUser.vue'
+import AddUser from '../components/AddUser.vue';
+import MediarelatedService from '../services/MediarelatedService';
 import Vue from "vue";
 export default {
   name: "User",
@@ -86,6 +87,7 @@ export default {
         userType: "",
         password: "",
       },
+      files:"",
     };
   },
   components: {
@@ -109,7 +111,8 @@ export default {
     showAddUser() {
       this.isAddUser = true;
     },
-     addUser(data) {
+     addUser(data,data1) {
+       this.files=data1;
        this.errormsg = "";
        if(!data.firstName){
         this.errormsg = "Please enter first name";
@@ -118,7 +121,20 @@ export default {
       
       userService
         .addUser(data)
-        .then((response) => (this.successmsg = "user added",this.isAddUser=false)
+        .then((response) => {
+           if(this.files != '')
+            {
+              const files = this.files;
+              MediarelatedService.uploadfile(files, response.data.userId, 1)
+                .then((response) => {            
+                  console.log("response", response);
+                })
+              .catch((err) => {
+                (this.errormsg = "error occured"), console.log(err.message);
+              });
+            }
+          this.successmsg = "user added";
+        this.isAddUser=false}
         )
         .catch((err) => {
           (this.errormsg = err.messge), console.log(err.message);
