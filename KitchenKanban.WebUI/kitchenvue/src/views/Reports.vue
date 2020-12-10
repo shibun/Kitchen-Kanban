@@ -15,7 +15,7 @@
                             {{currentdate |toDate}}
                         </div>
                         <div class="col-xs-3">
-                            <input type="search" placeholder="Search Order" class="form-control" />
+                            <input type="search" placeholder="Search Order" class="form-control" v-model.lazy="search" />
                         </div>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
                         <th class="text-center">Order Status</th>
                         <th class="text-center">Detail</th>
                     </tr>
-                    <tr class="custom-btl-row" v-for="(order,index) in orders" :key="order.orderNumber">
+                    <tr class="custom-btl-row" v-for="(order,index) in filteredItems" :key="order.orderNumber">
                         <td class="text-center">{{index+1}}</td>
                         <td>{{order.orderNumber}}</td>
                         <td>{{order.orderDate |toTime }}</td>
@@ -103,9 +103,9 @@
                         </tr>                       
                         <tr>
                             <th>Customer Name</th>
-                            <td>{{orderdetail.order.customerName}}</td>
+                            <td>{{orderdetail.order.customerName?orderdetail.order.customerName.substring(0,3)+"*****":''}}</td>
                             <th>Customer Phone No</th>
-                            <td>{{orderdetail.order.customerContactNumber}}</td>
+                            <td>{{orderdetail.order.customerContactNumber?orderdetail.order.customerContactNumber.substring(0,4)+"*****":''}}</td>
                         </tr>
                     </table>
 
@@ -155,6 +155,7 @@ export default {
   data(){
       return{
             orders:[],
+            filteredItems:[],
             totalamount:0.0,
             totalqty:0,  
             orderdetail:{
@@ -163,7 +164,8 @@ export default {
             },
             currentdate:new Date(),
             totalitemamount:0.0,
-            totalitemcount:0,         
+            totalitemcount:0,   
+            search:''      
       }
      
   },
@@ -181,10 +183,24 @@ export default {
         return moment(String(value)).format(' MM/DD/YYYY')
     }
   },
+ watch:{
+      search:function(newval,oldvalue){
+          if(newval){
+               this.filteredItems=this.orders.filter(function (order) {  return order.orderNumber === newval});
+          }
+          else
+          {
+              this.filteredItems=this.orders;
+          }
+          
+          
+      }
+  },
   methods:{
       getAllOrders:function(){
         OrderService.get().then((response) => {       
             (this.orders = response.data); 
+            this.filteredItems=response.data;
             this.totalamount=0.0;
             this.totalqty = 0;
                 this.orders.forEach((value, index) => {

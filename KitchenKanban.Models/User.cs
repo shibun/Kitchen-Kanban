@@ -11,5 +11,7 @@ namespace KitchenKanban.Models
         public string Password { get; set; }
         public UserType UserType { get; set; }
         public string ImageId { get; set; }
+
+        public virtual Image Image { get; set; }
     }
 }

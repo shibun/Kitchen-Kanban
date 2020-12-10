@@ -81,11 +81,16 @@
                 <div class="col-xs-4">
                   <div class="form-group">
                     <label>User Image</label>
-                    <img src="../assets/images/no_user_img.png" />
+                     <img src="../assets/images/no_user_img.png" v-if="imagedata==''" class="uploaded-user-img">
+                    <img :src="imagedata" v-if="imagedata!=''" class="uploaded-user-img"  />
                   </div>
                 </div>
                 <div class="col-xs-8">
-                  <button class="user-img-upload-btn">Upload</button>
+                 
+                   <label class="user-img-upload-btn" >
+                     <input type="file" name="file" multiple="" v-on:change="fileChange($event.target.files)"/>
+                     Upload
+                  </label>
                 </div>
               </div>
             </div>
@@ -144,6 +149,8 @@ export default {
         userType: "",
         password: "",
       },
+      imagedata:'',
+      files:""
     };
   },
   methods:{
@@ -151,10 +158,10 @@ export default {
         this.$emit('clear-add-user');
     },
     addUser(){
-         this.$emit("add-user",this.user);
+         this.$emit("add-user",this.user,this.files);
     },
     updateUser(){
-      this.$emit("update-user",this.user);
+      this.$emit("update-user",this.user,this.files);
     },
     clearForm() {
        this.user = {
@@ -165,8 +172,21 @@ export default {
         userType: "",
         password: "",
       };
+      this.imagedata='';
+      this.files="";
+
+
       console.log(this.user);
       this.hideAddUser();
+    },
+     fileChange(fileList) {      
+      var reader = new FileReader();                
+                reader.onload = (e) => {                    
+                    this.imagedata = e.target.result;
+                }
+        reader.readAsDataURL(fileList[0]);
+      this.files = new FormData();    
+      this.files.append("file", fileList[0], fileList[0].name);
     },
   },
    watch: {
@@ -176,6 +196,14 @@ export default {
           if(newVal){
             console.log(oldVal,newVal);
             this.user=newVal;
+             if(this.user.imageContent!=null){
+              console.log('image is there');
+              this.imagedata='data:image/jpeg;base64,'+this.user.imageContent;
+               }
+              else{
+             console.log('image is not threse')
+              this.imagedata='';
+           }
         }
       }
     }

@@ -81,13 +81,13 @@
                                         <td class="text-center">
                                             <button class="trans-btn" @click="deleteorderline(listitem,index)"><img src="../assets/images/delete.png" /></button>
                                         </td>
-                                        <td class="text-right bold">{{listitem.item.itemCharge*listitem.orderQuantity}}</td>
+                                        <td class="text-right bold">{{listitem.item.itemCharge*listitem.orderQuantity |toFixed|toUSD}}</td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="text-center bold">Total</td>
                                         <td class="text-center bold">{{totalqty}}</td>
                                         <td>&nbsp;</td>
-                                        <td class="text-right bold">{{totalamount}}</td>
+                                        <td class="text-right bold">{{totalamount |toFixed|toUSD}}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -161,6 +161,14 @@
                 showneworderform: false
 
             };
+        },
+        filters: {
+            toUSD(price) {
+            return `$${price}`;
+            },
+            toFixed(value) {
+            return value.toFixed(2);
+            },
         },
         created() {
             this.showneworderform = this.isAddOrder;

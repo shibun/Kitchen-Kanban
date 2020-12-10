@@ -22,11 +22,8 @@
             <tr v-bind:key="data.userId" v-for="(data, index) in users">
               <td class="text-center">{{ index + 1 }}</td>
               <td class="text-center">
-                <img
-                  src="../assets/images/user_img.png"
-                  class="display-user-img"
-                />
-                <!-- <img v-bind:src="'data:image/jpeg;base64,'+ data.imageContent" v-if="data.imageId!=null" class="display-user-img"/> -->
+              <img src="../assets/images/no_user_img.png" v-if="data.imageId==null" class="display-user-img" />
+                <img v-bind:src="'data:image/jpeg;base64,'+ data.imageContent" v-if="data.imageId!=null" class="display-user-img"/>
               </td>
               <td>{{ data.firstName }} {{ data.lastName }}</td>
               <td>{{ data.userName }}</td>
@@ -68,7 +65,8 @@ import userService from "../services/userService";
 //import appDataMixin from '../mixins/appDataMixin'
 import MessageSuccess from "@/components/MessageSuccess.vue";
 import MessageError from "@/components/MessageError.vue";
-import AddUser from "../components/AddUser.vue";
+import AddUser from '../components/AddUser.vue';
+import MediarelatedService from '../services/MediarelatedService';
 import Vue from "vue";
 export default {
   name: "User",
@@ -95,6 +93,7 @@ export default {
         userType: "",
         password: "",
       },
+      files:"",
     };
   },
   components: {
@@ -120,17 +119,34 @@ export default {
     showAddUser() {
       this.isAddUser = true;
     },
-    addUser(data) {
-      this.errormsg = "";
-      if(!this.validateUser(data,true)){
-        return;
-      }
+     addUser(data,data1) {
+       this.files=data1;
+       this.errormsg = "";
+       if(!data.firstName){
+        this.errormsg = "Please enter first name";
+         return;
+       }
+      
       userService
         .addUser(data)
         .then(
-          (response) => (
-            (this.successmsg = "user added"), (this.isAddUser = false)
-          )
+          (response) => 
+            {
+        if(this.files != '')
+            {
+              const files = this.files;
+              MediarelatedService.uploadfile(files, response.data.userId, 1)
+                .then((response) => {            
+                  console.log("response", response);
+                })
+              .catch((err) => {
+                (this.errormsg = "error occured"), console.log(err.message);
+              });
+            }
+         
+    this.successmsg = "user added";
+    this.isAddUser = false;
+          }
         )
         .catch((err) => {
           (this.errormsg = err.messge), console.log(err.message);
@@ -145,6 +161,17 @@ export default {
         .updateUser(data)
         .then(
           (response) => {
+             if(this.files != '')
+            {
+              const files = this.files;
+              MediarelatedService.uploadfile(files, data.userId, 1)
+                .then((response) => {            
+                  console.log("response", response);
+                })
+              .catch((err) => {
+                (this.errormsg = "error occured"), console.log(err.message);
+              });
+            }
             this.successmsg = "user updated";
             this.isAddUser = false
             }
