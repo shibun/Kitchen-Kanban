@@ -16,6 +16,7 @@ namespace KitchenKanban.ViewModels
         public string OrderTakenBy { get; set; }
         public string CancellationReason { get; set; }
 
+        public string OrderTakenByUserName { get; set; }
         public int NoOfItemsInOrder { get; set; }
     }
 }
