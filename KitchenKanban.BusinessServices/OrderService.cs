@@ -105,6 +105,13 @@ namespace KitchenKanban.BusinessServices
                     OrderLineId = x.OrderLineId,
                     OrderQuantity = x.OrderQuantity,
                     PreparedById = x.PreparedById,
+                    Item= new ItemViewModel()
+                    {
+                        ItemId=x.ItemId,
+                        ItemName = _databaseContext.Items.Find(x.ItemId).ItemName,
+                        ItemQuantity=x.OrderQuantity,
+                        ItemCharge = _databaseContext.Items.Find(x.ItemId).ItemCharge
+                    },
                     ItemName = _databaseContext.Items.Find(x.ItemId).ItemName,
                     ItemCharge= _databaseContext.Items.Find(x.ItemId).ItemCharge
                 }).ToList()) ;

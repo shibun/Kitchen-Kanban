@@ -115,7 +115,7 @@
                         </ul>
                       </div>
                       <button
-                        @click="editOrder(order)"
+                        @click="editOrder(order.orderId)"
                         class="edit-order-btn tkt-left-btn"
                       >
                         Edit Order
@@ -227,7 +227,7 @@
                         </ul>
                       </div>
                       <button
-                        @click="editOrder(bporder)"
+                        @click="editOrder(bporder.orderId)"
                         class="edit-order-btn tkt-left-btn"
                       >
                         Edit Order
@@ -348,7 +348,7 @@
                         Deliver
                       </button>
                       <button v-if="false"
-                        @click="editOrder(order)"
+                        @click="editOrder(order.orderId)"
                         class="edit-order-btn tkt-left-btn"
                       >
                         Edit Order
@@ -459,7 +459,7 @@
                         </ul>
                       </div>
                       <button v-if="false"
-                        @click="editOrder(order)"
+                        @click="editOrder(order.orderId)"
                         class="edit-order-btn tkt-left-btn"
                       >
                         Edit Order
@@ -578,7 +578,7 @@
       </div>
     </section>
     <div class="clearfix"></div>
-    <NewOrder :isAddOrder.sync="isAddOrder" v-on:order-update="getKanboard" />
+    <NewOrder :isAddOrder.sync="isAddOrder" v-on:order-update="getKanboard"   v-bind:editorderid="editorderid"/>
   </div>
 </template>
 <script>
@@ -613,7 +613,7 @@ export default {
       errormsg: "",
       isAddOrder: false,
       orderdetails: {},
-      editorder: null,
+      editorderid: null,
 
       orderStatusAll: [
         { id: 1, value: "New Order" },
@@ -692,9 +692,10 @@ export default {
       this.getFilteredStatus(bucketname, order);
       $("#orderdetailsdiv" + dividentifier + index).slideToggle();
     },
-    editOrder(data) {
-      this.editorder = data;
-      console.log("editorder", data);
+    editOrder(orderid) {
+      this.editorderid = orderid;
+      this.isAddOrder=true;
+      console.log("editorder", orderid);
     },
     changeOrderStatus(orderid, statusid, reason) {
       var orderStatus = {
