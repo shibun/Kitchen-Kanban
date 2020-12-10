@@ -110,15 +110,7 @@ namespace KitchenKanban.BusinessServices
 
                 output.Add(itemResult);
             }
-            return result.Select(user => new UserViewModel()
-            {
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                UserId = user.UserId,
-                UserName = user.UserName,
-                UserType = user.UserType,
-                ImageId = user.ImageId
-            }).ToList();
+            return output;
         }
 
         public bool Update(UserInputViewModel input)
