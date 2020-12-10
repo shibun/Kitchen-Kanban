@@ -41,6 +41,28 @@ namespace KitchenKanban.BusinessServices
             return input;
         }
 
+        public bool Delete(string kitchenId)
+        {
+            var kitchen = _databaseContext.Kitchens.Where(x => x.KitchenId == kitchenId).FirstOrDefault();
+            if (kitchen == null)
+                return false;
+
+            var orderLine = _databaseContext.OrderLines.Where(x => x.KitchenId == kitchen.KitchenId).FirstOrDefault();
+            if (orderLine != null)
+                throw new Exception("Kitchen cannot be deleted as transactions added aganist it");
+            try
+            {
+                _databaseContext.Kitchens.Remove(kitchen);
+                _databaseContext.SaveChanges();
+
+                return true;
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public KitchenViewModel GetKitchenById(string kitchenId)
         {
             var kitchen = _databaseContext.Kitchens.Where(x => x.KitchenId == kitchenId).FirstOrDefault();

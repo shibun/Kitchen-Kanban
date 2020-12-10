@@ -65,5 +65,19 @@ namespace KitchenKanban.WebAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete("{itemId}")]
+        public IActionResult Delete(string itemId)
+        {
+            try
+            {
+                var result = _itemService.Delete(itemId);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

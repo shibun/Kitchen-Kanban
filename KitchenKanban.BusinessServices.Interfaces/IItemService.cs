@@ -9,5 +9,6 @@ namespace KitchenKanban.BusinessServices.Interfaces
         ItemViewModel GetItemById(string itemId);
         List<ItemViewModel> GetItems();
         bool Update(ItemViewModel input);
+        bool Delete(string itemId);
     }
 }

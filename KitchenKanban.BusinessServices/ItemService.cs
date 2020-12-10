@@ -102,5 +102,28 @@ namespace KitchenKanban.BusinessServices
 
             return true;
         }
+
+        public bool Delete(string itemId)
+        {
+            var item = _databaseContext.Items.Where(x => x.ItemId == itemId).FirstOrDefault();
+            if (item == null)
+                return false;
+
+            var orderLine = _databaseContext.OrderLines.Where(x => x.ItemId == item.ItemId).FirstOrDefault();
+            if (orderLine != null)
+                throw new Exception("Item cannot be deleted as transactions added aganist it");
+            try
+            {
+                _databaseContext.Items.Remove(item);
+                _databaseContext.SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            throw new NotImplementedException();
+        }
     }
 }
