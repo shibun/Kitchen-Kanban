@@ -77,6 +77,7 @@ export default {
       errormsg: "",
       users: null,
       isAddUser: false,
+      isNew:true,
       edituser: {},
       userTypes: [
         { id: 1, value: "Administrator" },
@@ -210,6 +211,8 @@ export default {
     },
     editUser: function(data) {
       console.log('edit user call',data);
+      this.isNew=!this.isNew
+      data.isNew=this.isNew
       this.edituser = data;
       this.isAddUser = true;
     },
@@ -219,6 +222,7 @@ export default {
     },
     clearAddForm() {
       this.isAddUser = false;
+      this.edituser={}
     },
   },
 };

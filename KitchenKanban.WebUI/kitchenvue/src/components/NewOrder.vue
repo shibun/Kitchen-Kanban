@@ -1,5 +1,5 @@
 <template>
-    <div v-if="showneworderform">
+    <div v-if="isAddOrder">
         <div class="add-overlay" >
             <div class="add-pop-overlay">
                 <div class="modal-header">
@@ -158,7 +158,6 @@
                 selection: '',
                 successmsg: "",
                 errormsg: "",
-                showneworderform: false
 
             };
         },
@@ -171,28 +170,22 @@
             },
         },
         created() {
-            this.showneworderform = this.isAddOrder;
             this.getItems();
         },
         watch:{
             'isAddOrder'(){
                 this.successmsg = "";
-                 this.showneworderform = this.isAddOrder;
-                 console.log('watch',this.showneworderform);
-                 console.log('editorder',this.editorderid);
                
             },
             'editorderid'(){
                  this.successmsg = "";
-                 this.showneworderform = true;
-                 console.log('editorder',this.editorderid);
+                 if(this.editorderid)
                  this.getOrderDetails(this.editorderid);
             }
             },
         methods: {
             hideForm() {
-                this.$emit('update:isAddOrder',false)
-                 this.showneworderform = false;
+                this.$emit('clear-add-form');
             },
             getItems() {
                 (this.successmsg = false),

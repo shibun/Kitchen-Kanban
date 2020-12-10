@@ -127,6 +127,7 @@
 </template>
 <script>
 import userService from "../services/userService";
+import Vue from 'vue'
 export default {
     name:"AddUser",
     props:['isAddUser','edituser'],
@@ -190,23 +191,41 @@ export default {
     },
   },
    watch: {
-      edituser:{
-        immediate: true,
-        handler(newVal, oldVal) {
-          if(newVal){
-            console.log('watch',oldVal,newVal);
-            this.user=newVal;
-             if(this.user.imageContent!=null){
-              console.log('image is there');
-              this.imagedata='data:image/jpeg;base64,'+this.user.imageContent;
-               }
-              else{
-             console.log('image is not threse')
-              this.imagedata='';
-           }
-        }
-      }
-    }
+
+
+      'edituser'(){
+                 
+                  //Vue.set(this.user,'user',this.edituser);
+                  this.user=this.edituser;
+                  console.log('watch',this.edituser);
+                 if(this.user.imageContent!=null){
+                      //console.log('image is there');
+                      this.imagedata='data:image/jpeg;base64,'+this.user.imageContent;
+                      }
+                      else{
+                    //console.log('image is not threse')
+                      this.imagedata='';
+                  }
+               
+            },
+    //   edituser:{
+    //     immediate: true,
+    //     deep: true,
+    //     handler(newVal, oldVal) {
+       
+    //         console.log('watch',oldVal,newVal);
+    //         this.user=newVal;
+    //          if(this.user.imageContent!=null){
+    //           //console.log('image is there');
+    //           this.imagedata='data:image/jpeg;base64,'+this.user.imageContent;
+    //            }
+    //           else{
+    //          //console.log('image is not threse')
+    //           this.imagedata='';
+    //        }
+       
+    //   }
+    // }
   }
 }
 </script>

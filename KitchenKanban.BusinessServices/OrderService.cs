@@ -250,8 +250,8 @@ namespace KitchenKanban.BusinessServices
                 order.UpdatedOn = DateTime.Now;
                 _databaseContext.Orders.Update(order);
 
-                var newItems = input.OrderLines.Where(x => x.OrderLineId == null).ToList();
-                var existingItems = input.OrderLines.Where(x => x.OrderLineId != null).ToList();
+                var newItems = input.OrderLines.Where(x => string.IsNullOrEmpty(x.OrderLineId)).ToList();
+                var existingItems = input.OrderLines.Where(x => !string.IsNullOrEmpty(x.OrderLineId)).ToList();
 
                 for (int i = 0; i < order.OrderLines.Count(); i++)
                 {
