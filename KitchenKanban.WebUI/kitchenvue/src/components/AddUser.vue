@@ -6,7 +6,7 @@
             type="button"
             class="close"
             data-dismiss="modal"
-            @click="hideAddUser"
+             @click="clearForm"
           >
             ×
           </button>

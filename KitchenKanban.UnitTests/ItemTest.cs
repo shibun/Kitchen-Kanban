@@ -60,5 +60,30 @@ namespace KitchenKanban.UnitTests
 
             Assert.True(modifiedResult);
         }
+
+        [Fact]
+        public void DeleteItem()
+        {
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddDbContext<KitchenKanbanDB>(options => options.UseInMemoryDatabase("KitchenKanbanDB"), ServiceLifetime.Transient);
+            ServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
+            IUserInfo userInfo = new UserInfo()
+            {
+                UserId = "95632324-a9f8-44ba-9b3d-4c90dd5d9650",
+                UserType = Models.Enums.UserEnum.UserType.Administrator
+            };
+            IImageService imageService = new ImageService(serviceProvider, userInfo);
+            IItemService itemService = new ItemService(serviceProvider, imageService, userInfo);
+            var input = new ItemViewModel()
+            {
+                ItemName = "Pizza Margherita Cheese",
+                ItemCharge = 880.50M
+            };
+            var result = itemService.Create(input);
+
+            var deleteResult = itemService.Delete(result.ItemId);
+
+            Assert.True(deleteResult);
+        }
     }
 }

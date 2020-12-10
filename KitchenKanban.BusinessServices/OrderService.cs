@@ -76,6 +76,11 @@ namespace KitchenKanban.BusinessServices
 
             if (order != null)
             {
+                User orderTakenBy = null;
+                if(order.OrderTakenBy != null)
+                {
+                    orderTakenBy = _databaseContext.Users.Where(x => x.UserId == order.OrderTakenBy).FirstOrDefault();
+                }
                 OrderDetailViewModel result = new OrderDetailViewModel();
                 result.Order = new OrderViewModel()
                 {
@@ -88,6 +93,7 @@ namespace KitchenKanban.BusinessServices
                     OrderNumber = order.OrderNumber,
                     OrderStatus = order.OrderStatus,
                     OrderTakenBy = order.OrderTakenBy,
+                    OrderTakenByUserName = orderTakenBy?.FirstName + " " + orderTakenBy?.LastName,
                     OrderType = order.OrderType
                 };
 

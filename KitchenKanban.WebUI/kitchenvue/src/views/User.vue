@@ -136,23 +136,25 @@ export default {
             {
               const files = this.files;
               MediarelatedService.uploadfile(files, response.data.userId, 1)
-                .then((response) => {            
+                .then((response) => {  
+                  this.successmsg = "user added";
+                   this.isAddUser = false;          
                   console.log("response", response);
                 })
               .catch((err) => {
                 (this.errormsg = "error occured"), console.log(err.message);
               });
-            }
-         
-    this.successmsg = "user added";
-    this.isAddUser = false;
+            }   
+                
+    
           }
         )
         .catch((err) => {
           (this.errormsg = err.messge), console.log(err.message);
         });
     },
-    updateUser(data) {
+    updateUser(data,data1) {
+       this.files=data1;
       this.errormsg = "";
       if(!this.validateUser(data,false)){
         return;
@@ -165,15 +167,16 @@ export default {
             {
               const files = this.files;
               MediarelatedService.uploadfile(files, data.userId, 1)
-                .then((response) => {            
+                .then((response) => {    
+                   this.successmsg = "user updated";
+                    this.isAddUser = false        
                   console.log("response", response);
                 })
               .catch((err) => {
                 (this.errormsg = "error occured"), console.log(err.message);
               });
             }
-            this.successmsg = "user updated";
-            this.isAddUser = false
+           
             }
         )
         .catch((err) => {
