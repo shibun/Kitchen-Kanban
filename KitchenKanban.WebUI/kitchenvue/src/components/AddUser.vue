@@ -176,7 +176,7 @@ export default {
       this.files="";
 
 
-      console.log(this.user);
+      console.log('clearForm',this.user);
       this.hideAddUser();
     },
      fileChange(fileList) {      
@@ -194,7 +194,7 @@ export default {
         immediate: true,
         handler(newVal, oldVal) {
           if(newVal){
-            console.log(oldVal,newVal);
+            console.log('watch',oldVal,newVal);
             this.user=newVal;
              if(this.user.imageContent!=null){
               console.log('image is there');

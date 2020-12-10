@@ -206,7 +206,7 @@ export default {
       
     },
     editUser: function(data) {
-      console.log(data);
+      console.log('edit user call',data);
       this.edituser = data;
       this.isAddUser = true;
     },

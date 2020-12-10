@@ -226,12 +226,7 @@
                           </li>
                         </ul>
                       </div>
-                      <button
-                        @click="editOrder(bporder.orderId)"
-                        class="edit-order-btn tkt-left-btn"
-                      >
-                        Edit Order
-                      </button>
+                   
                       <button
                         class="cancel-order-btn"
                         @click="
@@ -628,6 +623,7 @@ export default {
   methods: {
     showForm() {
       this.isAddOrder = true;
+      this.editorderid='';
       console.log(this.isAddOrder);
     },
     getFilteredStatus(bucketname, order) {

@@ -179,6 +179,7 @@
                 this.successmsg = "";
                  this.showneworderform = this.isAddOrder;
                  console.log('watch',this.showneworderform);
+                 console.log('editorder',this.editorderid);
                
             },
             'editorderid'(){
