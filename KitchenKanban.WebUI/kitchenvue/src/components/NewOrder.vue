@@ -12,13 +12,13 @@
                             <div class="col-xs-6">
                                 <div class="form-group">
                                     <label>Customer Name </label>
-                                    <input type="text" class="form-control" v-model="Orderdetail.Order.CustomerName">
+                                    <input type="text" class="form-control" v-model="Orderdetail.Order.customerName">
                                 </div>
                             </div>
                             <div class="col-xs-6">
                                 <div class="form-group">
                                     <label>Customer Phone </label>
-                                    <input type="text" class="form-control" v-model="Orderdetail.Order.CustomerContactNumber">
+                                    <input type="text" class="form-control" v-model="Orderdetail.Order.customerContactNumber">
                                 </div>
                             </div>
                         </div>
@@ -26,7 +26,7 @@
                             <div class="col-xs-6">
                                 <div class="form-group">
                                     <label>Delivery Type <span class="asterisk">*</span></label>
-                                    <select class="form-control" v-model="Orderdetail.Order.OrderType">
+                                    <select class="form-control" v-model="Orderdetail.Order.orderType">
                                         <option>Select</option>
                                         <option value=1>Dining</option>
                                         <option value=2>Take Away</option>
@@ -65,15 +65,15 @@
                                     </tr>
                                     <tr v-for="(listitem,index) in list" :key="listitem.itemId">
                                         <td class="text-center">{{index+1}}</td>
-                                        <td>{{listitem.Item.itemName}}</td>
+                                        <td>{{listitem.item.itemName}}</td>
                                         <td class="text-center bold">
                                             <div class="qty-main">
                                                 <div class="float-left neg-qty-box">
-                                                    <button class="qty-btn" @click="decrement(listitem.OrderQuantity,index)">-</button>
+                                                    <button class="qty-btn" @click="decrement(listitem.orderQuantity,index)">-</button>
                                                 </div>
-                                                <div class="float-left qty-box">{{listitem.OrderQuantity}}</div>
+                                                <div class="float-left qty-box">{{listitem.orderQuantity}}</div>
                                                 <div class="float-left pos-qty-box">
-                                                    <button class="qty-btn" @click="increment(listitem.OrderQuantity,index)">+</button>
+                                                    <button class="qty-btn" @click="increment(listitem.orderQuantity,index)">+</button>
                                                 </div>
                                                 <div class="clearfix"></div>
                                             </div>
@@ -81,7 +81,7 @@
                                         <td class="text-center">
                                             <button class="trans-btn" @click="deleteorderline(listitem,index)"><img src="../assets/images/delete.png" /></button>
                                         </td>
-                                        <td class="text-right bold">{{listitem.Item.itemCharge*listitem.OrderQuantity}}</td>
+                                        <td class="text-right bold">{{listitem.item.itemCharge*listitem.orderQuantity}}</td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="text-center bold">Total</td>
@@ -96,7 +96,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default left-btn" data-dismiss="modal" @click="cancelForm">Cancel</button>
-                    <button type="button" class="btn btn-active" data-dismiss="modal" @click="addOrder">Add</button>
+                    <button v-if="!this.editorderid" type="button" class="btn btn-active" data-dismiss="modal" @click="addOrder">Add</button>
+                    <button v-if="this.editorderid" type="button" class="btn btn-active" data-dismiss="modal" @click="updateOrder">Update</button>
                 </div>
             </div>
         </div>
@@ -109,9 +110,10 @@
     import OrderService from "../services/OrderService";
     import MessageSuccess from "@/components/MessageSuccess.vue";
     import MessageError from "@/components/MessageError.vue";
+    import Vue from 'vue'
     export default {
         name: 'NewOrder',
-        props: ['isAddOrder'],
+        props: ['isAddOrder','editorderid'],
         components: {
             MessageError,
             MessageSuccess
@@ -124,10 +126,10 @@
                         OrderId: "",
                         OrderNumber: "",
                         OrderDate: new Date(),
-                        CustomerName: "",
-                        CustomerContactNumber: "",
+                        customerName: "",
+                        customerContactNumber: "",
                         OrderAmount: 0.0,
-                        OrderType: 1,
+                        orderType: 1,
                         OrderStatus: 1,
                         OrderTakenBy: "",
                         CancellationReason: ""
@@ -136,13 +138,13 @@
                 },
 
                 OrderLine: {
-                    OrderLineId: "",
-                    OrderId: "",
-                    ItemId: "",
-                    OrderQuantity: "",
-                    KitchenId: "",
-                    PreparedById: "",
-                    Item: {
+                    orderLineId: "",
+                    orderId: "",
+                    itemId: "",
+                    orderQuantity: "",
+                    kitchenId: "",
+                    preparedById: "",
+                    item: {
                         itemId: '',
                         itemCharge: '',
                         itemName: ''
@@ -169,6 +171,13 @@
                 this.successmsg = "";
                  this.showneworderform = this.isAddOrder;
                  console.log('watch',this.showneworderform);
+               
+            },
+            'editorderid'(){
+                 this.successmsg = "";
+                 this.showneworderform = true;
+                 console.log('editorder',this.editorderid);
+                 this.getOrderDetails(this.editorderid);
             }
             },
         methods: {
@@ -182,6 +191,22 @@
                     this.Items = response.data
                 });
             },
+            getOrderDetails(orderid) {
+                OrderService
+                    .getOrderById(orderid)
+                    .then((response) => {
+                            this.orderdetails = response.data;
+                            console.log(this.orderdetails);
+                            Vue.set(this.Orderdetail, "Order", response.data.order);
+                            Vue.set(this.Orderdetail,"OrderLines", response.data.orderLines);
+                            this.list=response.data.orderLines;
+                            console.log('list',this.list);
+                            })
+                    .catch((err) => {
+                    (this.errormsg = err.messge), console.log(err.message);
+                    });
+                    
+                },
             onError() {
                 console.log("onError parent");
                 this.errormsg = "";
@@ -192,13 +217,13 @@
                 this.Items.forEach((value, index) => {
                     if (value.itemName === e.target.value) {
                             this.OrderLine = {},
-                            this.OrderLine.OrderLineId = "",
-                            this.OrderLine.OrderId = "",
-                            this.OrderLine.ItemId = value.itemId,
-                            this.OrderLine.OrderQuantity = 1,
-                            this.OrderLine.KitchenId = "",
-                            this.OrderLine.PreparedById = "",
-                            this.OrderLine.Item = value
+                            this.OrderLine.orderLineId = "",
+                            this.OrderLine.orderId = "",
+                            this.OrderLine.itemId = value.itemId,
+                            this.OrderLine.orderQuantity = 1,
+                            this.OrderLine.kitchenId = "",
+                            this.OrderLine.preparedById = "",
+                            this.OrderLine.item = value
 
                             if(this.list.length==0){
                                     this.list.push(this.OrderLine);
@@ -207,10 +232,10 @@
                             if(this.list.length>0){
                                 let count=0;
                                 this.list.forEach((value, index1) => {
-                                     console.log(value.Item.itemName,e.target.value);
-                                    if(value.Item.itemName==e.target.value){
+                                     console.log(value.item.itemName,e.target.value);
+                                    if(value.item.itemName==e.target.value){
                                         count=1;                                       
-                                        this.increment(value.OrderQuantity,index1);
+                                        this.increment(value.orderQuantity,index1);
                                         return;
                                     }                                   
                                 });
@@ -224,13 +249,13 @@
                 this.totalCalculation();
             },
             increment: function (qty, index) {
-                    this.list[index].OrderQuantity++;
+                    this.list[index].orderQuantity++;
                     this.Orderdetail.OrderLines = this.list;
                    this.totalCalculation();
             },
             decrement: function (qty, index) {
-                        if (this.list[index].OrderQuantity > 1) {
-                            this.list[index].OrderQuantity--;                            
+                        if (this.list[index].orderQuantity > 1) {
+                            this.list[index].orderQuantity--;                            
                            this.totalCalculation();
                 }
             },
@@ -245,8 +270,8 @@
                     return;
                 }
                 console.log(this.Orderdetail);
-                this.Orderdetail.Order.OrderType = parseInt(this.Orderdetail.Order.OrderType);
-                OrderService.post(this.Orderdetail).then((response) => {
+                this.Orderdetail.Order.orderType = parseInt(this.Orderdetail.Order.orderType);
+                OrderService.addOrder(this.Orderdetail).then((response) => {
                     
                     this.successmsg = "Order created";
                     this.$emit('order-update')
@@ -257,16 +282,34 @@
                         (this.errormsg = "error occured"), console.log(err.message);
                     });
             },
+             updateOrder() {
+                if (this.Orderdetail.OrderLines.length == 0) {
+                    this.errormsg = "Please enter Items";
+                    return;
+                }
+                console.log(this.Orderdetail);
+                this.Orderdetail.Order.orderType = parseInt(this.Orderdetail.Order.orderType);
+                OrderService.updateOrder(this.Orderdetail).then((response) => {
+                    
+                    this.successmsg = "Order updated";
+                    this.$emit('order-update')
+                    this.clearOrder();
+                    //this.$emit('update:isAddOrder',false)
+                    })
+                    .catch((err) => {
+                        (this.errormsg = "error occured"), console.log(err.message);
+                    });
+            },
          totalCalculation:function(){
               this.Orderdetail.OrderLines = this.list;
-                this.Orderdetail.Order.OrderAmount = 0.0;
+                this.Orderdetail.Order.orderAmount = 0.0;
                 this.totalqty = 0;
                 this.Orderdetail.OrderLines.forEach((value, index) => {
-                    this.Orderdetail.Order.OrderAmount = parseFloat(this.Orderdetail.Order.OrderAmount) + (parseFloat(value.OrderQuantity) * parseFloat(value.Item.itemCharge));
-                    this.totalqty = parseFloat(this.totalqty) + parseFloat(value.OrderQuantity);
+                    this.Orderdetail.Order.orderAmount = parseFloat(this.Orderdetail.Order.orderAmount) + (parseFloat(value.orderQuantity) * parseFloat(value.item.itemCharge));
+                    this.totalqty = parseFloat(this.totalqty) + parseFloat(value.orderQuantity);
                 });
 
-                this.totalamount = this.Orderdetail.Order.OrderAmount;
+                this.totalamount = this.Orderdetail.Order.orderAmount;
          },
         cancelForm(){
             this.clearOrder();
@@ -277,23 +320,23 @@
                     OrderId: "",
                     OrderNumber: "",
                     OrderDate: new Date(),
-                    CustomerName: "",
+                    customerName: "",
                     CustomerConactNumber: "",
                     OrderAmount: 0.0,
-                    OrderType: 1,
+                    orderType: 1,
                     OrderStatus: 1,
                     OrderTakenBy: "",
                     CancellationReason: ""
                 };
                 this.Orderdetail.OrderLines = [];
                 this.OrderLine = {
-                    OrderLineId: "",
-                    OrderId: "",
-                    ItemId: "",
-                    OrderQuantity: "",
-                    KitchenId: "",
-                    PreparedById: "",
-                    Item: {
+                    orderLineId: "",
+                    orderId: "",
+                    itemId: "",
+                    orderQuantity: "",
+                    kitchenId: "",
+                    preparedById: "",
+                    item: {
                         itemId: '',
                         itemCharge: '',
                         itemName: ''
