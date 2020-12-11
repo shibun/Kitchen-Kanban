@@ -144,6 +144,7 @@ namespace KitchenKanban.BusinessServices
                 var bucket = new KanbanBucket()
                 {
                     BucketName = "Ready To Be Delivered",
+                    //BucketName = "Takeaway",
                     FlowOrder = flowOrder,
                     OrderCount = readyToBeDeliveredOrders.Count(),
                     Orders = readyToBeDeliveredOrders.Select(order => new KanbanOrder()
@@ -161,6 +162,54 @@ namespace KitchenKanban.BusinessServices
                 };
 
                 bucketList.Add(bucket);
+            }
+
+            //Delivered
+            var deliveredDateTime = DateTime.Now.AddMinutes(-15);
+            var deliveredOrders = _databaseContext.Orders.Include(x => x.OrderLines).Where(x => x.OrderStatus == OrderStatus.Completed && x.UpdatedOn >= deliveredDateTime).ToList();
+            if (deliveredOrders.Count() > 0)
+            {
+                var lastBucket = bucketList.Where(x => x.BucketName == "Ready To Be Delivered").FirstOrDefault();
+                if (lastBucket != null)
+                {
+                    lastBucket.OrderCount = lastBucket.OrderCount + deliveredOrders.Count();
+                    lastBucket.Orders.AddRange(deliveredOrders.Select(order => new KanbanOrder()
+                    {
+                        CustomerContactNumber = order.CustomerContactNumber,
+                        CustomerName = order.CustomerName,
+                        OrderAmount = order.OrderAmount,
+                        OrderDate = order.OrderDate,
+                        OrderId = order.OrderId,
+                        OrderLineCount = order.OrderLines.Count(),
+                        OrderNumber = order.OrderNumber,
+                        OrderStatus = order.OrderStatus,
+                        OrderType = order.OrderType
+                    }).ToList());
+                }
+                else
+                {
+                    flowOrder = flowOrder + 1;
+                    var bucket = new KanbanBucket()
+                    {
+                        BucketName = "Takeaway",
+                        FlowOrder = flowOrder,
+                        OrderCount = deliveredOrders.Count(),
+                        Orders = deliveredOrders.Select(order => new KanbanOrder()
+                        {
+                            CustomerContactNumber = order.CustomerContactNumber,
+                            CustomerName = order.CustomerName,
+                            OrderAmount = order.OrderAmount,
+                            OrderDate = order.OrderDate,
+                            OrderId = order.OrderId,
+                            OrderLineCount = order.OrderLines.Count(),
+                            OrderNumber = order.OrderNumber,
+                            OrderStatus = order.OrderStatus,
+                            OrderType = order.OrderType
+                        }).ToList()
+                    };
+
+                    bucketList.Add(bucket);
+                }
             }
 
             return bucketList;
