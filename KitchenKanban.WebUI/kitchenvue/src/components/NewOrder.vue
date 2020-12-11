@@ -26,11 +26,8 @@
                             <div class="col-xs-6">
                                 <div class="form-group">
                                     <label>Delivery Type <span class="asterisk">*</span></label>
-                                    <select class="form-control" v-model="Orderdetail.Order.orderType">
-                                        <option>Select</option>
-                                        <option value=1>Dining</option>
-                                        <option value=2>Take Away</option>
-                                    </select>
+                               
+                                    <input type="text"  class="form-control" :value="TakeAway" :readOnly="true">
                                 </div>
                             </div>
                         </div>
@@ -59,9 +56,10 @@
                                     <tr>
                                         <th class="text-center">Sl No</th>
                                         <th class="text-center">Item Name</th>
-                                        <th class="text-center">Qty</th>
+                                        <th class="text-center">Qty</th>                                        
+                                        <th class="text-center">Item Price</th>
+                                         <th class="text-center">&nbsp;</th>
                                         <th class="text-center">Delete</th>
-                                        <th class="text-center">Price</th>
                                     </tr>
                                     <tr v-for="(listitem,index) in list" :key="listitem.itemId">
                                         <td class="text-center">{{index+1}}</td>
@@ -77,17 +75,19 @@
                                                 </div>
                                                 <div class="clearfix"></div>
                                             </div>
-                                        </td>
-                                        <td class="text-center">
-                                            <button class="trans-btn" @click="deleteorderline(listitem,index)"><img src="../assets/images/delete.png" /></button>
-                                        </td>
+                                        </td>        
+                                        <td class="text-right bold">{{listitem.item.itemCharge |toFixed|toUSD}}</td>
                                         <td class="text-right bold">{{listitem.item.itemCharge*listitem.orderQuantity |toFixed|toUSD}}</td>
+                                        <td class="text-center">
+                                                    <button class="trans-btn" @click="deleteorderline(listitem,index)"><img src="../assets/images/delete.png" /></button>
+                                                </td>
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="text-center bold">Total</td>
                                         <td class="text-center bold">{{totalqty}}</td>
                                         <td>&nbsp;</td>
                                         <td class="text-right bold">{{totalamount |toFixed|toUSD}}</td>
+                                         <td>&nbsp;</td>
                                     </tr>
                                 </table>
                             </div>
@@ -121,6 +121,7 @@
         data() {
             return {
                 Items: [],
+                TakeAway:"TakeAway",
                 Orderdetail: {
                     Order: {
                         OrderId: "",
@@ -129,7 +130,7 @@
                         customerName: "",
                         customerContactNumber: "",
                         OrderAmount: 0.0,
-                        orderType: 1,
+                        orderType: 2,
                         OrderStatus: 1,
                         OrderTakenBy: "",
                         CancellationReason: ""
@@ -202,11 +203,13 @@
                             Vue.set(this.Orderdetail, "Order", response.data.order);
                             Vue.set(this.Orderdetail,"OrderLines", response.data.orderLines);
                             this.list=response.data.orderLines;
+                               this.totalCalculation();
                             console.log('list',this.list);
                             })
                     .catch((err) => {
                     (this.errormsg = err.messge), console.log(err.message);
                     });
+                    
                     
                 },
             onError() {
@@ -346,6 +349,9 @@
                 };
                 this.list = [];
                 this.selecteditem = '';
+                 this.totalamount= 0.00;
+                this.totalqty= 0;
+
             }
         }
 

@@ -18,7 +18,8 @@ export default {
     return axios.put('/Kitchen',Kitchen)
   },
   deletecounter(KitchenId){
-     return axios.delete('/Kitchen',KitchenId)
+     const article = { kitchenId:KitchenId};
+     return axios.delete('/Kitchen',article)
   },
 
 }
