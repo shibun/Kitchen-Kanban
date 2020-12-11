@@ -40,11 +40,14 @@
               >
                 <div
                   class="order-detail"
-                  @click="toggleOrderDetails(order, index, 'no',neworders.bucketName)"
+                  @click="
+                    toggleOrderDetails(order, index, 'no', neworders.bucketName)
+                  "
                 >
                   <div>
                     <div class="float-left">
-                      {{ order.orderNumber.split("-")[1]}} [ {{ order.orderDate | formatTime }}]
+                      {{ order.orderNumber.split("-")[1] }} [
+                      {{ order.orderDate | formatTime }}]
                     </div>
                     <div class="float-right" v-if="order.orderType == 1">
                       DineIn
@@ -151,11 +154,18 @@
               >
                 <div
                   class="order-detail"
-                  @click="toggleOrderDetails(bporder, bpindex, 'bp',beingpreparedorders.bucketName)"
+                  @click="
+                    toggleOrderDetails(
+                      bporder,
+                      bpindex,
+                      'bp',
+                      beingpreparedorders.bucketName
+                    )
+                  "
                 >
                   <div>
                     <div class="float-left">
-                      {{ bporder.orderNumber.split("-")[1]}} [
+                      {{ bporder.orderNumber.split("-")[1] }} [
                       {{ bporder.orderDate | formatTime }}]
                     </div>
                     <div class="float-right" v-if="bporder.orderType == 1">
@@ -226,12 +236,7 @@
                           </li>
                         </ul>
                       </div>
-                      <button
-                        @click="editOrder(bporder.orderId)"
-                        class="edit-order-btn tkt-left-btn"
-                      >
-                        Edit Order
-                      </button>
+
                       <button
                         class="cancel-order-btn"
                         @click="
@@ -267,11 +272,19 @@
               >
                 <div
                   class="order-detail"
-                  @click="toggleOrderDetails(order, index, 'po',preparedorders.bucketName)"
+                  @click="
+                    toggleOrderDetails(
+                      order,
+                      index,
+                      'po',
+                      preparedorders.bucketName
+                    )
+                  "
                 >
                   <div>
                     <div class="float-left">
-                      {{  order.orderNumber.split("-")[1] }} [ {{ order.orderDate | formatTime }}]
+                      {{ order.orderNumber.split("-")[1] }} [
+                      {{ order.orderDate | formatTime }}]
                     </div>
                     <div class="float-right" v-if="order.orderType == 1">
                       DineIn
@@ -341,19 +354,21 @@
                           </li>
                         </ul>
                       </div>
-                       <button
+                      <button
                         class="edit-order-btn"
                         @click="changeOrderStatus(order.orderId, 6, '')"
                       >
                         Deliver
                       </button>
-                      <button v-if="false"
+                      <button
+                        v-if="false"
                         @click="editOrder(order.orderId)"
                         class="edit-order-btn tkt-left-btn"
                       >
                         Edit Order
                       </button>
-                      <button v-if="false"
+                      <button
+                        v-if="false"
                         class="cancel-order-btn"
                         @click="
                           changeOrderStatus(order.orderId, 7, 'Incorrect order')
@@ -372,7 +387,7 @@
             <div class="kb-column-header">
               Packing
               <span class="order-count">{{
-                packingorders && packingorders.orderCount || 0
+                (packingorders && packingorders.orderCount) || 0
               }}</span>
             </div>
             <div class="ticket-sec" v-if="packingorders">
@@ -384,11 +399,19 @@
               >
                 <div
                   class="order-detail"
-                  @click="toggleOrderDetails(order, index, 'ko',packingorders.bucketName)"
+                  @click="
+                    toggleOrderDetails(
+                      order,
+                      index,
+                      'ko',
+                      packingorders.bucketName
+                    )
+                  "
                 >
                   <div>
                     <div class="float-left">
-                      {{  order.orderNumber.split("-")[1] }} [ {{ order.orderDate | formatTime }}]
+                      {{ order.orderNumber.split("-")[1] }} [
+                      {{ order.orderDate | formatTime }}]
                     </div>
                     <div class="float-right" v-if="order.orderType == 1">
                       DineIn
@@ -458,13 +481,15 @@
                           </li>
                         </ul>
                       </div>
-                      <button v-if="false"
+                      <button
+                        v-if="false"
                         @click="editOrder(order.orderId)"
                         class="edit-order-btn tkt-left-btn"
                       >
                         Edit Order
                       </button>
-                      <button v-if="false"
+                      <button
+                        v-if="false"
                         class="cancel-order-btn"
                         @click="
                           changeOrderStatus(order.orderId, 7, 'Incorrect order')
@@ -495,11 +520,19 @@
               >
                 <div
                   class="order-detail"
-                  @click="toggleOrderDetails(order, index, 'ro',readyorders.bucketName)"
+                  @click="
+                    toggleOrderDetails(
+                      order,
+                      index,
+                      'ro',
+                      readyorders.bucketName
+                    )
+                  "
                 >
                   <div>
                     <div class="float-left">
-                      {{  order.orderNumber.split("-")[1] }} [ {{ order.orderDate | formatTime }}]
+                      {{ order.orderNumber.split("-")[1] }} [
+                      {{ order.orderDate | formatTime }}]
                     </div>
                     <div class="float-right" v-if="order.orderType == 1">
                       DineIn
@@ -578,7 +611,12 @@
       </div>
     </section>
     <div class="clearfix"></div>
-    <NewOrder :isAddOrder.sync="isAddOrder" v-on:order-update="getKanboard"   v-bind:editorderid="editorderid"/>
+    <NewOrder
+      :isAddOrder.sync="isAddOrder"
+      v-on:order-update="getKanboard"
+      v-bind:editorderid="editorderid"
+       v-on:clear-add-form="clearAddForm"
+    />
   </div>
 </template>
 <script>
@@ -613,7 +651,7 @@ export default {
       errormsg: "",
       isAddOrder: false,
       orderdetails: {},
-      editorderid: null,
+      editorderid: '',
 
       orderStatusAll: [
         { id: 1, value: "New Order" },
@@ -628,19 +666,20 @@ export default {
   methods: {
     showForm() {
       this.isAddOrder = true;
-      console.log(this.isAddOrder);
+      //this.editorderid = "";
+      console.log('showForm',this.isAddOrder);
     },
     getFilteredStatus(bucketname, order) {
-      this.orderStatus =this.orderStatusAll; 
+      this.orderStatus = this.orderStatusAll;
       this.orderStatus = this.orderStatus.filter(
-            (item) => item.value != bucketname
-          );
-        if (order.orderType === 1) {
-          this.orderStatus = this.orderStatus.filter(
-            (item) => item.id != 4 && item.id != 5
-          );
-        } 
-       Vue.set(order, "orderStatus", this.orderStatus);
+        (item) => item.value != bucketname
+      );
+      if (order.orderType === 1) {
+        this.orderStatus = this.orderStatus.filter(
+          (item) => item.id != 4 && item.id != 5
+        );
+      }
+      Vue.set(order, "orderStatus", this.orderStatus);
     },
     getKanboard() {
       this.successmsg = "";
@@ -686,7 +725,7 @@ export default {
           (this.errormsg = err.messge), console.log(err.message);
         });
     },
-    toggleOrderDetails(order, index, dividentifier,bucketname) {
+    toggleOrderDetails(order, index, dividentifier, bucketname) {
       this.showorderdetails = !this.showorderdetails;
       this.getOrderDetails(order);
       this.getFilteredStatus(bucketname, order);
@@ -694,8 +733,13 @@ export default {
     },
     editOrder(orderid) {
       this.editorderid = orderid;
-      this.isAddOrder=true;
+      this.isAddOrder = true;
       console.log("editorder", orderid);
+    },
+    clearAddForm() {
+      this.editorderid = '';
+       this.isAddOrder = false;
+       console.log('clearAddForm',this.isAddOrder);
     },
     changeOrderStatus(orderid, statusid, reason) {
       var orderStatus = {
