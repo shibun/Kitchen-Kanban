@@ -82,7 +82,7 @@ namespace KitchenKanban.BusinessServices
                     orderTakenBy = _databaseContext.Users.Where(x => x.UserId == order.OrderTakenBy).FirstOrDefault();
                 }
                 OrderDetailViewModel result = new OrderDetailViewModel();
-                result.Order = new OrderViewModel()
+                var orderData = new OrderViewModel()
                 {
                     CancellationReason = order.CancellationReason,
                     CustomerContactNumber = order.CustomerContactNumber,
@@ -96,6 +96,13 @@ namespace KitchenKanban.BusinessServices
                     OrderTakenByUserName = orderTakenBy?.FirstName + " " + orderTakenBy?.LastName,
                     OrderType = order.OrderType
                 };
+
+                if(order.OrderStatus == OrderStatus.Completed)
+                {
+                    orderData.OrderDeliveryDate = order.UpdatedOn;
+                }
+
+                result.Order = orderData;
 
                 result.OrderLines.AddRange(order.OrderLines.Select(x => new OrderLineViewModel()
                 {
@@ -236,6 +243,10 @@ namespace KitchenKanban.BusinessServices
                     OrderTakenBy = order.OrderTakenBy,
                     OrderType = order.OrderType
                 };
+                if(order.OrderStatus == OrderStatus.Completed)
+                {
+                    orderView.OrderDeliveryDate = order.UpdatedOn;
+                }
                 if (order.OrderTakenBy != null)
                 {
                     orderTakenBy = _databaseContext.Users.Where(x => x.UserId == order.OrderTakenBy).FirstOrDefault();
