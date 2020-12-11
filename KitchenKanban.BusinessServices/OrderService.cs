@@ -216,21 +216,35 @@ namespace KitchenKanban.BusinessServices
 
         public List<OrderViewModel> GetAllOrders()
         {
+            List<OrderViewModel> result = new List<OrderViewModel>();
             var orders = _databaseContext.Orders.Include(x => x.OrderLines).ToList();
-            return orders.Select(x => new OrderViewModel()
+            User orderTakenBy = null;
+            foreach (var order in orders)
             {
-                CancellationReason = x.CancellationReason,
-                CustomerContactNumber = x.CustomerContactNumber,
-                CustomerName = x.CustomerName,
-                NoOfItemsInOrder = x.OrderLines.Count(),
-                OrderAmount = x.OrderAmount,
-                OrderDate = x.OrderDate,
-                OrderId = x.OrderId,
-                OrderNumber = x.OrderNumber,
-                OrderStatus = x.OrderStatus,
-                OrderTakenBy = x.OrderTakenBy,
-                OrderType = x.OrderType
-            }).ToList();
+
+                var orderView = new OrderViewModel()
+                {
+                    CancellationReason = order.CancellationReason,
+                    CustomerContactNumber = order.CustomerContactNumber,
+                    CustomerName = order.CustomerName,
+                    NoOfItemsInOrder = order.OrderLines.Count(),
+                    OrderAmount = order.OrderAmount,
+                    OrderDate = order.OrderDate,
+                    OrderId = order.OrderId,
+                    OrderNumber = order.OrderNumber,
+                    OrderStatus = order.OrderStatus,
+                    OrderTakenBy = order.OrderTakenBy,
+                    OrderType = order.OrderType
+                };
+                if (order.OrderTakenBy != null)
+                {
+                    orderTakenBy = _databaseContext.Users.Where(x => x.UserId == order.OrderTakenBy).FirstOrDefault();
+                    orderView.OrderTakenByUserName = orderTakenBy.FirstName + " " + orderTakenBy.LastName;
+                }
+
+                result.Add(orderView);
+            }
+            return result;
         }
 
         public bool Update(OrderDetailViewModel input)
