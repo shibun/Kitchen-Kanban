@@ -129,10 +129,10 @@ namespace KitchenKanban.BusinessServices
                 switch (input.OrderStatus)
                 {
                     case OrderStatus.BeingPrepared:
-                        if (order.OrderStatus != OrderStatus.NewOrder)
-                        {
-                            throw new Exception("Status Being Prepared is applicable only for New Order.");
-                        }
+                        //if (order.OrderStatus != OrderStatus.NewOrder)
+                        //{
+                        //    throw new Exception("Status Being Prepared is applicable only for New Order.");
+                        //}
                         order.OrderStatus = OrderStatus.BeingPrepared;
                         order.UpdatedBy = _userInfo.UserId;
                         order.UpdatedOn = DateTime.Now;
@@ -140,10 +140,10 @@ namespace KitchenKanban.BusinessServices
                         _databaseContext.SaveChanges();
                         break;
                     case OrderStatus.Prepared:
-                        if (order.OrderStatus != OrderStatus.BeingPrepared)
-                        {
-                            throw new Exception("Status Prepared is applicable only for the items which are already Being Prepared.");
-                        }
+                        //if (order.OrderStatus != OrderStatus.BeingPrepared)
+                        //{
+                        //    throw new Exception("Status Prepared is applicable only for the items which are already Being Prepared.");
+                        //}
                         order.OrderStatus = OrderStatus.Prepared;
                         order.UpdatedBy = _userInfo.UserId;
                         order.UpdatedOn = DateTime.Now;
@@ -151,14 +151,14 @@ namespace KitchenKanban.BusinessServices
                         _databaseContext.SaveChanges();
                         break;
                     case OrderStatus.Packing:
-                        if(order.OrderType != OrderType.TakeAway)
+                        if (order.OrderType != OrderType.TakeAway)
                         {
                             throw new Exception("This status is invalid for DineIn orders.");
                         }
-                        else if (order.OrderStatus != OrderStatus.Prepared)
-                        {
-                            throw new Exception("Status Packing is applicable only for the items which are already Prepared.");
-                        }
+                        //else if (order.OrderStatus != OrderStatus.Prepared)
+                        //{
+                        //    throw new Exception("Status Packing is applicable only for the items which are already Prepared.");
+                        //}
                         order.OrderStatus = OrderStatus.Packing;
                         order.UpdatedBy = _userInfo.UserId;
                         order.UpdatedOn = DateTime.Now;
@@ -171,10 +171,10 @@ namespace KitchenKanban.BusinessServices
                         {
                             throw new Exception("This status is invalid for DineIn orders.");
                         }
-                        else if (!(order.OrderStatus >= OrderStatus.Prepared && order.OrderStatus <= OrderStatus.Packing))
-                        {
-                            throw new Exception("Status Ready To Be Delivered is applicable only for the items which are Prepared or already BeingPacked.");
-                        }
+                        //else if (!(order.OrderStatus >= OrderStatus.Prepared && order.OrderStatus <= OrderStatus.Packing))
+                        //{
+                        //    throw new Exception("Status Ready To Be Delivered is applicable only for the items which are Prepared or already BeingPacked.");
+                        //}
                         order.OrderStatus = OrderStatus.ReadyToBeDelivered;
                         order.UpdatedBy = _userInfo.UserId;
                         order.UpdatedOn = DateTime.Now;
