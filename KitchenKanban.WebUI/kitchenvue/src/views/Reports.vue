@@ -35,7 +35,7 @@
                         <td>{{order.orderNumber}}</td>
                         <td>{{order.orderDate |toTime }}</td>
                         <td class="text-center">{{order.noOfItemsInOrder}}</td>
-                        <td>{{order.orderTakenBy}}</td>
+                        <td>{{order.orderTakenByUserName}}</td>
                         <td class="text-right">{{order.orderAmount | toFixed | toUSD }}</td>
                         <td class="text-center">
                         <span v-if="order.orderStatus==1">NewOrder</span>
@@ -97,7 +97,7 @@
                         </tr>
                         <tr>
                             <th>Ordered Taken By</th>
-                            <td>{{orderdetail.order.orderTakenBy}}</td> 
+                            <td>{{orderdetail.order.orderTakenByUserName}}</td> 
                             <th>Order Delivered By</th>
                             <td></td>                          
                         </tr>                       
@@ -186,7 +186,7 @@ export default {
  watch:{
       search:function(newval,oldvalue){
           if(newval){
-               this.filteredItems=this.orders.filter(function (order) {  return order.orderNumber === newval});
+               this.filteredItems=this.orders.filter(function (order) {  return order.orderNumber.includes(newval)});
           }
           else
           {

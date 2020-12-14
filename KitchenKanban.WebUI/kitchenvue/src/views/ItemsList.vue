@@ -39,13 +39,13 @@
                  
               </td>
               <td class="text-center">
-                <button class="trans-btn" @click="deleteItem(data.itemId)">
+                <button class="trans-btn" @click="deleteitem(data.itemId)">
                   <img src="../assets/images/delete.png" />
                 </button>
               </td>
             </tr>
             <tr v-show="itemsnotfound">
-             <td class="text-center" colspan="6"> No records found</td>
+             <td class="text-center" colspan="6">   <img src="../assets/images/norecordfound.png" /></td>
             </tr>
           </tbody>
         </table>
@@ -289,7 +289,7 @@ export default {
             (this.errormsg = "error occured"), console.log(err.message);
           });
     },
-    deleteItem: function(itemid) {
+    deleteitem: function(itemid) {
       ItemListService.deleteitem(itemid)
         .then((response) => {
           console.log("response", response.data),

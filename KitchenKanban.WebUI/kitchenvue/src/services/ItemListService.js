@@ -17,10 +17,9 @@ export default {
     const article = { ItemId:Item.ItemId,ItemName:Item.ItemName,ItemCharge:parseFloat(Item.ItemCharge) };
     return axios.put('/Item',article)
   },
-   deleteitem(ItemId){
-    
-    
-    return axios.delete('/Item',ItemId)
+   deleteitem(ItemId){   
+    const article = { itemId:ItemId};
+    return axios.delete('/Item',article)
   },
   
 }
