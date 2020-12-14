@@ -75,7 +75,8 @@ namespace KitchenKanban.BusinessServices
             if (user == null)
                 return null;
             else
-                return new UserViewModel()
+            {
+                var userModel=new UserViewModel()
                 {
                     FirstName = user.FirstName,
                     LastName = user.LastName,
@@ -84,6 +85,14 @@ namespace KitchenKanban.BusinessServices
                     UserType = user.UserType,
                     ImageId = user.ImageId
                 };
+
+                if (user.ImageId != null)
+                {
+                    var image = _imageService.GetImage(user.ImageId, ImageType.Icon);
+                    userModel.ImageContent = image.ImageContent;
+                }
+                return userModel;
+            }
         }
 
         public List<UserViewModel> GetUsers()
