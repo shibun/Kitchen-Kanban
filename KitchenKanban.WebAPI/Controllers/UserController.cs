@@ -17,7 +17,8 @@ namespace KitchenKanban.WebAPI.Controllers
             this._userService = userService;
         }
 
-        [HttpGet("{userId}")]
+        //[HttpGet("{userId}")]
+        [Route("GetUserById")]
         public IActionResult GetUserById(string userId)
         {
             var user = _userService.GetUserById(userId);
