@@ -28,55 +28,69 @@ namespace KitchenKanban.BusinessServices
 
         public string Create(ImageViewModel input)
         {
-            var newImage = new Image()
+            try
             {
-                ImageId = Guid.NewGuid().ToString(),
-                ImageContent = input.ImageContent,
-                Length = input.Length,
-                ImageType = input.ImageType,
-                ParentId = input.ParentId,
-                CreatedBy = _userInfo.UserId,
-                CreatedOn = DateTime.Now
-            };
+                var newImage = new Image()
+                {
+                    ImageId = Guid.NewGuid().ToString(),
+                    ImageContent = input.ImageContent,
+                    Length = input.Length,
+                    ImageType = input.ImageType,
+                    ParentId = input.ParentId,
+                    CreatedBy = _userInfo.UserId,
+                    CreatedOn = DateTime.Now
+                };
 
-            _databaseContext.Images.Add(newImage);
-            _databaseContext.SaveChanges();
+                _databaseContext.Images.Add(newImage);
+                _databaseContext.SaveChanges();
 
-            return newImage.ImageId;
+                return newImage.ImageId;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public string CreateWithReference(ImageViewModel input, string referenceId, FileType fileType)
         {
-            var imageId = Create(input);
-            switch (fileType)
+            try
             {
-                case FileType.UserImage:
-                    var user = _databaseContext.Users.Where(x => x.UserId == referenceId).FirstOrDefault();
-                    if(user != null)
-                    {
-                        user.ImageId = imageId;
-                        user.UpdatedBy = _userInfo.UserId;
-                        user.UpdatedOn = DateTime.Now;
-                        _databaseContext.Users.Update(user);
-                        _databaseContext.SaveChanges();
-                    }
-                    break;
-                case FileType.ItemImage:
-                    var item = _databaseContext.Items.Where(x => x.ItemId == referenceId).FirstOrDefault();
-                    if (item != null)
-                    {
-                        item.ImageId = imageId;
-                        item.UpdatedBy = _userInfo.UserId;
-                        item.UpdatedOn = DateTime.Now;
-                        _databaseContext.Items.Update(item);
-                        _databaseContext.SaveChanges();
-                    }
-                    break;
-                default:
-                    break;
+                var imageId = Create(input);
+                switch (fileType)
+                {
+                    case FileType.UserImage:
+                        var user = _databaseContext.Users.Where(x => x.UserId == referenceId).FirstOrDefault();
+                        if (user != null)
+                        {
+                            user.ImageId = imageId;
+                            user.UpdatedBy = _userInfo.UserId;
+                            user.UpdatedOn = DateTime.Now;
+                            _databaseContext.Users.Update(user);
+                            _databaseContext.SaveChanges();
+                        }
+                        break;
+                    case FileType.ItemImage:
+                        var item = _databaseContext.Items.Where(x => x.ItemId == referenceId).FirstOrDefault();
+                        if (item != null)
+                        {
+                            item.ImageId = imageId;
+                            item.UpdatedBy = _userInfo.UserId;
+                            item.UpdatedOn = DateTime.Now;
+                            _databaseContext.Items.Update(item);
+                            _databaseContext.SaveChanges();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                return imageId;
             }
-            
-            return imageId;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public bool Delete(string imageId)
@@ -86,34 +100,41 @@ namespace KitchenKanban.BusinessServices
 
         public ImageViewModel GetImage(string imageId, ImageType imageType)
         {
-            switch (imageType)
+            try
             {
-                case ImageType.Original:
-                    var originalImage = _databaseContext.Images.Where(x => x.ImageId == imageId && x.ImageType == ImageType.Original).FirstOrDefault();
-                    if(originalImage != null)
-                    {
-                        return new ImageViewModel()
+                switch (imageType)
+                {
+                    case ImageType.Original:
+                        var originalImage = _databaseContext.Images.Where(x => x.ImageId == imageId && x.ImageType == ImageType.Original).FirstOrDefault();
+                        if (originalImage != null)
                         {
-                            ImageId = originalImage.ImageId,
-                            ImageContent = originalImage.ImageContent
-                        };
-                    }
-                    break;
-                case ImageType.Icon:
-                    var iconImage = _databaseContext.Images.Where(x => x.ParentId == imageId && x.ImageType == ImageType.Icon).FirstOrDefault();
-                    if (iconImage != null)
-                    {
-                        return new ImageViewModel()
+                            return new ImageViewModel()
+                            {
+                                ImageId = originalImage.ImageId,
+                                ImageContent = originalImage.ImageContent
+                            };
+                        }
+                        break;
+                    case ImageType.Icon:
+                        var iconImage = _databaseContext.Images.Where(x => x.ParentId == imageId && x.ImageType == ImageType.Icon).FirstOrDefault();
+                        if (iconImage != null)
                         {
-                            ImageId = iconImage.ImageId,
-                            ImageContent = iconImage.ImageContent
-                        };
-                    }
-                    break;
-                default:
-                    throw new NotImplementedException();
+                            return new ImageViewModel()
+                            {
+                                ImageId = iconImage.ImageId,
+                                ImageContent = iconImage.ImageContent
+                            };
+                        }
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+                return null;
             }
-            return null;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public ImageViewModel GetImageById(string imageId)
@@ -123,40 +144,54 @@ namespace KitchenKanban.BusinessServices
 
         public bool Update(ImageViewModel input)
         {
-            var image = _databaseContext.Images.Where(x => x.ImageId == input.ImageId).FirstOrDefault();
-            if(image != null)
+            try
             {
-                image.ImageContent = input.ImageContent;
-                image.Length = input.Length;
-                image.UpdatedBy = _userInfo.UserId;
-                image.UpdatedOn = DateTime.Now;
+                var image = _databaseContext.Images.Where(x => x.ImageId == input.ImageId).FirstOrDefault();
+                if (image != null)
+                {
+                    image.ImageContent = input.ImageContent;
+                    image.Length = input.Length;
+                    image.UpdatedBy = _userInfo.UserId;
+                    image.UpdatedOn = DateTime.Now;
 
-                _databaseContext.Images.Update(image);
-                _databaseContext.SaveChanges();
+                    _databaseContext.Images.Update(image);
+                    _databaseContext.SaveChanges();
 
-                return true;
+                    return true;
+                }
+
+                return false;
             }
-
-            return false;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public bool UpdateWithReference(ImageViewModel input)
         {
-            var image = _databaseContext.Images.Where(x => x.ParentId == input.ParentId).FirstOrDefault();
-            if (image != null)
+            try
             {
-                image.ImageContent = input.ImageContent;
-                image.Length = input.Length;
-                image.UpdatedBy = _userInfo.UserId;
-                image.UpdatedOn = DateTime.Now;
+                var image = _databaseContext.Images.Where(x => x.ParentId == input.ParentId).FirstOrDefault();
+                if (image != null)
+                {
+                    image.ImageContent = input.ImageContent;
+                    image.Length = input.Length;
+                    image.UpdatedBy = _userInfo.UserId;
+                    image.UpdatedOn = DateTime.Now;
 
-                _databaseContext.Images.Update(image);
-                _databaseContext.SaveChanges();
+                    _databaseContext.Images.Update(image);
+                    _databaseContext.SaveChanges();
 
-                return true;
+                    return true;
+                }
+
+                return false;
             }
-
-            return false;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

@@ -25,79 +25,108 @@ namespace KitchenKanban.BusinessServices
 
         public KitchenViewModel Create(KitchenViewModel input)
         {
-            var newKitchen = new Kitchen()
+            try
             {
-                KitchenId = Guid.NewGuid().ToString(),
-                CounterNumber = input.CounterNumber,
-                CreatedBy = _userInfo.UserId,
-                CreatedOn = DateTime.Now
-            };
+                var newKitchen = new Kitchen()
+                {
+                    KitchenId = Guid.NewGuid().ToString(),
+                    CounterNumber = input.CounterNumber,
+                    CreatedBy = _userInfo.UserId,
+                    CreatedOn = DateTime.Now
+                };
 
-            _databaseContext.Kitchens.Add(newKitchen);
-            _databaseContext.SaveChanges();
+                _databaseContext.Kitchens.Add(newKitchen);
+                _databaseContext.SaveChanges();
 
-            input.KitchenId = newKitchen.KitchenId;
+                input.KitchenId = newKitchen.KitchenId;
 
-            return input;
+                return input;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public bool Delete(string kitchenId)
         {
-            var kitchen = _databaseContext.Kitchens.Where(x => x.KitchenId == kitchenId).FirstOrDefault();
-            if (kitchen == null)
-                return false;
-
-            var orderLine = _databaseContext.OrderLines.Where(x => x.KitchenId == kitchen.KitchenId).FirstOrDefault();
-            if (orderLine != null)
-                throw new Exception("Kitchen cannot be deleted as transactions added aganist it");
             try
             {
+                var kitchen = _databaseContext.Kitchens.Where(x => x.KitchenId == kitchenId).FirstOrDefault();
+                if (kitchen == null)
+                    return false;
+
+                var orderLine = _databaseContext.OrderLines.Where(x => x.KitchenId == kitchen.KitchenId).FirstOrDefault();
+                if (orderLine != null)
+                    throw new Exception("Kitchen cannot be deleted as transactions added aganist it");
+
                 _databaseContext.Kitchens.Remove(kitchen);
                 _databaseContext.SaveChanges();
 
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw ex;
             }
         }
 
         public KitchenViewModel GetKitchenById(string kitchenId)
         {
-            var kitchen = _databaseContext.Kitchens.Where(x => x.KitchenId == kitchenId).FirstOrDefault();
-            if (kitchen == null)
-                return null;
-
-            return new KitchenViewModel()
+            try
             {
-                KitchenId = kitchen.KitchenId,
-                CounterNumber = kitchen.CounterNumber
-            };
+                var kitchen = _databaseContext.Kitchens.Where(x => x.KitchenId == kitchenId).FirstOrDefault();
+                if (kitchen == null)
+                    return null;
+
+                return new KitchenViewModel()
+                {
+                    KitchenId = kitchen.KitchenId,
+                    CounterNumber = kitchen.CounterNumber
+                };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public List<KitchenViewModel> GetKitchens()
         {
-            var result = _databaseContext.Kitchens;
-            return result.Select(x => new KitchenViewModel()
+            try
             {
-                KitchenId = x.KitchenId,
-                CounterNumber = x.CounterNumber
-            }).ToList();
+                var result = _databaseContext.Kitchens;
+                return result.Select(x => new KitchenViewModel()
+                {
+                    KitchenId = x.KitchenId,
+                    CounterNumber = x.CounterNumber
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public bool Update(KitchenViewModel input)
         {
-            var kitchen = _databaseContext.Kitchens.Where(x => x.KitchenId == input.KitchenId).FirstOrDefault();
-            if (kitchen == null)
-                throw new Exception("Kitchen not found.");
-            kitchen.CounterNumber = input.CounterNumber;
-            kitchen.UpdatedBy = _userInfo.UserId;
-            kitchen.UpdatedOn = DateTime.Now;
+            try
+            {
+                var kitchen = _databaseContext.Kitchens.Where(x => x.KitchenId == input.KitchenId).FirstOrDefault();
+                if (kitchen == null)
+                    throw new Exception("Kitchen not found.");
+                kitchen.CounterNumber = input.CounterNumber;
+                kitchen.UpdatedBy = _userInfo.UserId;
+                kitchen.UpdatedOn = DateTime.Now;
 
-            _databaseContext.Kitchens.Update(kitchen);
-            _databaseContext.SaveChanges();
-            return true;
+                _databaseContext.Kitchens.Update(kitchen);
+                _databaseContext.SaveChanges();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

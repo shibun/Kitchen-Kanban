@@ -3,13 +3,11 @@ using KitchenKanban.ViewModels;
 using KitchenKanban.WebAPI.Providers;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using static KitchenKanban.Models.Enums.DocumentEnum;
 using static KitchenKanban.Models.Enums.ImageEnum;
 
@@ -21,10 +19,14 @@ namespace KitchenKanban.WebAPI.Controllers
     public class ImageController : ControllerBase
     {
         private IImageService _imageService { get; set; }
+        ILoggerFactory _loggerFactory;
+        ILogger _logger;
 
-        public ImageController(IImageService imageService)
+        public ImageController(ILoggerFactory loggerFactory, IImageService imageService)
         {
             this._imageService = imageService;
+            _loggerFactory = loggerFactory;
+            _logger = _loggerFactory.CreateLogger("Image Controller");
         }
 
         [HttpPost]
@@ -63,12 +65,14 @@ namespace KitchenKanban.WebAPI.Controllers
                 }
                 else
                 {
+                    _logger.LogInformation("No image data");
                     return BadRequest("No image data");
                 }
 
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error occured while saving image.");
                 return BadRequest(ex.Message);
             }
         }
@@ -109,12 +113,14 @@ namespace KitchenKanban.WebAPI.Controllers
                 }
                 else
                 {
+                    _logger.LogInformation("No image data");
                     return BadRequest("No image data");
                 }
 
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error occured while updating image.");
                 return BadRequest(ex.Message);
             }
         }
@@ -122,14 +128,22 @@ namespace KitchenKanban.WebAPI.Controllers
         [HttpGet]
         public IActionResult GetImage(string imageId, ImageType imageType = ImageType.Icon)
         {
-            var result = _imageService.GetImage(imageId, imageType);
-            if (result != null)
-            {                
-                return Ok(result);
-            }
-            else
+            try
             {
-                return BadRequest();
+                var result = _imageService.GetImage(imageId, imageType);
+                if (result != null)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return BadRequest("No image found");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while fetching image.");
+                throw ex;
             }
         }
 

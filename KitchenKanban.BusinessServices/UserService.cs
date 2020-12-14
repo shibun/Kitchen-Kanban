@@ -28,112 +28,148 @@ namespace KitchenKanban.BusinessServices
 
         public UserViewModel Authenticate(AuthenticateRequest input)
         {
-            var user = _databaseContext.Users.Where(x => x.UserName == input.Username && x.Password == input.Password).SingleOrDefault();
-            if (user == null)
-                return null;
-            else
-                return new UserViewModel()
-                {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    UserId = user.UserId,
-                    UserName = user.UserName,
-                    UserType = user.UserType
-                };
+            try
+            {
+                var user = _databaseContext.Users.Where(x => x.UserName == input.Username && x.Password == input.Password).SingleOrDefault();
+                if (user == null)
+                    return null;
+                else
+                    return new UserViewModel()
+                    {
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        UserId = user.UserId,
+                        UserName = user.UserName,
+                        UserType = user.UserType
+                    };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public UserViewModel Create(UserInputViewModel input)
         {
-            var newUser = new User()
+            try
             {
-                UserId = Guid.NewGuid().ToString(),
-                FirstName = input.FirstName,
-                LastName = input.LastName,
-                UserName = input.UserName,
-                Password = input.Password,
-                UserType = input.UserType,
-                CreatedBy = _userInfo.UserId,
-                CreatedOn = DateTime.Now
-            };
+                var newUser = new User()
+                {
+                    UserId = Guid.NewGuid().ToString(),
+                    FirstName = input.FirstName,
+                    LastName = input.LastName,
+                    UserName = input.UserName,
+                    Password = input.Password,
+                    UserType = input.UserType,
+                    CreatedBy = _userInfo.UserId,
+                    CreatedOn = DateTime.Now
+                };
 
-            _databaseContext.Users.Add(newUser);
-            _databaseContext.SaveChanges();
+                _databaseContext.Users.Add(newUser);
+                _databaseContext.SaveChanges();
 
-            return new UserViewModel()
+                return new UserViewModel()
+                {
+                    UserId = newUser.UserId,
+                    FirstName = newUser.FirstName,
+                    LastName = newUser.LastName,
+                    UserName = newUser.UserName,
+                    UserType = newUser.UserType
+                };
+            }
+            catch (Exception ex)
             {
-                UserId = newUser.UserId,
-                FirstName = newUser.FirstName,
-                LastName = newUser.LastName,
-                UserName = newUser.UserName,
-                UserType = newUser.UserType                
-            };
+                throw ex;
+            }
         }
 
         public UserViewModel GetUserById(string userId)
         {
-            var user = _databaseContext.Users.Where(x => x.UserId == userId).FirstOrDefault();
-            if (user == null)
-                return null;
-            else
+            try
             {
-                var userModel=new UserViewModel()
+                var user = _databaseContext.Users.Where(x => x.UserId == userId).FirstOrDefault();
+                if (user == null)
+                    return null;
+                else
                 {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    UserId = user.UserId,
-                    UserName = user.UserName,
-                    UserType = user.UserType,
-                    ImageId = user.ImageId
-                };
+                    var userModel = new UserViewModel()
+                    {
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        UserId = user.UserId,
+                        UserName = user.UserName,
+                        UserType = user.UserType,
+                        ImageId = user.ImageId
+                    };
 
-                if (user.ImageId != null)
-                {
-                    var image = _imageService.GetImage(user.ImageId, ImageType.Icon);
-                    userModel.ImageContent = image.ImageContent;
+                    if (user.ImageId != null)
+                    {
+                        var image = _imageService.GetImage(user.ImageId, ImageType.Icon);
+                        userModel.ImageContent = image.ImageContent;
+                    }
+                    return userModel;
                 }
-                return userModel;
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
         public List<UserViewModel> GetUsers()
         {
-            List<UserViewModel> output = new List<UserViewModel>();
-            var result = _databaseContext.Users;
-            foreach (var user in result)
+            try
             {
-                var itemResult = new UserViewModel()
+                List<UserViewModel> output = new List<UserViewModel>();
+                var result = _databaseContext.Users;
+                foreach (var user in result)
                 {
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    UserId = user.UserId,
-                    UserName = user.UserName,
-                    UserType = user.UserType,
-                    ImageId = user.ImageId
-                };
+                    var itemResult = new UserViewModel()
+                    {
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        UserId = user.UserId,
+                        UserName = user.UserName,
+                        UserType = user.UserType,
+                        ImageId = user.ImageId
+                    };
 
-                if (user.ImageId != null)
-                {
-                    var image = _imageService.GetImage(user.ImageId, ImageType.Icon);
-                    itemResult.ImageContent = image.ImageContent;
+                    if (user.ImageId != null)
+                    {
+                        var image = _imageService.GetImage(user.ImageId, ImageType.Icon);
+                        itemResult.ImageContent = image.ImageContent;
+                    }
+
+                    output.Add(itemResult);
                 }
-
-                output.Add(itemResult);
+                return output;
             }
-            return output;
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public bool Update(UserInputViewModel input)
         {
-            var user = _databaseContext.Users.Where(x => x.UserId == input.UserId).FirstOrDefault();
-            if (user == null)
-                return false;
-            user.FirstName = input.FirstName;
-            user.LastName = input.LastName;
-            user.UserType = input.UserType;
-            _databaseContext.Users.Update(user);
-            _databaseContext.SaveChanges();
+            try
+            {
+                var user = _databaseContext.Users.Where(x => x.UserId == input.UserId).FirstOrDefault();
+                if (user == null)
+                    return false;
+                user.FirstName = input.FirstName;
+                user.LastName = input.LastName;
+                user.UserType = input.UserType;
+                _databaseContext.Users.Update(user);
+                _databaseContext.SaveChanges();
 
-            return true;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
