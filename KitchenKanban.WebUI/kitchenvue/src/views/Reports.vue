@@ -93,19 +93,19 @@
                             <th>Ordered Time</th>
                             <td>{{orderdetail.order.orderDate|toTime}}</td>
                             <th>Delivered Time</th>
-                            <td></td>
+                            <td><span v-if="orderdetail.order.orderDeliveryDate==null">  </span>
+                            <span v-else>{{orderdetail.order.orderDeliveryDate |toTime}}</span></td>
                         </tr>
                         <tr>
                             <th>Ordered Taken By</th>
                             <td>{{orderdetail.order.orderTakenByUserName}}</td> 
-                            <th>Order Delivered By</th>
-                            <td></td>                          
+                            <th>Customer Phone No</th>
+                            <td>{{orderdetail.order.customerContactNumber?orderdetail.order.customerContactNumber.substring(0,4)+"*****":''}}</td> 
                         </tr>                       
                         <tr>
                             <th>Customer Name</th>
                             <td>{{orderdetail.order.customerName?orderdetail.order.customerName.substring(0,3)+"*****":''}}</td>
-                            <th>Customer Phone No</th>
-                            <td>{{orderdetail.order.customerContactNumber?orderdetail.order.customerContactNumber.substring(0,4)+"*****":''}}</td>
+                           
                         </tr>
                     </table>
 
