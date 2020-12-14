@@ -1,6 +1,7 @@
 ﻿using KitchenKanban.BusinessServices.Interfaces;
 using KitchenKanban.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace KitchenKanban.WebAPI.Controllers
@@ -11,30 +12,52 @@ namespace KitchenKanban.WebAPI.Controllers
     public class KitchenController : ControllerBase
     {
         private IKitchenService _kitchenService { get; set; }
-        public KitchenController(IKitchenService kitchenService)
+        ILoggerFactory _loggerFactory;
+        ILogger _logger;
+
+        public KitchenController(ILoggerFactory loggerFactory, IKitchenService kitchenService)
         {
             this._kitchenService = kitchenService;
+            _loggerFactory = loggerFactory;
+            _logger = _loggerFactory.CreateLogger("Kitchen Controller");
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var kitchens = _kitchenService.GetKitchens();
-            return Ok(kitchens);
+            try
+            {
+                var kitchens = _kitchenService.GetKitchens();
+                return Ok(kitchens);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured in Get");
+                return BadRequest("Error occured.");
+            }
         }
 
         [HttpGet("{kitchenId}")]
         public IActionResult GetKitchenById(string kitchenId)
         {
-            if (!String.IsNullOrEmpty(kitchenId))
+            try
             {
-                var result = _kitchenService.GetKitchenById(kitchenId);
+                if (!String.IsNullOrEmpty(kitchenId))
+                {
+                    var result = _kitchenService.GetKitchenById(kitchenId);
 
-                return Ok(result);
+                    return Ok(result);
+                }
+                else
+                {
+                    _logger.LogError("kitchenId is null");
+                    return BadRequest("kitchenId is null");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest();
+                _logger.LogError(ex, "Error occured in GetKitchenById");
+                return BadRequest(ex.Message);
             }
         }
 
@@ -48,6 +71,7 @@ namespace KitchenKanban.WebAPI.Controllers
             }
             catch(Exception ex)
             {
+                _logger.LogError(ex, "Error occured in Post");
                 return BadRequest(ex.Message);
             }
         }
@@ -62,6 +86,7 @@ namespace KitchenKanban.WebAPI.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error occured in Put");
                 return BadRequest(ex.Message);
             }
         }
@@ -76,6 +101,7 @@ namespace KitchenKanban.WebAPI.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error occured in Delete");
                 return BadRequest(ex.Message);
             }
         }

@@ -1,6 +1,7 @@
 ﻿using KitchenKanban.BusinessServices.Interfaces;
 using KitchenKanban.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace KitchenKanban.WebAPI.Controllers
@@ -11,30 +12,51 @@ namespace KitchenKanban.WebAPI.Controllers
     public class ItemController : ControllerBase
     {
         private IItemService _itemService { get; set; }
+        ILoggerFactory _loggerFactory;
+        ILogger _logger;
 
-        public ItemController(IItemService itemService)
+        public ItemController(ILoggerFactory loggerFactory, IItemService itemService)
         {
             this._itemService = itemService;
+            _loggerFactory = loggerFactory;
+            _logger = _loggerFactory.CreateLogger("Item Controller");
         }
 
         [HttpGet]
         public IActionResult Get()
         {
-            var items = _itemService.GetItems();
-            return Ok(items);
+            try
+            {
+                var items = _itemService.GetItems();
+                return Ok(items);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured in Get");
+                return BadRequest("Error occured.");
+            }
         }
 
         [HttpGet("{itemId}")]
         public IActionResult GetItemById(string itemId)
         {
-            if (!String.IsNullOrEmpty(itemId))
+            try
             {
-                var result = _itemService.GetItemById(itemId);
-                return Ok(result);
+                if (!String.IsNullOrEmpty(itemId))
+                {
+                    var result = _itemService.GetItemById(itemId);
+                    return Ok(result);
+                }
+                else
+                {
+                    _logger.LogError("itemId is null");
+                    return BadRequest("itemId is null");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return BadRequest();
+                _logger.LogError(ex, "Error occured in GetItemById");
+                return BadRequest("Error occured.");
             }
         }
 
@@ -48,6 +70,7 @@ namespace KitchenKanban.WebAPI.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error occured in Post");
                 return BadRequest(ex.Message);
             }
         }
@@ -62,6 +85,7 @@ namespace KitchenKanban.WebAPI.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error occured in Put");
                 return BadRequest(ex.Message);
             }
         }
@@ -76,6 +100,7 @@ namespace KitchenKanban.WebAPI.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error occured in Delete");
                 return BadRequest(ex.Message);
             }
         }
