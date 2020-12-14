@@ -56,7 +56,7 @@ export default {
         })
       },
       getUserDetails(){
-        if(this.isLoggedIn){
+        if(this.isLoggedIn && this.loggedUser){
            userService
             .getUser(this.loggedUser.userId)
               .then((response) => {

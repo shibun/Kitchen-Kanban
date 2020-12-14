@@ -44,6 +44,16 @@ Vue.filter('formatTime', function(value) {
       return moment(String(value)).format('hh:mm a')
   }
 });
+Vue.filter('toUSD', function(price) {
+  if (price) {
+    return `$${price}`
+  }
+});
+Vue.filter('toFixed', function(value) {
+  if (value) {
+    return value.toFixed(2);
+  }
+});
 
 new Vue({
   router,

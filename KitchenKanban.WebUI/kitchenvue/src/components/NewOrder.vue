@@ -162,14 +162,6 @@
 
             };
         },
-        filters: {
-            toUSD(price) {
-            return `$${price}`;
-            },
-            toFixed(value) {
-            return value.toFixed(2);
-            },
-        },
         created() {
             this.getItems();
         },

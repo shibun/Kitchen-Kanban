@@ -8,8 +8,8 @@
             <div class="text-center pop-header">Confirm!</div>
             <div class="text-center">
                 <div>{{msgWarning}}</div>
-                <div class="top20">
-                    <label><input class="confirm-check" type="checkbox" /> Don't show this message again</label>
+                <div class="top20" v-if="!hideCheck">
+                    <label><input class="confirm-check"  v-model="warningCheck" type="checkbox" @change="onWarningChange" /> Don't show this message again</label>
                 </div>
             </div>
             <div class="text-center">
@@ -23,13 +23,24 @@
 <script>
 export default {
     name:'MessageWarning',
-    props:['msgWarning'],
+    props:['msgWarning','hideCheck'],
+    data(){
+        return{
+        warningCheck:false
+        }
+    },
     methods:{
         onContinue(){
             this.$emit('on-continue-warning')
         },
         onReturn(){
             this.$emit('update:msgWarning','')
+        },
+        onWarningChange(){
+            console.log(this.warningCheck);
+            if(this.warningCheck){
+                localStorage.setItem('kitchenvuewarning', false)
+            }
         }
     }
 }

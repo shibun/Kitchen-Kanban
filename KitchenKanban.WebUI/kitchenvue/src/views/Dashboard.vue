@@ -131,7 +131,7 @@
                       <button
                         class="cancel-order-btn"
                         @click="
-                          changeOrderStatus(order.orderId, 7, 'Incorrect order')
+                          showWarningCancel(order.orderId, 7, 'Incorrect order')
                         "
                       >
                         Cancel Order
@@ -210,8 +210,13 @@
                         <td class="text-center">
                           {{ orderline.orderQuantity }}
                         </td>
-                        <td class="text-right">{{ orderline.itemCharge }}</td>
+                           <td class="text-right">{{ orderline.itemCharge * orderline.orderQuantity |toFixed|toUSD}}</td>
                       </tr>
+                        <tr>
+                           <th>Total</th>
+                            <th class="text-center">{{bporder.noOfItemsInOrder}}</th>
+                            <th class="text-right">{{bporder.orderAmount |toFixed|toUSD}}</th>
+                         </tr>
                     </tbody>
                   </table>
                   <div class="top6">
@@ -234,7 +239,7 @@
                             <a
                               href="#"
                               @click="
-                                changeOrderStatus(bporder.orderId, item.id, '')
+                                 showWarning(bporder.orderId, item.id, '')
                               "
                               >{{ item.value }}</a
                             >
@@ -245,7 +250,7 @@
                       <button
                         class="cancel-order-btn"
                         @click="
-                          changeOrderStatus(
+                          showWarningCancel(
                             bporder.orderId,
                             7,
                             'Incorrect order'
@@ -328,8 +333,13 @@
                         <td class="text-center">
                           {{ orderline.orderQuantity }}
                         </td>
-                        <td class="text-right">{{ orderline.itemCharge }}</td>
+                           <td class="text-right">{{ orderline.itemCharge * orderline.orderQuantity |toFixed|toUSD}}</td>
                       </tr>
+                        <tr>
+                           <th>Total</th>
+                            <th class="text-center">{{order.noOfItemsInOrder}}</th>
+                            <th class="text-right">{{order.orderAmount |toFixed|toUSD}}</th>
+                         </tr>
                     </tbody>
                   </table>
                   <div class="top6">
@@ -352,19 +362,13 @@
                             <a
                               href="#"
                               @click="
-                                changeOrderStatus(order.orderId, item.id, '')
+                                showWarning(order.orderId, item.id, '')
                               "
                               >{{ item.value }}</a
                             >
                           </li>
                         </ul>
                       </div>
-                      <button
-                        class="edit-order-btn"
-                        @click="changeOrderStatus(order.orderId, 6, '')"
-                      >
-                        Deliver
-                      </button>
                       <button
                         v-if="false"
                         @click="editOrder(order.orderId)"
@@ -376,7 +380,7 @@
                         v-if="false"
                         class="cancel-order-btn"
                         @click="
-                          changeOrderStatus(order.orderId, 7, 'Incorrect order')
+                          showWarningCancel(order.orderId, 7, 'Incorrect order')
                         "
                       >
                         Cancel Order
@@ -455,8 +459,13 @@
                         <td class="text-center">
                           {{ orderline.orderQuantity }}
                         </td>
-                        <td class="text-right">{{ orderline.itemCharge }}</td>
+                          <td class="text-right">{{ orderline.itemCharge * orderline.orderQuantity |toFixed|toUSD}}</td>
                       </tr>
+                        <tr>
+                           <th>Total</th>
+                            <th class="text-center">{{order.noOfItemsInOrder}}</th>
+                            <th class="text-right">{{order.orderAmount |toFixed|toUSD}}</th>
+                         </tr>
                     </tbody>
                   </table>
                   <div class="top6">
@@ -479,7 +488,7 @@
                             <a
                               href="#"
                               @click="
-                                changeOrderStatus(order.orderId, item.id, '')
+                                showWarning(order.orderId, item.id, '')
                               "
                               >{{ item.value }}</a
                             >
@@ -497,7 +506,7 @@
                         v-if="false"
                         class="cancel-order-btn"
                         @click="
-                          changeOrderStatus(order.orderId, 7, 'Incorrect order')
+                          showWarningCancel(order.orderId, 7, 'Incorrect order')
                         "
                       >
                         Cancel Order
@@ -576,12 +585,43 @@
                         <td class="text-center">
                           {{ orderline.orderQuantity }}
                         </td>
-                        <td class="text-right">{{ orderline.itemCharge }}</td>
+                          <td class="text-right">{{ orderline.itemCharge * orderline.orderQuantity |toFixed|toUSD}}</td>
                       </tr>
+                        <tr>
+                           <th>Total</th>
+                            <th class="text-center">{{order.noOfItemsInOrder}}</th>
+                            <th class="text-right">{{order.orderAmount |toFixed|toUSD}}</th>
+                         </tr>
                     </tbody>
                   </table>
                   <div class="top6">
                     <div class="float-right">
+
+                        <div class="dropup tkt-left-btn">
+                        <button
+                          class="move-order-btn dropdown-toggle"
+                          type="button"
+                          data-toggle="dropdown"
+                        >
+                          Move To
+                          <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" v-if="order.orderStatus">
+                          <li
+                            v-bind:key="index"
+                            v-for="(item, index) in order.orderStatus"
+                            v-bind:value="item.id"
+                          >
+                            <a
+                              href="#"
+                              @click="
+                                 showWarning(order.orderId, item.id, '')
+                              "
+                              >{{ item.value }}</a
+                            >
+                          </li>
+                        </ul>
+                      </div>
                       <button
                         class="edit-order-btn"
                         @click="changeOrderStatus(order.orderId, 6, '')"
@@ -622,162 +662,10 @@
       v-bind:editorderid="editorderid"
        v-on:clear-add-form="clearAddForm"
     />
-    <MessageWarning :msgWarning.sync="msgWarning" v-on:on-continue-warning="continueAction"/>
+    <MessageWarning :msgWarning.sync="msgWarning" :hideCheck="hideCheck" v-on:on-continue-warning="continueAction"/>
   </div>
 </template>
-<script>
-import NewOrder from "@/components/NewOrder.vue";
-import dashBoardService from "../services/dashboardService";
-import MessageWarning from '../components/MessageWarning'
-import $ from "jquery";
-import Vue from "vue";
-export default {
-  name: "Dashboard",
-  components: {
-    NewOrder,MessageWarning
-  },
-  created() {
-    this.getKanboard();
-    this.orderStatus = this.orderStatusAll;
-  },
-  data() {
-    return {
-      kanboards: null,
-      neworders: [],
+<script src='../viewscripts/dashboardScript.js' type="text/javascript" >
 
-      beingpreparedorders: [],
-      preparedorders: {},
-
-      packingorders: [],
-      readyorders: [],
-      successmsg: "",
-      errormsg: "",
-      isAddOrder: false,
-      msgWarning:'',
-      orderdetails: {},
-      editorderid: '',
-      orderStatusModel:{
-        orderId: '',
-        OrderStatus: '',
-        cancellationReason: '',
-      },
-      orderStatusAll: [
-        { id: 1, value: "New Order" },
-        { id: 2, value: "Being Prepared" },
-        { id: 3, value: "Prepared" },
-        { id: 4, value: "Packing" },
-        { id: 5, value: "Ready for Delivery" },
-      ],
-      orderStatus: [],
-    };
-  },
-  methods: {
-    showForm() {
-      this.isAddOrder = true;
-      //this.editorderid = "";
-      console.log('showForm',this.isAddOrder);
-    },
-    getFilteredStatus(bucketname, order) {
-      this.orderStatus = this.orderStatusAll;
-      this.orderStatus = this.orderStatus.filter(
-        (item) => item.value != bucketname
-      );
-      if (order.orderType === 1) {
-        this.orderStatus = this.orderStatus.filter(
-          (item) => item.id != 4 && item.id != 5
-        );
-      }
-      Vue.set(order, "orderStatus", this.orderStatus);
-    },
-    getKanboard() {
-      this.successmsg = "";
-      dashBoardService
-        .getKanboard()
-        .then((response) => {
-          this.kanboards = response.data;
-          this.beingpreparedorders = response.data.filter(
-            (item) => item.bucketName === "Being Prepared"
-          )[0];
-          if (response.data && response.data.length > 0) {
-            this.neworders = response.data.filter(
-              (item) => item.bucketName === "New Order"
-            )[0];
-
-            this.preparedorders = response.data.filter(
-              (item) => item.bucketName === "Prepared"
-            )[0];
-            this.packingorders = response.data.filter(
-              (item) => item.bucketName === "Packing"
-            )[0];
-            this.readyorders = response.data.filter(
-              (item) => item.bucketName === "Ready To Be Delivered"
-            )[0];
-
-            // console.log('bp',this.beingpreparedorders);
-            // console.log('no',this.neworders);
-          }
-        })
-        .catch((err) => {
-          (this.errormsg = err.messge), console.log(err.message);
-        });
-    },
-    getOrderDetails(data) {
-      this.isAddOrder = false;
-      dashBoardService
-        .getOrderDetails(data.orderId)
-        .then((response) => {
-          this.orderdetails = response.data;
-          Vue.set(data, "orderLines", response.data.orderLines);
-        })
-        .catch((err) => {
-          (this.errormsg = err.messge), console.log(err.message);
-        });
-    },
-    toggleOrderDetails(order, index, dividentifier, bucketname) {
-      this.showorderdetails = !this.showorderdetails;
-      this.getOrderDetails(order);
-      this.getFilteredStatus(bucketname, order);
-      $("#orderdetailsdiv" + dividentifier + index).slideToggle();
-    },
-    editOrder(orderid) {
-      this.editorderid = orderid;
-      this.isAddOrder = true;
-      console.log("editorder", orderid);
-    },
-    clearAddForm() {
-      this.editorderid = '';
-       this.isAddOrder = false;
-       console.log('clearAddForm',this.isAddOrder);
-    },
-    showWarning(orderid, statusid, reason){
-      this.msgWarning='Are you sure to move this order?';
-      this.orderStatusModel.orderId=orderid;
-      this.orderStatusModel.orderStatus=statusid;
-      this.orderStatusModel.cancellationReason=reason;
-    },
-    continueAction(){
-      console.log('continueAction');
-      this.msgWarning='';
-         this.changeOrderStatus(this.orderStatusModel.orderId,this.orderStatusModel.orderStatus,this.orderStatusModel.cancellationReason);
-    },
-    changeOrderStatus(orderid, statusid, reason) {
-      var orderStatusModel = {
-        orderId: orderid,
-        orderStatus: statusid,
-        cancellationReason: reason,
-      };
-      dashBoardService
-        .updateOrderStatus(orderStatusModel)
-        .then((response) => {
-          this.successmsg = "Order Updated.";
-          this.getKanboard();
-          console.log(response.data);
-        })
-        .catch((err) => {
-          (this.errormsg = err.messge), console.log(err.message);
-        });
-    },
-  },
-};
 </script>
 <style scoped></style>
