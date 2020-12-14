@@ -23,7 +23,8 @@ namespace KitchenKanban.WebAPI.Controllers
             _logger = _loggerFactory.CreateLogger("User Controller");
         }
 
-        [HttpGet("{userId}")]
+        //[HttpGet("{userId}")]
+        [Route("GetUserById")]
         public IActionResult GetUserById(string userId)
         {
             try

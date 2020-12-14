@@ -85,25 +85,27 @@ namespace KitchenKanban.BusinessServices
 
         public UserViewModel GetUserById(string userId)
         {
-            try
+            var user = _databaseContext.Users.Where(x => x.UserId == userId).FirstOrDefault();
+            if (user == null)
+                return null;
+            else
             {
-                var user = _databaseContext.Users.Where(x => x.UserId == userId).FirstOrDefault();
-                if (user == null)
-                    return null;
-                else
-                    return new UserViewModel()
-                    {
-                        FirstName = user.FirstName,
-                        LastName = user.LastName,
-                        UserId = user.UserId,
-                        UserName = user.UserName,
-                        UserType = user.UserType,
-                        ImageId = user.ImageId
-                    };
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                var userModel=new UserViewModel()
+                {
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    UserId = user.UserId,
+                    UserName = user.UserName,
+                    UserType = user.UserType,
+                    ImageId = user.ImageId
+                };
+
+                if (user.ImageId != null)
+                {
+                    var image = _imageService.GetImage(user.ImageId, ImageType.Icon);
+                    userModel.ImageContent = image.ImageContent;
+                }
+                return userModel;
             }
         }
 

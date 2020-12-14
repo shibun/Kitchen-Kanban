@@ -209,9 +209,9 @@ export default {
         .then((response) => {
           this.successmsg = "Counter deleted";
         })
-        .catch((err) => {
-          (this.errormsg = "error occured"),
-            console.log(err.message);
+        .catch((error) => {
+          (this.errormsg = error.data),
+            console.log(error.data);
         });
     },
     onError() {

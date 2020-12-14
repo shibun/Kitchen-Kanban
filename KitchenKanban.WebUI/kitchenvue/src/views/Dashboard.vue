@@ -86,8 +86,13 @@
                         <td class="text-center">
                           {{ orderline.orderQuantity }}
                         </td>
-                        <td class="text-right">{{ orderline.itemCharge }}</td>
+                        <td class="text-right">{{ orderline.itemCharge * orderline.orderQuantity |toFixed|toUSD}}</td>
                       </tr>
+                        <tr>
+                           <th>Total</th>
+                            <th class="text-center">{{order.noOfItemsInOrder}}</th>
+                            <th class="text-right">{{order.orderAmount |toFixed|toUSD}}</th>
+                         </tr>
                     </tbody>
                   </table>
                   <div class="top6">
@@ -110,7 +115,7 @@
                             <a
                               href="#"
                               @click="
-                                changeOrderStatus(order.orderId, item.id, '')
+                                showWarning(order.orderId, item.id, '')
                               "
                               >{{ item.value }}</a
                             >
@@ -617,21 +622,19 @@
       v-bind:editorderid="editorderid"
        v-on:clear-add-form="clearAddForm"
     />
+    <MessageWarning :msgWarning.sync="msgWarning" v-on:on-continue-warning="continueAction"/>
   </div>
 </template>
 <script>
-//import MessageSuccess from "@/components/MessageSuccess.vue";
-//import MessageError from "@/components/MessageError.vue";
 import NewOrder from "@/components/NewOrder.vue";
 import dashBoardService from "../services/dashboardService";
+import MessageWarning from '../components/MessageWarning'
 import $ from "jquery";
 import Vue from "vue";
 export default {
   name: "Dashboard",
   components: {
-    // MessageError,
-    //MessageSuccess,
-    NewOrder,
+    NewOrder,MessageWarning
   },
   created() {
     this.getKanboard();
@@ -650,9 +653,14 @@ export default {
       successmsg: "",
       errormsg: "",
       isAddOrder: false,
+      msgWarning:'',
       orderdetails: {},
       editorderid: '',
-
+      orderStatusModel:{
+        orderId: '',
+        OrderStatus: '',
+        cancellationReason: '',
+      },
       orderStatusAll: [
         { id: 1, value: "New Order" },
         { id: 2, value: "Being Prepared" },
@@ -741,14 +749,25 @@ export default {
        this.isAddOrder = false;
        console.log('clearAddForm',this.isAddOrder);
     },
+    showWarning(orderid, statusid, reason){
+      this.msgWarning='Are you sure to move this order?';
+      this.orderStatusModel.orderId=orderid;
+      this.orderStatusModel.orderStatus=statusid;
+      this.orderStatusModel.cancellationReason=reason;
+    },
+    continueAction(){
+      console.log('continueAction');
+      this.msgWarning='';
+         this.changeOrderStatus(this.orderStatusModel.orderId,this.orderStatusModel.orderStatus,this.orderStatusModel.cancellationReason);
+    },
     changeOrderStatus(orderid, statusid, reason) {
-      var orderStatus = {
+      var orderStatusModel = {
         orderId: orderid,
-        OrderStatus: statusid,
+        orderStatus: statusid,
         cancellationReason: reason,
       };
       dashBoardService
-        .updateOrderStatus(orderStatus)
+        .updateOrderStatus(orderStatusModel)
         .then((response) => {
           this.successmsg = "Order Updated.";
           this.getKanboard();
