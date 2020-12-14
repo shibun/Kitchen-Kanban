@@ -86,8 +86,13 @@
                         <td class="text-center">
                           {{ orderline.orderQuantity }}
                         </td>
-                        <td class="text-right">{{ orderline.itemCharge }}</td>
+                        <td class="text-right">{{ orderline.itemCharge * orderline.orderQuantity |toFixed|toUSD}}</td>
                       </tr>
+                        <tr>
+                           <th>Total</th>
+                            <th class="text-center">{{order.noOfItemsInOrder}}</th>
+                            <th class="text-right">{{order.orderAmount |toFixed|toUSD}}</th>
+                         </tr>
                     </tbody>
                   </table>
                   <div class="top6">
