@@ -145,4 +145,4 @@
   </div>
 </template>
 
-<script src="./itemlistscript.js" type="text/javascript"/>
+<script src="../viewscripts/itemListScript.js" type="text/javascript"/>

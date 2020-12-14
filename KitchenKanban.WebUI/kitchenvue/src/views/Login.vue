@@ -42,29 +42,6 @@
     <div class="clearfix"></div>
   </div>
 </template>
-<script>
-export default {
-  data() {
-    return {
-      Username: "",
-      password: "",
-      loginsuccess: true,
-    };
-  },
-  methods: {
-    login: function() {
-      let Username = this.Username;
-      let password = this.password;
-      this.$store
-        .dispatch("login", { Username, password })
-        .then(() => this.$router.push("/"))
-        .catch(
-          (err) => {
-          console.log("login error",err);
-          this.loginsuccess = false;
-          }
-        );
-    },
-  },
-};
+<script src="../viewscripts/loginScript.js" type="text/javascript">
+
 </script>
