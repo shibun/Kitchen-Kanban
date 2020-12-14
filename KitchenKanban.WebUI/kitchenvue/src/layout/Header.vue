@@ -23,7 +23,6 @@
                 <li><router-link to="/user">User List</router-link></li>
                 <li><router-link to="/kitchencounterlist">Kitchen Counter List</router-link></li>
                 <li><router-link to="/itemsList">Item List</router-link></li>
-                <li> <router-link to="/about">About</router-link></li>
                 <li><router-link to="/reports">Reports</router-link></li>
             </ul>
         </aside>
