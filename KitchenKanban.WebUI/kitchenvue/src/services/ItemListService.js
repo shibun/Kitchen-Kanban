@@ -18,8 +18,8 @@ export default {
     return axios.put('/Item',article)
   },
    deleteitem(ItemId){   
-    const article = { itemId:ItemId};
-    return axios.delete('/Item',article)
+    
+    return axios.delete('/Item/'+ItemId)
   },
   
 }
