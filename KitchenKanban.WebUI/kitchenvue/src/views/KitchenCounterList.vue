@@ -1,7 +1,9 @@
 <template>
   <div>
     <section>
-      <div class="breadcrumb">Kitchen Counter List</div>
+      <div class="breadcrumb"><div>Kitchen Counter List</div>
+        <div class="current-time">{{currentdate |formatTime}}</div>
+         <div class="clearfix"></div></div>
       <div class="list-sec">
         <div class="text-right">
           <button class="trans-btn" @click="showForm">

@@ -22,7 +22,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <!--<div class="row">
                             <div class="col-xs-6">
                                 <div class="form-group">
                                     <label>Delivery Type <span class="asterisk">*</span></label>
@@ -30,7 +30,7 @@
                                     <input type="text"  class="form-control" :value="TakeAway" :readOnly="true">
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                     </form>
                 </div>
                 <div class="food-order-section">
@@ -58,7 +58,7 @@
                                         <th class="text-center">Item Name</th>
                                         <th class="text-center">Qty</th>                                        
                                         <th class="text-center">Item Price</th>
-                                         <th class="text-center">&nbsp;</th>
+                                         <th class="text-center">Total Price</th>
                                         <th class="text-center">Delete</th>
                                     </tr>
                                     <tr v-for="(listitem,index) in list" :key="listitem.itemId">
@@ -320,7 +320,7 @@
                     customerName: "",
                     CustomerConactNumber: "",
                     OrderAmount: 0.0,
-                    orderType: 1,
+                    orderType: 2,
                     OrderStatus: 1,
                     OrderTakenBy: "",
                     CancellationReason: ""

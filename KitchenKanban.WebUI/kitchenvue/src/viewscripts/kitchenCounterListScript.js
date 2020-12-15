@@ -8,6 +8,7 @@ export default {
   },
   data() {
     return {
+      currentdate:'',
     Kitchen:{
      KitchenId:"",
      CounterNumber:""
@@ -25,9 +26,21 @@ export default {
     MessageSuccess,
     MessageError,
   },
+  mounted: function () {
+    setInterval(function () {
+      this.getNow()
+    }.bind(this), 1000)
+  },
   methods: {
     showForm() {
       this.isShowForm = true;
+    },
+     getNow: function() {
+      const today = new Date();
+      const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+      const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      const dateTime = date + ' ' + time;
+      this.currentdate = dateTime;
     },
     hideForm() {
       this.isShowForm = false;

@@ -1,18 +1,14 @@
 <template>
 <div v-if="msg">
-<div class="overlay">
-<div class="pop-overlay">
-            <div class="success-header">
-                <img src="../assets/images/success.png" />
-            </div>
-            <div class="text-center pop-header">Great!</div>
-            <div class="text-center">{{msg}}</div>
-            <div class="text-center">
-                <button class="success-btn" @click="onContinue">Continue</button>
-            </div>
-        </div>
-</div>
-</div>
+  <div class="overlay">
+    <div class="success-overlay">
+            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none" />
+                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+            </svg>
+    </div>
+  </div>
+  </div>
 </template>
 <script>
 export default {

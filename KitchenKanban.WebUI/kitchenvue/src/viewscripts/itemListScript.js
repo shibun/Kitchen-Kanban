@@ -27,6 +27,7 @@ export default {
       editmode: false,
       isShowForm: false,
       imagedata:'',
+      currentdate:''
     };
   },
   filters: {
@@ -37,6 +38,11 @@ export default {
       return value.toFixed(2);
     },
   },
+  mounted: function () {
+    setInterval(function () {
+      this.getNow()
+    }.bind(this), 1000)
+  },
 
   methods: {
     showForm() {
@@ -45,6 +51,13 @@ export default {
     hideForm() {
       this.isShowForm = false;
       this.clearItem();
+    },
+     getNow: function() {
+      const today = new Date();
+      const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+      const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      const dateTime = date + ' ' + time;
+      this.currentdate = dateTime;
     },
     getItems() {
       (this.successmsg = false),

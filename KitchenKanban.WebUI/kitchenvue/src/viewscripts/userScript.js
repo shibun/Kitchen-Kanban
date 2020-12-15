@@ -12,6 +12,7 @@ export default {
     return {
       successmsg: "",
       errormsg: "",
+      currentdate:'',
       users: null,
       isAddUser: false,
       isNew:true,
@@ -43,6 +44,11 @@ export default {
     this.getUsers();
     //this.userTypes=this.$data
   },
+  mounted: function () {
+    setInterval(function () {
+      this.getNow()
+    }.bind(this), 1000)
+  },
   methods: {
     getUsers() {
       this.successmsg = "";
@@ -56,6 +62,13 @@ export default {
     },
     showAddUser() {
       this.isAddUser = true;
+    },
+    getNow: function() {
+      const today = new Date();
+      const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+      const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      const dateTime = date + ' ' + time;
+      this.currentdate = dateTime;
     },
      addUser(data,data1) {
        this.files=data1;
