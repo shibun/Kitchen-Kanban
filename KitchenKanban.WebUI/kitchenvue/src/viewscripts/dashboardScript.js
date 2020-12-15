@@ -49,6 +49,7 @@ export default {
   },
   watch:{
       search:function(newval,oldvalue){
+       
           if(newval){   
             if(this.beingpreparedorders.orders &&this.beingpreparedorders.orders.length>0){
                 this.beingpreparedorders.orders=this.beingpreparedorders.orders.filter(function (order) {  return order.orderNumber.includes(newval)});

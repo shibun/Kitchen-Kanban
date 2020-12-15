@@ -14,7 +14,7 @@
               <input
                 type="search"
                 placeholder="Search Order"
-                class="form-control" 
+                class="form-control" v-model="search"
               />
             </div>
           </div>
