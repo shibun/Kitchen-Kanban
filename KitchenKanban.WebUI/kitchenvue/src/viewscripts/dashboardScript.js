@@ -1,12 +1,14 @@
 import NewOrder from "@/components/NewOrder.vue";
 import dashBoardService from "../services/dashboardService";
 import MessageWarning from '../components/MessageWarning'
+import MessageSuccess from "../components/MessageSuccess";
+import MessageError from "../components/MessageError";
 import $ from "jquery";
 import Vue from "vue";
 export default {
   name: "Dashboard",
   components: {
-    NewOrder,MessageWarning
+    NewOrder,MessageWarning,MessageSuccess,MessageError
   },
   created() {
     this.getKanboard();
@@ -16,16 +18,16 @@ export default {
     return {
       kanboards: null,
       neworders: [],
-
       beingpreparedorders: [],
       preparedorders: {},
-
       packingorders: [],
       readyorders: [],
-      successmsg: "",
-      errormsg: "",
+      deliveredorders:[],
+      successmsg: '',
+      errormsg: '',
       isAddOrder: false,
-      
+      search:'',
+      currentdate:'',
       msgWarning:'',
       hideCheck:true,
       orderdetails: {},
@@ -45,13 +47,60 @@ export default {
       orderStatus: [],
     };
   },
+  watch:{
+      search:function(newval,oldvalue){
+          if(newval){   
+            if(this.beingpreparedorders.orders &&this.beingpreparedorders.orders.length>0){
+                this.beingpreparedorders.orders=this.beingpreparedorders.orders.filter(function (order) {  return order.orderNumber.includes(newval)});
+            }  
+            if(this.neworders.orders && this.neworders.orders.length>0){
+               this.neworders.orders=this.neworders.orders.filter(function (order) {  return order.orderNumber.includes(newval)});
+            }  
+            if(this.preparedorders.orders && this.preparedorders.orders.length>0){
+               this.preparedorders.orders=this.preparedorders.orders.filter(function (order) {  return order.orderNumber.includes(newval)});
+            }  
+            if(this.packingorders && this.packingorders.orders.length>0){
+              this.packingorders.orders=this.packingorders.orders.filter(function (order) {  return order.orderNumber.includes(newval)});
+            }  
+            if(this.readyorders && this.readyorders.orders.length>0){
+               this.readyorders.orders=this.readyorders.orders.filter(function (order) {  return order.orderNumber.includes(newval)});
+            }       
+          }
+          else
+          {
+              this.getKanboard()
+          }
+          
+          
+      }
+  },
+   mounted: function () {
+    setInterval(function () {
+      this.getNow()
+    }.bind(this), 1000)
+  },
   methods: {
     showForm() {
       this.isAddOrder = true;
       //this.editorderid = "";
       console.log('showForm',this.isAddOrder);
     },
+    getNow: function() {
+      const today = new Date();
+      const date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+      const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      const dateTime = date + ' ' + time;
+      this.currentdate = dateTime;
+    },
+    getordertime:function(orderdate){
+     var initial = new Date(orderdate);
+    var final = new Date();  
+    var difference = Math.floor(initial.getTime() - final.getTime())/3.6e6;    
+     return difference;
+    },
+    
     getFilteredStatus(bucketname, order) {
+      console.log('orderin getFIlteredStatus',order);
       this.orderStatus = this.orderStatusAll;
       this.orderStatus = this.orderStatus.filter(
         (item) => item.value != bucketname
@@ -60,8 +109,8 @@ export default {
         this.orderStatus = this.orderStatus.filter(
           (item) => item.id != 4 && item.id != 5
         );
-      }
-      Vue.set(order, "orderStatus", this.orderStatus);
+      }    
+     Vue.set(order, "orderStatus", this.orderStatus);   
     },
     getKanboard() {
       this.successmsg = "";
@@ -84,10 +133,9 @@ export default {
               (item) => item.bucketName === "Packing"
             )[0];
             this.readyorders = response.data.filter(
-              (item) => item.bucketName === "Ready To Be Delivered"
+              (item) => (item.bucketName === "Ready To Be Delivered" ||item.bucketName === "Takeaway" )
             )[0];
-
-            // console.log('bp',this.beingpreparedorders);
+   
             // console.log('no',this.neworders);
           }
         })
@@ -102,16 +150,29 @@ export default {
         .then((response) => {
           this.orderdetails = response.data;
           Vue.set(data, "orderLines", response.data.orderLines);
+          
         })
         .catch((err) => {
           (this.errormsg = err.messge), console.log(err.message);
         });
     },
-    toggleOrderDetails(order, index, dividentifier, bucketname) {
-      this.showorderdetails = !this.showorderdetails;
-      this.getOrderDetails(order);
-      this.getFilteredStatus(bucketname, order);
-      $("#orderdetailsdiv" + dividentifier + index).slideToggle();
+    toggleOrderDetails(order, index, dividentifier, bucketname) {   
+      console.log('order in toggle',order); 
+      if(order.orderStatus==6){
+        console.log('if block executed in sidetoggle');
+        return
+      }
+      else{
+        console.log('else block executed in toggle');
+         $("#orderdetailsdiv" + dividentifier + index).slideToggle();
+         this.showorderdetails = !this.showorderdetails;
+         this.getOrderDetails(order);
+         this.getFilteredStatus(bucketname, order);
+         
+        }
+     
+      
+     
     },
     editOrder(orderid) {
       this.editorderid = orderid;
@@ -132,8 +193,14 @@ export default {
         this.orderStatusModel.cancellationReason=reason;
     },
     showWarning(orderid, statusid, reason){
+      console.log(statusid);
         console.log('localstorage',localStorage.getItem('kitchenvuewarning') || true)
         var showWarningCheck=localStorage.getItem('kitchenvuewarning') || true;
+        if(statusid==1){
+          this.errormsg="can not move";
+          return
+        }
+        
 
         if(showWarningCheck===true){
             this.hideCheck=false;
@@ -142,32 +209,39 @@ export default {
             this.orderStatusModel.orderStatus=statusid;
             this.orderStatusModel.cancellationReason=reason;
         }
-        else{
+        else{          
             this.msgWarning=''
             this.changeOrderStatus(orderid,statusid,reason);
+            this.getOrderDetails(); 
         }
       
     },
+       onError() {
+                console.log("onError parent");
+                this.errormsg = "";
+           
+            },
     continueAction(){
       console.log('continueAction');
       this.msgWarning='';
          this.changeOrderStatus(this.orderStatusModel.orderId,this.orderStatusModel.orderStatus,this.orderStatusModel.cancellationReason);
     },
-    changeOrderStatus(orderid, statusid, reason) {
+    changeOrderStatus(orderid, statusid, reason) {     
       var orderStatusModel = {
         orderId: orderid,
         orderStatus: statusid,
-        cancellationReason: reason,
+        cancellationReason: reason,       
       };
+   
       dashBoardService
         .updateOrderStatus(orderStatusModel)
-        .then((response) => {
+        .then((response) => {          
           this.successmsg = "Order Updated.";
           this.getKanboard();
           console.log(response.data);
         })
-        .catch((err) => {
-          (this.errormsg = err.messge), console.log(err.message);
+        .catch((error) => {
+          (this.errormsg = error.data), console.log(error.data);
         });
     },
   },

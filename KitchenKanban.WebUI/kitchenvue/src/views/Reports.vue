@@ -4,6 +4,8 @@
         <section>
             <div class="breadcrumb">
                 <div>Reports</div>
+                 <div class="current-time">{{currentdate |formatTime}}</div>
+                   <div class="clearfix"></div>
             </div>
             <div class="list-sec">
                 <div class="container-fluid">
