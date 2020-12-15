@@ -117,10 +117,7 @@
                       </button>
                       <button
                         class="cancel-order-btn"
-                        @click="
-                          showWarningCancel(order.orderId, 7, 'Incorrect order')
-                        "
-                      >
+                        @click="showWarningCancel(order.orderId, 7, 'Incorrect order')">
                         Cancel Order
                       </button>
                     </div>
