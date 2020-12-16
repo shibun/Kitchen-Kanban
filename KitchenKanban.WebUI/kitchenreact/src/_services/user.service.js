@@ -1,7 +1,6 @@
 import config from 'config';
 import { authHeader } from '../_helpers';
 import axios from 'axios'
-
 export const userService = {
     login,
     logout,
@@ -31,7 +30,7 @@ function login(username, password) {
         .then(user => {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             localStorage.setItem('user', JSON.stringify(user));
-
+            axios.defaults.headers.common['Authorization'] = user.token
             return user;
         });
 }
@@ -42,15 +41,21 @@ function logout() {
 }
 
 function getAll() {
+    axios.defaults.headers.common =  authHeader()
+    return axios.get(`${config.apiUrl}/api/User`);
+  }
+function getAllo() {
     const requestOptions = {
         method: 'GET',
         headers: authHeader()
     };
 
-    return fetch(`${config.apiUrl}/users`, requestOptions).then(handleResponse);
+    return fetch(`${config.apiUrl}/api/user`, requestOptions).then(handleResponse);
 }
 
+
 function handleResponse(response) {
+    console.log(response)
     return response.text().then(text => {
         const data = text && JSON.parse(text);
         if (!response.ok) {

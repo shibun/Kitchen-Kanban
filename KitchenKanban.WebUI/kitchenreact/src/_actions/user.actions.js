@@ -6,7 +6,8 @@ import { history } from '../_helpers';
 export const userActions = {
     login,
     logout,
-    getAll
+    getAll,
+    //getUsers
 };
 
 function login(username, password) {
@@ -37,6 +38,24 @@ function logout() {
 }
 
 function getAll() {
+    return (dispatch) => {
+      userService
+        .getAll()
+        .then((res) => {
+          dispatch({
+            type: userConstants.GETALL_SUCCESS,
+            payload: res.data,
+          });
+        })
+        .catch((error) => {
+          dispatch({
+            type: userConstants.GETALL_FAILURE,
+            payload: error,
+          });
+        });
+    };
+  }
+function getAllo() {
     return dispatch => {
         dispatch(request());
 
