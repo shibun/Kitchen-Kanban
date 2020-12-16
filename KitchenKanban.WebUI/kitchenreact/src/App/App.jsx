@@ -48,9 +48,10 @@ class App extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { alert } = state;
+  const { alert ,authentication} = state;
+  const { loggedIn } = authentication;
   return {
-    alert,
+    alert
   };
 }
 
