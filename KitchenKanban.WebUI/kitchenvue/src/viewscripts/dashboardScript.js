@@ -96,7 +96,7 @@ export default {
     getordertime:function(orderdate){
      var initial = new Date(orderdate);
     var final = new Date();  
-    var difference = Math.floor(initial.getTime() - final.getTime())/3.6e6;    
+   var difference = (Math.floor(final.getTime()-initial.getTime())/36e6);  
      return difference;
     },
     
