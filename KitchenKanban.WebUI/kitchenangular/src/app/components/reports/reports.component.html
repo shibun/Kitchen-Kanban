@@ -1,0 +1,174 @@
+<div>
+    <section>
+        <div class="breadcrumb">Reports</div>
+        <div class="list-sec">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-3">
+                        &nbsp;
+                    </div>
+                    <div class="col-xs-6 text-center current-date">
+                        07/12/2020
+                    </div>
+                    <div class="col-xs-3">
+                        <input type="search" placeholder="Search Order" class="form-control" />
+                    </div>
+                </div>
+            </div>
+            <table class="custom-tbl">
+                <tr>
+                    <th class="text-center">Sl No</th>
+                    <th class="text-center">Order No</th>
+                    <th class="text-center">Order Time</th>
+                    <th class="text-center">No of Dishes</th>
+                    <th class="text-center">Order Taken By</th>
+                    <th class="text-center">Order Value</th>
+                    <th class="text-center">Order Status</th>
+                    <th class="text-center">Detail</th>
+                </tr>
+                <tr class="custom-btl-row">
+                    <td class="text-center">01</td>
+                    <td>120820-001</td>
+                    <td>09.20 am</td>
+                    <td class="text-center">03</td>
+                    <td>Pramod Karkera</td>
+                    <td class="text-right">$150.00</td>
+                    <td class="text-center">Delivered</td>
+                    <td class="text-center">
+                        <button class="trans-btn" data-toggle="modal" data-target="#reportDetail"><i
+                                class="glyphicon glyphicon-exclamation-sign"></i></button>
+                    </td>
+                </tr>
+                <tr class="custom-btl-row">
+                    <td class="text-center">02</td>
+                    <td>120820-002</td>
+                    <td>10.13 am</td>
+                    <td class="text-center">03</td>
+                    <td>Pramod Karkera</td>
+                    <td class="text-right">$150.00</td>
+                    <td class="text-center cancelled-order-status">Cancelled</td>
+                    <td class="text-center">
+                        <button class="trans-btn" data-toggle="modal" data-target="#reportDetail"><i
+                                class="glyphicon glyphicon-exclamation-sign"></i></button>
+                    </td>
+                </tr>
+                <tr class="custom-btl-row">
+                    <td class="text-center">03</td>
+                    <td>120820-003</td>
+                    <td>10.22 am</td>
+                    <td class="text-center">03</td>
+                    <td>Pramod Karkera</td>
+                    <td class="text-right">$150.00</td>
+                    <td class="text-center">Preparing</td>
+                    <td class="text-center">
+                        <button class="trans-btn" data-toggle="modal" data-target="#reportDetail"><i
+                                class="glyphicon glyphicon-exclamation-sign"></i></button>
+                    </td>
+                </tr>
+                <tr class="custom-btl-row">
+                    <td class="text-center">04</td>
+                    <td>120820-004</td>
+                    <td>11.15 am</td>
+                    <td class="text-center">03</td>
+                    <td>Pramod Karkera</td>
+                    <td class="text-right">$150.00</td>
+                    <td class="text-center">Packing</td>
+                    <td class="text-center">
+                        <button class="trans-btn" data-toggle="modal" data-target="#reportDetail"><i
+                                class="glyphicon glyphicon-exclamation-sign"></i></button>
+                    </td>
+                </tr>
+                <tr class="custom-btl-row">
+                    <td class="text-center bold">04</td>
+                    <td colspan="2">&nbsp;</td>
+                    <td class="text-center bold">12</td>
+                    <td class="text-right bold">Total</td>
+                    <td class="text-right bold">$600.00</td>
+                    <td colspan="2">&nbsp;</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+    <div class="clearfix"></div>
+</div>
+<div id="reportDetail" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">123456</h4>
+            </div>
+            <div class="modal-body">
+                <table class="report-tbl">
+                    <tr>
+                        <th>Status</th>
+                        <td>Delivered</td>
+                        <th>Ordered Date</th>
+                        <td>07/12/2020</td>
+                    </tr>
+                    <tr>
+                        <th>Ordered Time</th>
+                        <td>09.30 am</td>
+                        <th>Delivered Time</th>
+                        <td>09.58 am</td>
+                    </tr>
+                    <tr>
+                        <th>Ordered Taken By</th>
+                        <td>Pramod Karkera</td>
+                        <th>Order Prepared By</th>
+                        <td>Sujeesh Soman</td>
+                    </tr>
+                    <tr>
+                        <th>Ordered Packed By</th>
+                        <td>Sony Reddy</td>
+                        <th>Order Delivered By</th>
+                        <td>Jayanth Joseph</td>
+                    </tr>
+                    <tr>
+                        <th>Customer Name</th>
+                        <td>Pxxxxd Kxxxxxa</td>
+                        <th>Customer Phone No</th>
+                        <td>9xxxxxxxx7</td>
+                    </tr>
+                </table>
+
+                <h5 class="order-dtls">Order Details</h5>
+                <table class="custom-tbl">
+                    <tr>
+                        <th class="text-center">Sl No</th>
+                        <th class="text-center">Item Name</th>
+                        <th class="text-center">Quantity</th>
+                        <th class="text-center">Price</th>
+                    </tr>
+                    <tr>
+                        <td class="text-center">01</td>
+                        <td>Margherita</td>
+                        <td class="text-center">01</td>
+                        <td class="text-right">$150.00</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">02</td>
+                        <td>Peppy Paneer</td>
+                        <td class="text-center">01</td>
+                        <td class="text-right">$150.00</td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">03</td>
+                        <td>Deluxe Veggie</td>
+                        <td class="text-center">01</td>
+                        <td class="text-right">$150.00</td>
+                    </tr>
+                    <tr>
+                        <td class="bold text-center">03</td>
+                        <td class="bold">&nbsp;</td>
+                        <td class="bold text-center">03</td>
+                        <td class="bold text-right">$600.00</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

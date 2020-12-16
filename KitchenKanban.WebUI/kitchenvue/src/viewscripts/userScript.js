@@ -1,7 +1,7 @@
 import userService from "../services/userService";
 //import appDataMixin from '../mixins/appDataMixin'
-import MessageSuccess from "@/components/MessageSuccess.vue";
-import MessageError from "@/components/MessageError.vue";
+import MessageSuccess from "../components/MessageSuccess.vue";
+import MessageError from "../components/MessageError.vue";
 import AddUser from '../components/AddUser.vue';
 import MediarelatedService from '../services/MediarelatedService';
 import Vue from "vue";
@@ -96,6 +96,10 @@ export default {
                 (this.errormsg = "error occured"), console.log(err.message);
               });
             }   
+            else{
+               this.successmsg = "user added";
+                   this.isAddUser = false;    
+            }
                 
     
           }
@@ -126,6 +130,10 @@ export default {
               .catch((err) => {
                 (this.errormsg = "error occured"), console.log(err.message);
               });
+            }
+            else{
+               this.successmsg = "user updated";
+                    this.isAddUser = false       
             }
            
             }

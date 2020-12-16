@@ -44,9 +44,9 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <input class="form-control" list="itemList" name="itemList" v-model="selecteditem" v-on:change="selectionChanged">
+                                <input class="form-control" list="itemList" name="ItemList" v-model="selecteditem" v-on:change="selectionChanged">
                                 <datalist id="itemList">
-                                    <option v-for="item in Items" :key="item.itemId">{{item.itemName}}</option>
+                                    <option v-for="item in Items" v-bind:key="item.itemId" v-label="item.itemName">{{item.itemName}}</option>
                                 </datalist>
                             </div>
                         </div>
@@ -183,7 +183,10 @@
             getItems() {
                 (this.successmsg = false),
                 ItemListService.get().then((response) => {
-                    this.Items = response.data
+                    if(response.data.length>0){
+                          this.Items = response.data
+                    }
+                  
                 });
             },
             getOrderDetails(orderid) {
