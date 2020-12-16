@@ -1,0 +1,29 @@
+<div class="login-sec">
+    <div class="login-flex">
+        <div class="login-left-sec">
+            <div class="welcome-text">Welcome to My Kitchen</div>
+            <p class="welcome-des">
+                Lorem Ipsum is simply dummy text of the printing and typesetting
+                industry. Lorem Ipsum has been the industry's standard dummy text ever
+                since the 1500s,
+            </p>
+        </div>
+        <div class="login-right-sec">
+            <h3 class="login-header">Login</h3>
+            <form class="top50 bottom50">
+                <div class="form-group">
+                    <label>User Name</label>
+                    <input type="text" class="form-control" [(ngModel)]="loginInput.userName" name="Username" />
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" class="form-control" [(ngModel)]="loginInput.password" name="Password" />
+                </div>
+                <div class="text-center">
+                    <button class="login-btn" (click)="signIn()" type="button">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>

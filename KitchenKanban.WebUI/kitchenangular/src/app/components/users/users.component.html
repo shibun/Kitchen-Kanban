@@ -1,0 +1,119 @@
+<div>
+    <section>
+        <div class="breadcrumb">Users</div>
+        <div class="list-sec">
+            <div class="text-right">
+                <button class="trans-btn" (click)="showAddUserForm()">
+                    <img src="../../assets/images/add.png" />
+                </button>
+            </div>
+            <table class="custom-tbl">
+                <tbody>
+                    <tr>
+                        <th class="text-center">Sl No</th>
+                        <th class="text-center">User Image</th>
+                        <th class="text-center">User Name</th>
+                        <th class="text-center">User Type</th>
+                        <th class="text-center">Edit</th>
+                        <th class="text-center">Delete</th>
+                    </tr>
+                    <tr *ngFor='let userData of users; index as i;'>
+                        <td class="text-center">{{i + 1}}</td>
+                        <td class="text-center">
+                            <img src="../../assets/images/no_user_img.png" *ngIf="userData.imageId==null"
+                                class="display-user-img" />
+                            <img [src]="'data:image/jpeg;base64,'+ userData.imageContent" *ngIf="userData.imageId!=null"
+                                class="display-user-img" />
+                        </td>
+                        <td>{{userData.firstName}} {{userData.lastName}}</td>
+                        <td>{{getUserType(userData.userType)}}</td>
+                        <td class="text-center">
+                            <button class="trans-btn" (click)="showEditUserForm(userData.userId)"><img
+                                    src="../../assets/images/edit.png" /></button>
+                        </td>
+                        <td class="text-center">
+                            <button class="trans-btn"><img src="../../assets/images/delete.png" /></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+    <div class="clearfix"></div>
+</div>
+
+<div class="add-overlay" [hidden]="!isNewUser">
+    <div class="add-pop-overlay">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" (click)="closeAddUserForm()">×</button>
+            <h4 class="modal-title">Add User</h4>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label>First Name <span class="asterisk">*</span></label>
+                                <input type="text" class="form-control" [(ngModel)]="user.firstName" name="firstName">
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label>Last Name <span class="asterisk">*</span></label>
+                                <input type="text" class="form-control" [(ngModel)]="user.lastName" name="lastName">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label>User Type <span class="asterisk">*</span></label>
+                                <select class="form-control" [(ngModel)]="user.userType" name="userTypeId">
+                                    <option *ngFor="let item of userTypes" [ngValue]="item.id">{{item.text}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label>User Name <span class="asterisk">*</span></label>
+                                <input type="text" class="form-control" [(ngModel)]="user.userName" name="userName">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <div class="form-group">
+                                <label>Password <span class="asterisk">*</span></label>
+                                <input type="password" class="form-control" [(ngModel)]="user.password" name="password">
+                            </div>
+                        </div>
+                        <div class="col-xs-6"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <div class="form-group">
+                                <label>User Image</label>
+                                <img src="../../assets/images/no_user_img.png" *ngIf="!imageSrc"
+                                    class="uploaded-user-img" />
+                                <img [src]="imageSrc" *ngIf="imageSrc" class="uploaded-user-img">
+                            </div>
+                        </div>
+                        <div class="col-xs-8">
+                            <label class="user-img-upload-btn">
+                                <input type="file" name="file" multiple="" (change)="onFileChange($event)" />
+                                Upload
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default left-btn" data-dismiss="modal"
+                (click)="closeAddUserForm()">Cancel</button>
+            <button type="button" class="btn btn-active" data-dismiss="modal" (click)="saveUser()">Save</button>
+        </div>
+    </div>
+</div>
