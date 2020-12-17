@@ -8,5 +8,5 @@ export interface User {
     password: string;
     token: string;
     imageContent: null;
-    imageId: null;    
+    imageId: null;
 }

@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
+import { AuthGuard } from './auth.guard'
 
 import { LoginComponent } from './components/login/login.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -12,6 +13,7 @@ import { UsersComponent } from './components/users/users.component';
 import { KitchensComponent } from './components/kitchens/kitchens.component';
 import { ItemsComponent } from './components/items/items.component';
 import { ReportsComponent } from './components/reports/reports.component';
+import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,8 @@ import { ReportsComponent } from './components/reports/reports.component';
     UsersComponent,
     KitchensComponent,
     ItemsComponent,
-    ReportsComponent
+    ReportsComponent,
+    NavMenuComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +33,10 @@ import { ReportsComponent } from './components/reports/reports.component';
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [authInterceptorProviders],
+  providers: [
+    AuthGuard,
+    authInterceptorProviders
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
