@@ -20,7 +20,7 @@
                     <div class="kb-column-header">
                         <div class="float-left">New Order <span class="order-count">03</span></div>
                         <div class="float-right">
-                            <button class="add-order">+</button>
+                            <button class="add-order" (click)="showAddForm()">+</button>
                         </div>
                         <div class="clearfix"></div>
                     </div>
@@ -221,4 +221,109 @@
         </div>
     </section>
     <div class="clearfix"></div>
+</div>
+
+<div class="add-overlay" [hidden]="!showPopup">
+    <div class="add-pop-overlay">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" (click)="closeForm()">×</button>
+            <h4 class="modal-title">New Order</h4>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>Customer Name</label>
+                            <input type="text" class="form-control" autocomplete="off" [(ngModel)]="record.order.customerName" name="customerName">
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>Customer Phone</label>
+                            <input type="text" class="form-control" autocomplete="off" [(ngModel)]="record.order.customerContactNumber" name="customerContactNumber">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <div class="form-group">
+                            <label>Delivery Type <span class="asterisk">*</span></label>
+                            <select [disabled]="true" class="form-control" [(ngModel)]="record.order.orderType" name="orderTypeId">
+                                <option *ngFor="let orderType of orderTypes" [ngValue]="orderType.id">{{orderType.text}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="food-order-section">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="food-ordering-header">
+                            Select Item
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <input class="form-control" list="itemList" name="itemList" [(ngModel)]='selectedItemName' (change)="onItemChanged(selectedItemName)">
+                        <datalist id="itemList">
+                            <select>
+                                <option *ngFor="let item of items" [value]="item.itemName"></option>
+                            </select>
+                        </datalist>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <table class="ordered-items-tbl">
+                            <tr>
+                                <th class="text-center">Sl No</th>
+                                <th class="text-center">Item Name</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-center">Item Price</th>
+                                <th class="text-center">Total Price</th>
+                                <th class="text-center">Delete</th>
+                            </tr>
+                            <tr *ngFor='let selectedItem of selectedItems; index as i;'>
+                                <td class="text-center">{{i + 1}}</td>
+                                <td>{{selectedItem.itemName}}</td>
+                                <td class="text-center bold">
+                                    <div class="qty-main">
+                                        <div class="float-left neg-qty-box">
+                                            <button class="qty-btn" (click)="reduceQuantity(i)">-</button>
+                                        </div>
+                                        <div class="float-left qty-box">{{selectedItem.itemQuantity}}</div>
+                                        <div class="float-left pos-qty-box">
+                                            <button class="qty-btn" (click)="increaseQuantity(i)">+</button>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </td>
+                                <td class="text-right bold">{{selectedItem.itemCharge | currency:'USD':true:'1.2-2'}}</td>
+                                <td class="text-right bold">{{getItemTotalAmount(selectedItem.itemQuantity, selectedItem.itemCharge) | currency:'USD':true:'1.2-2'}}</td>
+                                <td class="text-center">
+                                    <button class="trans-btn" (click)="deleteItem(i)"><img src="../../assets/images/delete.png" /></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="text-center bold">Total</td>
+                                <td class="text-center bold">{{ getTotalItems() }}</td>
+                                <td>&nbsp;</td>
+                                <td class="text-right bold">{{ getTotalAmount() | currency:'USD':true:'1.2-2' }}</td>
+                                <td>&nbsp;</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default left-btn" data-dismiss="modal" (click)="closeForm()">Cancel</button>
+            <button type="button" class="btn btn-active" data-dismiss="modal" (click)="saveOrder()">Save</button>
+        </div>
+    </div>
 </div>

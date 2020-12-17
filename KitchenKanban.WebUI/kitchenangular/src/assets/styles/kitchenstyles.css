@@ -468,7 +468,7 @@ section {
 
 .add-pop-overlay {
     background-color: #fff;
-    width: 600px;
+    width: 50%;
     position: fixed;
     top: 50%;
     left: 50%;
