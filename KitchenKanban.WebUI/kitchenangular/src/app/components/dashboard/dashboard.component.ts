@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../services/user.service';
+import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,9 +7,12 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  constructor(private userService: UserService) { }
-
+  constructor(private messageService: MessageService) { }
   ngOnInit(): void {
     
+  }
+
+  saveDash(): void {
+    this.messageService.showErrorMessage("Error while updating.");
   }
 }

@@ -14,6 +14,7 @@ import { KitchensComponent } from './components/kitchens/kitchens.component';
 import { ItemsComponent } from './components/items/items.component';
 import { ReportsComponent } from './components/reports/reports.component';
 import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
+import { MessageComponent } from './components/message/message.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { NavMenuComponent } from './components/nav-menu/nav-menu.component';
     KitchensComponent,
     ItemsComponent,
     ReportsComponent,
-    NavMenuComponent
+    NavMenuComponent,
+    MessageComponent
   ],
   imports: [
     BrowserModule,

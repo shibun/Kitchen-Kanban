@@ -1,0 +1,26 @@
+<div class="overlay" *ngIf="messageService.isSuccessMessage">
+    <div class="pop-overlay">
+        <div class="success-header">
+            <img src="../../../assets/images/success.png" />
+        </div>
+        <div class="text-center pop-header"></div>
+        <div class="text-center">{{messageService.successMessage}}</div>
+        <div class="text-center">
+            <button class="success-btn" (click)="messageService.closeSuccessMessage()">Continue</button>
+        </div>
+    </div>
+</div>
+
+
+<div class="overlay" *ngIf="messageService.isErrorMessage">
+    <div class="pop-overlay">
+        <div class="error-header">
+            <img src="../../../assets/images/error.png" />
+        </div>
+        <div class="text-center pop-header"></div>
+        <div class="text-center">{{messageService.errorMessage}}</div>
+        <div class="text-center">
+            <button class="error-btn" (click)="messageService.closeErrorMessage()">Continue</button>
+        </div>
+    </div>
+</div>
