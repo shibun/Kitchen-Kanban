@@ -8,11 +8,11 @@ export function users(state = {}, action) {
       };
     case userConstants.GETALL_SUCCESS:
       return {
-        items: action.users
+        items: action.payload
       };
     case userConstants.GETALL_FAILURE:
       return { 
-        error: action.error
+        error: action.payload
       };
     default:
       return state

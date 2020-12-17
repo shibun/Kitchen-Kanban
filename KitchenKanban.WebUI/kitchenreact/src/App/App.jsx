@@ -1,54 +1,59 @@
-import React from 'react';
-import { Router, Route } from 'react-router-dom';
-import { connect } from 'react-redux';
+import React, { lazy, Suspense } from "react";
+import { connect } from "react-redux";
+import { history } from "../_helpers";
+import { alertActions } from "../_actions";
+import { Switch, Route, withRouter, Router, Link } from "react-router-dom";
+import { PrivateRoute } from "../_components";
+import { Header } from "../_components/Header";
 
-import { history } from '../_helpers';
-import { alertActions } from '../_actions';
-import { PrivateRoute } from '../_components';
-import { HomePage } from '../HomePage';
-import { LoginPage } from '../LoginPage';
-import {ItemsList} from '../ItemsListPage'; 
+const LoginPage = lazy(() => import("../LoginPage"));
+const DashboardPage = lazy(() => import("../Dashboard"));
 
 class App extends React.Component {
-    constructor(props) {
-        super(props);
+  constructor(props) {
+    super(props);
 
-        const { dispatch } = this.props;
-        history.listen((location, action) => {
-            // clear alert on location change
-            dispatch(alertActions.clear());
-        });
-    }
+    const { dispatch } = this.props;
+    history.listen((location, action) => {
+      // clear alert on location change
+      dispatch(alertActions.clear());
+    });
+  }
 
-    render() {
-        const { alert } = this.props;
-        return (
-            <div className="jumbotron">
-                <div className="container">
-                    <div className="col-sm-8 col-sm-offset-2">
-                        {alert.message &&
-                            <div className={`alert ${alert.type}`}>{alert.message}</div>
-                        }
-                        <Router history={history}>
-                            <div>
-                                <PrivateRoute exact path="/" component={HomePage} />
-                                <Route path="/login" component={LoginPage} />
-                                <Route path="/itemList" component={ItemsList} />
-                            </div>
-                        </Router>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+  render() {
+    const { alert } = this.props;
+    return (
+      <div>
+        <Router history={history}>
+          <div>
+            <Header />
+            <Suspense fallback={<div>Loading...</div>}>
+              <Switch>
+                <PrivateRoute
+                  exact
+                  path="/"
+                  component={(props) => <DashboardPage {...props} />}
+                />
+                <Route
+                  path="/login"
+                  component={(props) => <LoginPage {...props} />}
+                />
+              </Switch>
+            </Suspense>
+          </div>
+        </Router>
+      </div>
+    );
+  }
 }
 
 function mapStateToProps(state) {
-    const { alert } = state;
-    return {
-        alert
-    };
+  const { alert ,authentication} = state;
+  const { loggedIn } = authentication;
+  return {
+    alert
+  };
 }
 
 const connectedApp = connect(mapStateToProps)(App);
-export { connectedApp as App }; 
+export { connectedApp as App };
