@@ -100,7 +100,7 @@ export class KitchensComponent implements OnInit {
         this.closeForm();
       },
       err => {
-        console.log("Kitchen updateKitchen : ", err)
+        console.log("Kitchen deleteKitchen : ", err)
       }
     );
   }

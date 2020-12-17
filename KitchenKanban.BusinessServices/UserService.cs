@@ -104,7 +104,7 @@ namespace KitchenKanban.BusinessServices
 
                     if (user.ImageId != null)
                     {
-                        var image = _imageService.GetImage(user.ImageId, ImageType.Icon);
+                        var image = _imageService.GetImage(user.ImageId, ImageType.Original);
                         userModel.ImageContent = image.ImageContent;
                     }
                     return userModel;
