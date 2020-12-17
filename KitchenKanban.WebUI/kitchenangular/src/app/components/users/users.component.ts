@@ -78,6 +78,11 @@ export class UsersComponent implements OnInit {
   }
 
   saveUser(): void {
+    if(this.user.firstName == '' || this.user.lastName == '' || this.user.userName == '' || this.user.password == '' || this.user.userType == 0)
+    {      
+      this.messageService.showErrorMessage("Please fill the mandatory fields.");
+      return;
+    }
     if (this.user.userId != null && this.user.userId != '') {
       this.userService.updateUser(this.user).subscribe(
         data => {
@@ -133,6 +138,7 @@ export class UsersComponent implements OnInit {
               },
               err => {
                 console.log("Dashboard getUserById : ", err)
+                this.messageService.showErrorMessage(err.Message);
               }
             );
           }
@@ -143,6 +149,7 @@ export class UsersComponent implements OnInit {
         },
         err => {
           console.log("Dashboard addUser : ", err.error)
+          this.messageService.showErrorMessage(err.error);
         }
       );
     }
