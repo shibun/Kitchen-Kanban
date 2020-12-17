@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Header } from '../_components/Header';
 
 import { kitchenCounterActions } from '../_actions';
 
@@ -21,27 +22,9 @@ class KitchenCounter extends React.Component {
         
         return (
     <div>
-            <nav className="navbar navbar-inverse">
-            <div className="container-fluid">
-                <div className="navbar-header">
-                    <a className="navbar-brand" href="dashboard.html">My Kitchen</a>
-                </div>
-                <ul className="nav navbar-nav navbar-right">
-                    <li><a href="#">Pramod Karkera</a></li>
-                    <li><a href="login.html"><i className="glyphicon glyphicon-log-out"></i></a></li>
-                </ul>
-            </div>
-            </nav>
+        
          <div>
-            <aside>
-            <ul className="nav-menu-ul">
-                <li><a href="dashboard.html">Dashboard</a></li>
-                <li><a href="userList.html">User List</a></li>
-                <li><a href="kitchenCounterList.html">Kitchen Counter List</a></li>
-                <li><a href="itemList.html">Item List</a></li>
-                <li><a href="report.html">Reports</a></li>
-            </ul>
-         </aside>
+       <Header/>
          <section>
             <div className="breadcrumb">Kitchen Counter List</div>
             <div className="list-sec">
@@ -58,16 +41,17 @@ class KitchenCounter extends React.Component {
                             <th className="text-center">Edit</th>
                             <th className="text-center">Delete</th>
                         </tr>
-                        <tr>
-                            <td className="text-center">1</td>
-                            <td>Counter 1</td>
-                            <td className="text-center">
-                                <button className="trans-btn"><img src="images/edit.png" /></button>
-                            </td>
-                            <td className="text-center">
-                                <button className="trans-btn"><img src="images/delete.png" /></button>
-                            </td>
-                        </tr>
+                                 {kitchenCounters && kitchenCounters.map((counter, index) =>                                         
+                                                    
+                                                    <tr key={counter.counterId}>
+                                                        <td className="text-center">{index+1}</td>                                            
+                                                        <td>{counter.counterName}</td>
+                                                    
+                                                <td className="text-center"><img src="images/edit.png" /></td>
+                                                    <td className="text-center"><img src="images/delete.png" /></td>
+                                                    </tr>
+                    
+                                                        )}
                         <tr>
                             <td className="text-center">2</td>
                             <td>Counter 2</td>
@@ -106,32 +90,7 @@ class KitchenCounter extends React.Component {
         </div>
 
 
-    <div className="overlay" style={{display:"none"}}>
-        <div className="pop-overlay">
-            <div className="success-header">
-                <img src="images/success.png" />
-            </div>
-            <div className="text-center pop-header">Great!</div>
-            <div className="text-center">Successfully Updated</div>
-            <div className="text-center">
-                <button className="success-btn">Continue</button>
-            </div>
-        </div>
-    </div>
-
-
-    <div className="overlay" style={{display:"none"}}>
-        <div className="pop-overlay">
-            <div className="error-header">
-                <img src="images/error.png" />
-            </div>
-            <div className="text-center pop-header">Error!</div>
-            <div className="text-center">Error message shown up here</div>
-            <div className="text-center">
-                <button className="error-btn">Continue</button>
-            </div>
-        </div>
-    </div>
+  
   
 
 </div>
