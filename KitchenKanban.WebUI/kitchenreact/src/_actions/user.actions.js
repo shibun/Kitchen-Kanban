@@ -6,8 +6,8 @@ import { history } from '../_helpers';
 export const userActions = {
     login,
     logout,
-    getAll,
-    //getUsers
+    getUsers,
+    addUser
 };
 
 function login(username, password) {
@@ -37,10 +37,10 @@ function logout() {
     return { type: userConstants.LOGOUT };
 }
 
-function getAll() {
+function getUsers() {
     return (dispatch) => {
       userService
-        .getAll()
+        .getUsers()
         .then((res) => {
           dispatch({
             type: userConstants.GETALL_SUCCESS,
@@ -55,18 +55,22 @@ function getAll() {
         });
     };
   }
-function getAllo() {
-    return dispatch => {
-        dispatch(request());
 
-        userService.getAll()
-            .then(
-                users => dispatch(success(users)),
-                error => dispatch(failure(error))
-            );
+  function addUser(data) {
+    return (dispatch) => {
+      userService
+        .addUser(data)
+        .then((res) => {
+          dispatch({
+            type: userConstants.CREATEUSER_SUCCESS,
+            payload: res.data,
+          });
+        })
+        .catch((error) => {
+          dispatch({
+            type: userConstants.CREATEUSER_FAILURE,
+            payload: error,
+          });
+        });
     };
-
-    function request() { return { type: userConstants.GETALL_REQUEST } }
-    function success(users) { return { type: userConstants.GETALL_SUCCESS, users } }
-    function failure(error) { return { type: userConstants.GETALL_FAILURE, error } }
-}
+  }

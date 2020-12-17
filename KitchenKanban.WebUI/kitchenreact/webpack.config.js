@@ -22,7 +22,8 @@ module.exports = {
     externals: {
         // global app config object
         config: JSON.stringify({
-            apiUrl: 'http://localhost:64464/WebApi'
+            baseUrl: 'http://localhost:64464/WebApi',
+            apiUrl: 'http://localhost:64464/WebApi/api'
         })
     }
 }
