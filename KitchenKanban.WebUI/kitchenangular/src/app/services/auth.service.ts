@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { AuthenticationRequest } from '../models/authentication-request';
 import { map } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import jwt_decode from "jwt-decode";
 
 const API_URL = 'http://localhost:64464/WebApi';
 
@@ -21,7 +20,7 @@ export class AuthService {
 
    // User related properties
    private loginStatus = new BehaviorSubject<boolean>(this.checkLoginStatus());
-   private User    = new BehaviorSubject<any>(localStorage.getItem('user'));
+   private UserFullName    = new BehaviorSubject<string>(this.getUserFullName());
    
   login(credentials : AuthenticationRequest): Observable<any> {
     return this.http.post(API_URL + '/token', {
@@ -44,8 +43,8 @@ export class AuthService {
                     this.loginStatus.next(true);
                     localStorage.setItem('loginStatus', '1');
                     localStorage.setItem('userToken', result.token);
-                    localStorage.setItem('user', result);
-                    this.User.next(result);
+                    localStorage.setItem('user', JSON.stringify(result));
+                    this.UserFullName.next(result.firstName + " " + result.lastName);
                 }
                  return result;
             })
@@ -66,8 +65,7 @@ export class AuthService {
 
 
     checkLoginStatus() : boolean 
-    {      
-      console.log("Inside checkLoginStatus");
+    {
         var loginCookie = localStorage.getItem("loginStatus");
         if(loginCookie == "1") 
         {
@@ -81,13 +79,24 @@ export class AuthService {
         return false;
     }
 
+    getUserFullName() : string
+    {
+      var user = localStorage.getItem("user");
+      if(user != null)
+      {
+        var json = JSON.parse(user);
+        return json.firstName + " " + json.lastName
+      }
+      return '';
+    }
+
     get isLoggesIn() 
     {
         return this.loginStatus.asObservable();
     }
 
-    get currentUser() 
+    get currentUserFullName() 
     {
-        return this.User.asObservable();
+        return this.UserFullName.asObservable();
     }
 }

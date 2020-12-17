@@ -5,10 +5,10 @@
               <span class="navbar-brand">My Kitchen</span>
           </div>
           <ul class="nav navbar-nav navbar-right">
-              <li *ngIf="(User$ | async) as User"><a>
+              <li *ngIf="(UserFullName$ | async) as UserFullName"><a>
               <img class="display-user-img" src="../assets/images/no_user_img.png" />
               <!-- <img [src]="'data:image/jpeg;base64,'+ usrImage" v-if="usrImage" class="display-user-img" /> -->
-              {{User.firstName}}
+              {{UserFullName}}
             </a></li>
           <li><a href="" (click)="signOut()"><i class="glyphicon glyphicon-log-out"></i></a></li>
         </ul>

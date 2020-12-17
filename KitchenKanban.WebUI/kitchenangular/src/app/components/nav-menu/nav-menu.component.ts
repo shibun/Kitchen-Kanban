@@ -12,11 +12,11 @@ export class NavMenuComponent implements OnInit {
   constructor(private authService : AuthService) { }
   
   LoginStatus$!: Observable<boolean>;
-  User$!: Observable<any>;
+  UserFullName$!: Observable<any>;
 
   ngOnInit(): void {
     this.LoginStatus$ = this.authService.isLoggesIn;
-    this.User$ = this.authService.currentUser;
+    this.UserFullName$ = this.authService.currentUserFullName;
   }
 
   signOut(){    
