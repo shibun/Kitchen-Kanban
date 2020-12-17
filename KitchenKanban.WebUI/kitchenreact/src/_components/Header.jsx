@@ -4,10 +4,7 @@ import { Link } from 'react-router-dom';
 import { userActions } from '../_actions';
 
 class Header extends React.Component {
-    componentDidMount() {
-      
-    }
-
+ 
     render() {
         const { user,loggedIn } = this.props;
         return ( 

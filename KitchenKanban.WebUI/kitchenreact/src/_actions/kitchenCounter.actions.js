@@ -7,17 +7,21 @@ export const kitchenCounterActions = {
     getAll,   
 };
 function getAll() {
-    return dispatch => {
-        dispatch(request());
 
-        kitchenCounterService.getAll(true)
-            .then(
-                kitchenCounters => dispatch(success(kitchenCounters)),
-                error => dispatch(failure(error.toString()))
-            );
-    };
-
-    function request() { return { type: kitchenCounterConstants.KITCHENCOUNTER_GETALL_REQUEST } }
-    function success(kitchenCounters) { return { type: kitchenCounterConstants.KITCHENCOUNTER_GETALL_SUCCESS, kitchenCounters } }
-    function failure(error) { return { type: kitchenCounterConstants.KITCHENCOUNTER_GETALL_FAILURE, error } }
+    return (dispatch) => {
+        kitchenCounterService
+          .getAll()
+          .then((res) => {
+            dispatch({
+              type: itemsListConstants.GETALL_SUCCESS,
+              payload: res.data,
+            });
+          })
+          .catch((error) => {
+            dispatch({
+              type:itemsListConstants.GETALL_FAILURE,
+              payload: error,
+            });
+          });
+        }
 }

@@ -7,17 +7,21 @@ export const itemsListActions = {
     getAll,   
 };
 function getAll() {
-    return dispatch => {
-        dispatch(request());
 
-        itemsListService.getAll(true)
-            .then(
-                items => dispatch(success(items)),
-                error => dispatch(failure(error.toString()))
-            );
-    };
-
-    function request() { return { type: itemsListConstants.ITEMS_GETALL_REQUEST } }
-    function success(items) { return { type: itemsListConstants.ITEMS_GETALL_SUCCESS, items } }
-    function failure(error) { return { type: itemsListConstants.ITEMS_GETALL_FAILURE, error } }
-}
+    return (dispatch) => {
+        itemsListService
+          .getAll()
+          .then((res) => {
+            dispatch({
+              type: itemsListConstants.GETALL_SUCCESS,
+              payload: res.data,
+            });
+          })
+          .catch((error) => {
+            dispatch({
+              type:itemsListConstants.GETALL_FAILURE,
+              payload: error,
+            });
+          });
+        }
+      };

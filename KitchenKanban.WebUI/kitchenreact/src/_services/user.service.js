@@ -4,19 +4,9 @@ import axios from 'axios'
 export const userService = {
     login,
     logout,
-    getAll
+    getAll,
+    add
 };
-
-function loginold(username, password){
-    return axios.post('http://localhost:64464/WebApi/token', {username:username,password:password})
-    .then(res => {
-      //const token = user.token
-      //localStorage.setItem('user', JSON.stringify(user))
-      //axios.defaults.headers.common['Authorization'] = user.token
-      console.log('user',res.data)
-      return JSON.parse(res.data);
-    })
-}
 
 function login(username, password) {
     const requestOptions = {
@@ -25,7 +15,7 @@ function login(username, password) {
         body: JSON.stringify({ username, password })
     };
 
-    return fetch(`${config.apiUrl}/token`, requestOptions)
+    return fetch(`${config.baseUrl}/token`, requestOptions)
         .then(handleResponse)
         .then(user => {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
@@ -42,7 +32,12 @@ function logout() {
 
 function getAll() {
     axios.defaults.headers.common =  authHeader()
-    return axios.get(`${config.apiUrl}/api/User`);
+    return axios.get(`${config.apiUrl}/User`);
+  }
+
+  function add(data) {
+    axios.defaults.headers.common =  authHeader()
+    return axios.post(`${config.apiUrl}/User`,data);
   }
 function getAllo() {
     const requestOptions = {

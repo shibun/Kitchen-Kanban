@@ -14,6 +14,20 @@ export function users(state = {}, action) {
       return { 
         error: action.payload
       };
+
+      case userConstants.CREATEUSER_REQUEST:
+        return {
+            loading: true
+        };
+    case userConstants.CREATEUSER_SUCCESS:
+      return {
+        item: action.payload
+      };
+    case userConstants.CREATEUSER_FAILURE:
+        return {
+            error: action.error
+        };
+
     default:
       return state
   }

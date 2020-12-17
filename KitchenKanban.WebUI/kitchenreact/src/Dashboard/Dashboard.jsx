@@ -6,7 +6,7 @@ import { userActions } from '../_actions';
 import { Header } from '../_components/Header';
 
 class DashboardPage extends React.Component {
-    componentDidMount() {
+  componentDidMount () {
         this.props.dispatch(userActions.getAll());
     }
 
