@@ -41,7 +41,7 @@ class KitchenCounter extends React.Component {
                             <th className="text-center">Edit</th>
                             <th className="text-center">Delete</th>
                         </tr>
-                                 {kitchenCounters && kitchenCounters.map((counter, index) =>                                         
+                                 {kitchenCounters && kitchenCounters.items &&kitchenCounters.items.map((counter, index) =>                                         
                                                     
                                                     <tr key={counter.counterId}>
                                                         <td className="text-center">{index+1}</td>                                            

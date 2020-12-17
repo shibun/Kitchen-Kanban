@@ -6,6 +6,7 @@ import { Switch, Route, withRouter, Router, Link } from "react-router-dom";
 import { PrivateRoute } from "../_components";
 import { Header } from "../_components/Header";
 import { ItemsList} from '../ItemsListPage';
+import {KitchenCounter} from '../KitchenCounter';
 
 
 
@@ -47,6 +48,11 @@ class App extends React.Component {
                   exact
                   path="/itemsList"
                   component={(props) => <ItemsList {...props} />}
+                />
+                 <PrivateRoute
+                  exact
+                  path="/kitchencounterlist"
+                  component={(props) => <KitchenCounter {...props} />}
                 />
                  
               </Switch>

@@ -13,13 +13,13 @@ function getAll() {
           .getAll()
           .then((res) => {
             dispatch({
-              type: itemsListConstants.GETALL_SUCCESS,
+              type: kitchenCounterConstants.GETALL_SUCCESS,
               payload: res.data,
             });
           })
           .catch((error) => {
             dispatch({
-              type:itemsListConstants.GETALL_FAILURE,
+              type:kitchenCounterConstants.GETALL_FAILURE,
               payload: error,
             });
           });

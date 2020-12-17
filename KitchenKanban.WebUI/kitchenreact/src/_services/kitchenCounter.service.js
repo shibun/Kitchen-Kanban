@@ -7,6 +7,7 @@ export const kitchenCounterService = {
 };
 
 
-function getAll() {     
-     return axios.get('http://localhost:64464/WebApi/api/KitchenCounter');
+function getAll() {   
+       axios.defaults.headers.common =  authHeader()  
+        return axios.get(`${config.apiUrl}/Kitchen`);      
 }

@@ -1,6 +1,6 @@
 import { itemsListConstants } from '../_constants';
 
-export function itemsList(state = {}, action) {
+export function items(state = {}, action) {
     switch (action.type) {      
        
         case itemsListConstants.GETALL_REQUEST:
@@ -15,6 +15,30 @@ export function itemsList(state = {}, action) {
             return {
                 error: action.payload
             };
+           
+        case itemsListConstants.UPDATE_SUCCESS:
+            return {  updateditem: action.payload };
+        case itemsListConstants.UPDATE_FAILURE:
+            return {  error: action.payload};
+      
+        default:
+            return state
+    }
+}
+export function createditem(state = {}, action) {
+    switch (action.type) {      
+       
+    case itemsListConstants.CREATE_REQUEST:
+        return {
+            loading: true
+        };
+    case itemsListConstants.CREATE_SUCCESS:
+      return action.payload
+      ;
+    case itemsListConstants.CREATE_FAILURE:
+        return {
+            error: action.error
+        };
       
         default:
             return state
