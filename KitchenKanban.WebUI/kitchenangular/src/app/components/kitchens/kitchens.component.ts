@@ -69,7 +69,7 @@ export class KitchensComponent implements OnInit {
     if (this.record.kitchenId != null && this.record.kitchenId != '') {
       this.kitchenService.updateKitchen(this.record).subscribe(
         data => {
-          this.messageService.showSuccessMessage("Kitchen counter updated successfully");
+          this.messageService.showSuccessMessage();
           this.getKitchens();
           this.closeForm();
         },
@@ -81,7 +81,7 @@ export class KitchensComponent implements OnInit {
     else {
       this.kitchenService.addKitchen(this.record).subscribe(
         data => {
-          this.messageService.showSuccessMessage("Kitchen counter added successfully");
+          this.messageService.showSuccessMessage();
           this.getKitchens();
           this.closeForm();
         },
@@ -95,7 +95,7 @@ export class KitchensComponent implements OnInit {
   deleteRecord(kitchenId: string): void {
     this.kitchenService.deleteKitchen(kitchenId).subscribe(
       data => {
-        this.messageService.showSuccessMessage("Kitchen counter deleted successfully");
+        this.messageService.showSuccessMessage();
         this.getKitchens();
         this.closeForm();
       },

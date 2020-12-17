@@ -13,6 +13,6 @@ export class DashboardComponent implements OnInit {
   }
 
   saveDash(): void {
-    this.messageService.showErrorMessage("Error while updating.");
+    this.messageService.showSuccessMessage();
   }
 }

@@ -59,7 +59,7 @@ export class ItemsComponent implements OnInit {
     if (this.record.itemId != null && this.record.itemId != '') {
       this.itemService.updateItem(this.record).subscribe(
         data => {
-          this.messageService.showSuccessMessage("Item updated successfully");
+          this.messageService.showSuccessMessage();
           if (this.files != null) {
             if (this.record.imageId != null && this.record.imageId != '') {
               this.mediaService.updateFile(this.files, this.record.imageId).subscribe(
@@ -102,7 +102,7 @@ export class ItemsComponent implements OnInit {
           if (this.imageSrc != null) {
             this.mediaService.postFile(this.files, data.itemId, 2).subscribe(
               data => {
-                this.messageService.showSuccessMessage("Item added successfully");
+                this.messageService.showSuccessMessage();
                 this.getItems();
                 this.closeForm();
               },
@@ -113,7 +113,7 @@ export class ItemsComponent implements OnInit {
             );
           }
           else {
-            this.messageService.showSuccessMessage("Item added successfully");
+            this.messageService.showSuccessMessage();
             this.getItems();
             this.closeForm();
           }
@@ -148,7 +148,7 @@ export class ItemsComponent implements OnInit {
   deleteRecord(itemId: string): void {
     this.itemService.deleteItem(itemId).subscribe(
       data => {
-        this.messageService.showSuccessMessage("Item deleted successfully");
+        this.messageService.showSuccessMessage();
         this.getItems();
         this.closeForm();
       },

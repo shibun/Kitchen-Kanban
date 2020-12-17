@@ -6,13 +6,11 @@ import { Injectable } from '@angular/core';
 export class MessageService {
 
   isSuccessMessage: boolean = false;
-  successMessage: string = '';
   isErrorMessage: boolean = false;
   errorMessage: string = '';
 
-  showSuccessMessage(message: string) {
+  showSuccessMessage() {
     this.isSuccessMessage = true;
-    this.successMessage = message;
 
     setTimeout(() => {
       this.closeSuccessMessage();
@@ -21,7 +19,6 @@ export class MessageService {
 
   closeSuccessMessage() {
     this.isSuccessMessage = false;
-    this.successMessage = '';
   }
 
   showErrorMessage(message: string) {

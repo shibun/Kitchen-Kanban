@@ -86,7 +86,7 @@ export class UsersComponent implements OnInit {
     if (this.user.userId != null && this.user.userId != '') {
       this.userService.updateUser(this.user).subscribe(
         data => {
-          this.messageService.showSuccessMessage("User updated successfully");
+          this.messageService.showSuccessMessage();
           if (this.files != null) {
             if (this.user.imageId != null && this.user.imageId != '') {
               this.mediaService.updateFile(this.files, this.user.imageId).subscribe(
@@ -129,7 +129,7 @@ export class UsersComponent implements OnInit {
     else {
       this.userService.addUser(this.user).subscribe(
         data => {          
-          this.messageService.showSuccessMessage("User added successfully");
+          this.messageService.showSuccessMessage();
           if (this.imageSrc != null) {
             this.mediaService.postFile(this.files, data.userId, 1).subscribe(
               data => {
