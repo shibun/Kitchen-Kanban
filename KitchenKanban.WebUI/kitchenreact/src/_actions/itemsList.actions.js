@@ -6,11 +6,11 @@ import { history } from '../_helpers';
 
 export const itemsListActions = {   
     getAll,
-    addItem,  
-    uploadImage, 
+    addItem,    
     deleteItem,
     updateItem,
-    updateImage
+    updateImage,
+    uploadImage
 };
 function getAll() {
 

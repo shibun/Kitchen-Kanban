@@ -24,9 +24,9 @@ class ItemsList extends React.Component {
         
         this.handleOnAddClick=this.handleOnAddClick.bind(this);  
         this.handleChange = this.handleChange.bind(this);
-        this.clearForm=this.clearForm.bind(this);  
-        this.addItem=this.addItem.bind(this);
+        this.clearForm=this.clearForm.bind(this);       
          this.catchFile = this.catchFile.bind(this);
+        this.addItem=this.addItem.bind(this);
         this.deleteItem=this.deleteItem.bind(this); 
         this.handleOnEdit=this.handleOnEdit.bind(this);  
         this.updateItem=this.updateItem.bind(this); 
@@ -42,30 +42,7 @@ class ItemsList extends React.Component {
         });
         
     }
-    addItem(){
-         const { item } = this.state;
-         this.setState({
-            item: {
-                ...item,
-               itemCharge:parseFloat(this.state.item.itemCharge)
-            }
-        },()=>{
-    this.props.dispatch(itemsListActions.addItem(this.state.item));
-        });    
-          
-    }
-        updateItem(){
-              const { item } = this.state;
-         this.setState({
-            item: {
-                ...item,
-               itemCharge:parseFloat(this.state.item.itemCharge)
-            }
-        },()=>{
-         this.props.dispatch(itemsListActions.updateItem(this.state.item));
-        });          
-        }
-    clearForm(){
+      clearForm(){
         this.setState({
              showform:false,
             item:{
@@ -90,6 +67,30 @@ class ItemsList extends React.Component {
         });
            
     }
+    addItem(){
+         const { item } = this.state;
+         this.setState({
+            item: {
+                ...item,
+               itemCharge:parseFloat(this.state.item.itemCharge)
+            }
+        },()=>{
+    this.props.dispatch(itemsListActions.addItem(this.state.item));
+        });    
+          
+    }
+        updateItem(){
+              const { item } = this.state;
+         this.setState({
+            item: {
+                ...item,
+               itemCharge:parseFloat(this.state.item.itemCharge)
+            }
+        },()=>{
+         this.props.dispatch(itemsListActions.updateItem(this.state.item));
+        });          
+        }
+  
      catchFile(e) {
 
         var file = e.target.files[0];
