@@ -22,7 +22,7 @@ class Header extends React.Component {
                      </div>
                       <ul className="nav navbar-nav navbar-right">
                          <li><a>
-                         <img className="user-img" src="../src/assets/images/user_img.png"/> 
+                         <img className="user-img" src="../src/_assets/images/user_img.png"/> 
                        
                         {user && user.userFullName} 
                             </a></li>
