@@ -6,41 +6,44 @@ import { history } from '../_helpers';
 export const userActions = {
     login,
     logout,
-    getUsers,
-    addUser
+    getAll,
+    add
 };
 
 function login(username, password) {
-    return dispatch => {
-        dispatch(request({ username }));
 
-        userService.login(username, password)
-            .then(
-                user => { 
-                    dispatch(success(user));
-                    history.push('/');
-                },
-                error => {
-                    dispatch(failure(error));
-                    dispatch(alertActions.error(error));
-                }
-            );
-    };
-
-    function request(user) { return { type: userConstants.LOGIN_REQUEST, user } }
-    function success(user) { return { type: userConstants.LOGIN_SUCCESS, user } }
-    function failure(error) { return { type: userConstants.LOGIN_FAILURE, error } }
+  return (dispatch) => {
+    dispatch(
+      {
+        type: userConstants.LOGIN_REQUEST,
+        user: username,
+      });
+     userService
+      .login(username, password)
+      .then((res) => {
+        dispatch({
+          type: userConstants.LOGIN_SUCCESS,
+          user: res.data,
+        });
+        history.push('/');
+      })
+      .catch((error) => {
+        dispatch({
+          type: userConstants.LOGIN_FAILURE,
+          error: error,
+        });
+      });
+  };
 }
-
 function logout() {
     userService.logout();
     return { type: userConstants.LOGOUT };
 }
 
-function getUsers() {
+function getAll() {
     return (dispatch) => {
       userService
-        .getUsers()
+        .getAll()
         .then((res) => {
           dispatch({
             type: userConstants.GETALL_SUCCESS,
@@ -56,19 +59,19 @@ function getUsers() {
     };
   }
 
-  function addUser(data) {
+  function add(data) {
     return (dispatch) => {
       userService
-        .addUser(data)
+        .add(data)
         .then((res) => {
           dispatch({
-            type: userConstants.CREATEUSER_SUCCESS,
+            type: userConstants.CREATE_REQUEST,
             payload: res.data,
           });
         })
         .catch((error) => {
           dispatch({
-            type: userConstants.CREATEUSER_FAILURE,
+            type: userConstants.CREATE_FAILURE,
             payload: error,
           });
         });

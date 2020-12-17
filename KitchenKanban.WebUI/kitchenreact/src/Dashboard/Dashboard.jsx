@@ -6,8 +6,8 @@ import { userActions } from '../_actions';
 import { Header } from '../_components/Header';
 
 class DashboardPage extends React.Component {
-    componentDidMount() {
-        this.props.dispatch(userActions.getUsers());
+  componentDidMount () {
+        this.props.dispatch(userActions.getAll());
     }
 
     render() {

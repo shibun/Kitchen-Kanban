@@ -4,8 +4,8 @@ import axios from 'axios'
 export const userService = {
     login,
     logout,
-    getUsers,
-    addUser
+    getAll,
+    add
 };
 
 function login(username, password) {
@@ -30,12 +30,12 @@ function logout() {
     localStorage.removeItem('user');
 }
 
-function getUsers() {
+function getAll() {
     axios.defaults.headers.common =  authHeader()
     return axios.get(`${config.apiUrl}/User`);
   }
 
-  function addUser(data) {
+  function add(data) {
     axios.defaults.headers.common =  authHeader()
     return axios.post(`${config.apiUrl}/User`,data);
   }

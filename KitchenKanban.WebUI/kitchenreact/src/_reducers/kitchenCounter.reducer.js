@@ -3,17 +3,17 @@ import { kitchenCounterConstants } from '../_constants';
 export function kitchenCounters(state = {}, action) {
     switch (action.type) {      
        
-        case kitchenCounterConstants.KITCHENCOUNTER_GETALL_REQUEST:
+        case kitchenCounterConstants.GETALL_REQUEST:
             return {
                 loading: true
             };
-        case kitchenCounterConstants.KITCHENCOUNTER_GETALL_SUCCESS:
+        case kitchenCounterConstants.GETALL_SUCCESS:
             return {
-                items: action.kitchenCounters
+                items: action.payload
             };
-        case kitchenCounterConstants.KITCHENCOUNTER_GETALL_FAILURE:
+        case kitchenCounterConstants.GETALL_FAILURE:
             return {
-                error: action.error
+                error: action.payload
             };
       
         default:

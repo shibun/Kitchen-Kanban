@@ -3,17 +3,17 @@ import { itemsListConstants } from '../_constants';
 export function itemsList(state = {}, action) {
     switch (action.type) {      
        
-        case itemsListConstants.ITEMS_GETALL_REQUEST:
+        case itemsListConstants.GETALL_REQUEST:
             return {
                 loading: true
             };
-        case itemsListConstants.ITEMS_GETALL_SUCCESS:
+        case itemsListConstants.GETALL_SUCCESS:
             return {
-                items: action.items
+                items: action.payload
             };
-        case itemsListConstants.ITEMS_GETALL_FAILURE:
+        case itemsListConstants.GETALL_FAILURE:
             return {
-                error: action.error
+                error: action.payload
             };
       
         default:
