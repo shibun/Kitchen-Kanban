@@ -7,7 +7,16 @@ import { MessageService } from '../../services/message.service';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  constructor(private messageService: MessageService) { }
+
+  clock  = new Date();
+
+  constructor(private messageService: MessageService) {
+    setInterval(() => {
+      this.clock = new Date();
+  }, 1000) // Updates the time every second.
+
+   }
+  
   ngOnInit(): void {
     
   }
