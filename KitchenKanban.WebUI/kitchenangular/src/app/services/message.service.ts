@@ -14,7 +14,7 @@ export class MessageService {
 
     setTimeout(() => {
       this.closeSuccessMessage();
-    }, 3000);
+    }, 1500);
   }
 
   closeSuccessMessage() {
