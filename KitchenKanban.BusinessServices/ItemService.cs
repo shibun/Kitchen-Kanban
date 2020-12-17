@@ -60,14 +60,20 @@ namespace KitchenKanban.BusinessServices
                 var item = _databaseContext.Items.Where(x => x.ItemId == itemId).FirstOrDefault();
                 if (item == null)
                     return null;
-
-                return new ItemViewModel()
+                var itemRec = new ItemViewModel()
                 {
                     ItemId = item.ItemId,
                     ItemName = item.ItemName,
                     ItemCharge = item.ItemCharge,
                     ImageId = item.ImageId
                 };
+
+                if (item.ImageId != null)
+                {
+                    var image = _imageService.GetImage(item.ImageId, ImageType.Original);
+                    itemRec.ImageContent = image.ImageContent;
+                }
+                return itemRec;
             }
             catch (Exception ex)
             {

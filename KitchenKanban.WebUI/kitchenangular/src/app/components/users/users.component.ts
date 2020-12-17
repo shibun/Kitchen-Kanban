@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { MediaService } from '../../services/media.service';
 import { User } from '../../models/user';
+import { MessageService } from '../../services/message.service';
+
 
 @Component({
   selector: 'app-users',
@@ -33,7 +35,7 @@ export class UsersComponent implements OnInit {
   imageSrc: any = null;
   files: any = null;
 
-  constructor(private userService: UserService, private mediaService: MediaService) { }
+  constructor(private userService: UserService, private mediaService: MediaService, private messageService: MessageService) { }
 
   ngOnInit(): void {
     this.getUsers();
@@ -50,6 +52,7 @@ export class UsersComponent implements OnInit {
       },
       err => {
         console.log("Dashboard ngOnInit : ", err)
+        this.messageService.showErrorMessage(err.Message);
       }
     );
   }
@@ -69,17 +72,21 @@ export class UsersComponent implements OnInit {
       },
       err => {
         console.log("Dashboard getUserById : ", err)
+        this.messageService.showErrorMessage(err.Message);
       }
     );
   }
 
   saveUser(): void {
-    console.log("this.user.userId : ", this.user.userId);
+    if(this.user.firstName == '' || this.user.lastName == '' || this.user.userName == '' || this.user.password == '' || this.user.userType == 0)
+    {      
+      this.messageService.showErrorMessage("Please fill the mandatory fields.");
+      return;
+    }
     if (this.user.userId != null && this.user.userId != '') {
-      console.log("Update");
-
       this.userService.updateUser(this.user).subscribe(
         data => {
+          this.messageService.showSuccessMessage();
           if (this.files != null) {
             if (this.user.imageId != null && this.user.imageId != '') {
               this.mediaService.updateFile(this.files, this.user.imageId).subscribe(
@@ -89,6 +96,7 @@ export class UsersComponent implements OnInit {
                 },
                 err => {
                   console.log("Dashboard saveUser updateFile : ", err)
+                  this.messageService.showErrorMessage(err.Message);
                 }
               );
             }
@@ -100,6 +108,7 @@ export class UsersComponent implements OnInit {
                 },
                 err => {
                   console.log("Dashboard saveUser postFile : ", err)
+                  this.messageService.showErrorMessage(err.Message);
                 }
               );
             }
@@ -111,6 +120,7 @@ export class UsersComponent implements OnInit {
         },
         err => {
           console.log("Dashboard updateUser : ", err.error)
+          this.messageService.showErrorMessage(err.Message);
         }
       );
 
@@ -118,9 +128,9 @@ export class UsersComponent implements OnInit {
     }
     else {
       this.userService.addUser(this.user).subscribe(
-        data => {
+        data => {          
+          this.messageService.showSuccessMessage();
           if (this.imageSrc != null) {
-
             this.mediaService.postFile(this.files, data.userId, 1).subscribe(
               data => {
                 this.getUsers();
@@ -128,6 +138,7 @@ export class UsersComponent implements OnInit {
               },
               err => {
                 console.log("Dashboard getUserById : ", err)
+                this.messageService.showErrorMessage(err.Message);
               }
             );
           }
@@ -138,6 +149,7 @@ export class UsersComponent implements OnInit {
         },
         err => {
           console.log("Dashboard addUser : ", err.error)
+          this.messageService.showErrorMessage(err.error);
         }
       );
     }
