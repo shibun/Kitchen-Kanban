@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ItemService } from '../../services/item.service';
+import { OrderService } from '../../services/order.service';
+import { DashboardService } from '../../services/dashboard.service';
 import { MessageService } from '../../services/message.service';
 
 @Component({
@@ -16,10 +18,12 @@ export class DashboardComponent implements OnInit {
   clock = new Date();
   showPopup = false;
   items: any = [];
+  kanbanBuckets: any = [];
   selectedItems: any = [];
   selectedItemName: string = "";
   record = {
     order: {
+      orderId: null,
       orderType: 2,
       customerName: null,
       customerContactNumber: null
@@ -27,7 +31,8 @@ export class DashboardComponent implements OnInit {
     orderLines: []
   };
 
-  constructor(private messageService: MessageService, private itemService: ItemService) {
+  constructor(private messageService: MessageService, private itemService: ItemService, 
+              private orderService: OrderService, private dashboardService: DashboardService) {
     setInterval(() => {
       this.clock = new Date();
     }, 1000)
@@ -35,7 +40,7 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.getKanbanboard();
   }
 
   showAddForm(): void {
@@ -69,10 +74,12 @@ export class DashboardComponent implements OnInit {
         this.selectedItems.splice(index, 1);
       }
       existingRecord.itemQuantity = existingRecord.itemQuantity + 1;
+      existingRecord.orderQuantity = existingRecord.orderQuantity + 1;
       this.selectedItems.push(existingRecord);
     }
     else {
       selectedRecord.itemQuantity = 1;
+      selectedRecord.orderQuantity = 1;
       this.selectedItems.push(selectedRecord);
     }
 
@@ -98,12 +105,14 @@ export class DashboardComponent implements OnInit {
   }
 
   increaseQuantity(index: number) {
+    this.selectedItems[index].orderQuantity++;
     this.selectedItems[index].itemQuantity++;
   }
 
   reduceQuantity(index: number) {
     if(this.selectedItems[index].itemQuantity > 1)
     {
+      this.selectedItems[index].orderQuantity--;
       this.selectedItems[index].itemQuantity--;
     }
   }
@@ -114,8 +123,39 @@ export class DashboardComponent implements OnInit {
   }
 
   saveOrder(): void {
+    if(this.selectedItems == null || this.selectedItems.length == 0)
+    {
+      this.messageService.showErrorMessage("Please add items to order.");
+      return;
+    }
     this.record.orderLines = this.selectedItems;
-    console.log("this.record : ", this.record);
+    if (this.record.order.orderId != null && this.record.order.orderId != '') {
+      
+    }
+    else
+    {
+      this.orderService.newOrder(this.record).subscribe(
+        data => {
+          this.messageService.showSuccessMessage();
+          this.closeForm();
+        },
+        err => {
+          console.log("Dashboard saveOrder : ", err.error)
+        }
+      );
+    }
+  }
+
+  getKanbanboard(): void {
+    this.dashboardService.getKanbanboard().subscribe(
+      data => {
+        this.kanbanBuckets = data;        
+      },
+      err => {
+        console.log("Dashboard getKanbanboard : ", err)
+        this.messageService.showErrorMessage(err.Message);
+      }
+    );
   }
 
   closeForm(): void {
@@ -124,6 +164,7 @@ export class DashboardComponent implements OnInit {
     this.selectedItems = [];
     this.record = {
       order: {  
+        orderId: null,
         orderType: 2,
         customerName: null,
         customerContactNumber: null
