@@ -26,4 +26,12 @@ export class OrderService {
   newOrder(order: any): Observable<any> {
     return this.http.post<any>(environment.apiEndpoint + '/Order', order);
   }
+
+  changeOrderStatus(input: any): Observable<any> {
+    return this.http.post<any>(environment.apiEndpoint + '/Order/OrderStatus', input);
+  }
+
+  getOrderById(orderId: string): Observable<any> {
+    return this.http.get(environment.apiEndpoint + '/Order/GetOrderById?orderId=' + orderId, { responseType: 'json' }).pipe(catchError(this.handleError));
+  }
 }

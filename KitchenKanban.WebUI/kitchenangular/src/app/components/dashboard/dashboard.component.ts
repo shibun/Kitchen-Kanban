@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as $ from 'jquery'
 import { ItemService } from '../../services/item.service';
 import { OrderService } from '../../services/order.service';
 import { DashboardService } from '../../services/dashboard.service';
@@ -17,10 +18,44 @@ export class DashboardComponent implements OnInit {
   ];
   clock = new Date();
   showPopup = false;
+  showOrderCancelPopup = false;
+  orderIdForCancellation = '';
+  orderNumberForCancellation = '';
   items: any = [];
   kanbanBuckets: any = [];
+  newOrderBucket: any = {
+    bucketName: '',
+    flowOrder: 0,
+    orderCount: 0,
+    orders: []
+  };
+  beingPreparedBucket: any = {
+    bucketName: '',
+    flowOrder: 0,
+    orderCount: 0,
+    orders: []
+  };
+  preparedBucket: any = {
+    bucketName: '',
+    flowOrder: 0,
+    orderCount: 0,
+    orders: []
+  };
+  packingBucket: any = {
+    bucketName: '',
+    flowOrder: 0,
+    orderCount: 0,
+    orders: []
+  };
+  readyOrderBucket: any = {
+    bucketName: '',
+    flowOrder: 0,
+    orderCount: 0,
+    orders: []
+  };
   selectedItems: any = [];
   selectedItemName: string = "";
+  selectedOrder: any = {};
   record = {
     order: {
       orderId: null,
@@ -137,6 +172,7 @@ export class DashboardComponent implements OnInit {
       this.orderService.newOrder(this.record).subscribe(
         data => {
           this.messageService.showSuccessMessage();
+          this.getKanbanboard();
           this.closeForm();
         },
         err => {
@@ -149,10 +185,107 @@ export class DashboardComponent implements OnInit {
   getKanbanboard(): void {
     this.dashboardService.getKanbanboard().subscribe(
       data => {
-        this.kanbanBuckets = data;        
+        this.kanbanBuckets = data;   
+        if(this.kanbanBuckets.length > 0)
+        {
+          this.newOrderBucket = this.kanbanBuckets.find((x: { flowOrder: number; }) => x.flowOrder == 1);
+          this.beingPreparedBucket = this.kanbanBuckets.find((x: { flowOrder: number; }) => x.flowOrder == 2);
+          this.preparedBucket = this.kanbanBuckets.find((x: { flowOrder: number; }) => x.flowOrder == 3);
+          this.packingBucket = this.kanbanBuckets.find((x: { flowOrder: number; }) => x.flowOrder == 4);
+          this.readyOrderBucket = this.kanbanBuckets.find((x: { flowOrder: number; }) => x.flowOrder == 5);
+        } 
+        else
+        {
+          this.newOrderBucket = [];
+          this.beingPreparedBucket = [];
+          this.preparedBucket = [];
+          this.packingBucket = [];
+          this.readyOrderBucket = [];
+        }    
       },
       err => {
         console.log("Dashboard getKanbanboard : ", err)
+        this.messageService.showErrorMessage(err.Message);
+      }
+    );
+  }
+
+  getOrderAging(order: any) {
+    let currentTime: any = new Date();
+    let orderDate: any = new Date(order.orderDate);
+    let diffMs = ((currentTime || 0) - (orderDate || 0));
+    let diffHrs = Math.floor((diffMs % 86400000) / 3600000); // hours
+    let diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000); // minutes
+    if (diffHrs && diffHrs > 0) {
+      return (diffHrs == 1 ? diffHrs + "hr" : diffHrs + "hrs");
+    }
+    else if(diffMins > 0) {
+      return (diffMins == 1 ? diffMins + "min" : diffMins + "mins");
+    }
+    else
+    {
+      return "Just Now";
+    }
+  }
+
+  toggleOrderDetails(order: any, index: number, divIdentifier: string) {
+    if (order.orderStatus == 6) {
+      return;
+    }
+    else {
+      this.selectedOrder = {};
+      this.getOrderDetails(order);       
+      $("#orderdetailsdiv" + divIdentifier + index).slideToggle();
+    }
+  }
+
+  showCancelOrderPopup(order: any)
+  {
+    this.orderIdForCancellation = order.orderId;
+    this.orderNumberForCancellation = order.orderNumber;
+    this.showOrderCancelPopup = true;
+  }
+
+  closeOrderCancelPopup()
+  {
+    this.orderIdForCancellation = '';
+    this.orderNumberForCancellation = '';
+    this.showOrderCancelPopup = false;
+  }
+
+  cancelOrder()
+  {
+    let input = {
+      orderId: this.orderIdForCancellation,
+      orderStatus: 7,
+      cancellationReason: "Wrong order."
+    }
+    this.orderService.changeOrderStatus(input).subscribe(
+      data => {
+        this.messageService.showSuccessMessage();
+        this.getKanbanboard();
+        this.closeOrderCancelPopup();
+      },
+      err => {
+        console.log("Dashboard cancelOrder : ", err)
+        this.messageService.showErrorMessage(err.Message);
+      }
+    );
+  }
+
+  getOrderLineTotal(item : any)
+  {
+    return (item.orderQuantity * item.itemCharge);
+  }
+
+  getOrderDetails(order: any)
+  {
+    this.orderService.getOrderById(order.orderId).subscribe(
+      data => {
+        this.selectedOrder = data;
+      },
+      err => {
+        console.log("Dashboard getOrderDetails : ", err)
         this.messageService.showErrorMessage(err.Message);
       }
     );
