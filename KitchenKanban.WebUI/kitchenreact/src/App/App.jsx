@@ -8,6 +8,7 @@ import { Header } from "../_components/Header";
 
 const LoginPage = lazy(() => import("../LoginPage"));
 const DashboardPage = lazy(() => import("../Dashboard"));
+const UserListPage = lazy(() => import("../MasterPages"));
 
 class App extends React.Component {
   constructor(props) {
@@ -37,6 +38,10 @@ class App extends React.Component {
                 <Route
                   path="/login"
                   component={(props) => <LoginPage {...props} />}
+                />
+                 <Route
+                  path="/userlist"
+                  component={(props) => <UserListPage {...props} />}
                 />
               </Switch>
             </Suspense>

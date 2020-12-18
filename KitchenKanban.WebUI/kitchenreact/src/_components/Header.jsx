@@ -35,7 +35,7 @@ class Header extends React.Component {
                      <PrivateRoute exact path="/" component={props => <DashboardPage {...props} />} />
                      <Route path="/login" component={props => <LoginPage {...props} />}  /> */}
                          <li><Link to="/">Dashboard</Link></li>
-                         <li><Link to="/user">User List</Link></li>
+                         <li><Link to="/userlist">User List</Link></li>
                          <li><Link to="/kitchencounterlist">Kitchen Counter List</Link></li>
                          <li><Link to="/itemsList">Item List</Link></li>
                          <li><Link to="/reports">Reports</Link></li> 
