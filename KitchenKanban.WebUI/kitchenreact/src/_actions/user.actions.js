@@ -7,7 +7,7 @@ export const userActions = {
     login,
     logout,
     getAll,
-    add
+    add,update
 };
 
 function login(username, password) {
@@ -61,17 +61,35 @@ function getAll() {
 
   function add(data) {
     return (dispatch) => {
-      userService
+      return userService
         .add(data)
         .then((res) => {
           dispatch({
-            type: userConstants.CREATE_REQUEST,
+            type: userConstants.CREATE_SUCCESS,
             payload: res.data,
           });
         })
         .catch((error) => {
           dispatch({
             type: userConstants.CREATE_FAILURE,
+            payload: error,
+          });
+        });
+    };
+  }
+  function update(data) {
+    return (dispatch) => {
+      return userService
+        .update(data)
+        .then((res) => {
+          dispatch({
+            type: userConstants.UPDATE_SUCCESS,
+            payload: res.data,
+          });
+        })
+        .catch((error) => {
+          dispatch({
+            type: userConstants.UPDATE_FAILURE,
             payload: error,
           });
         });

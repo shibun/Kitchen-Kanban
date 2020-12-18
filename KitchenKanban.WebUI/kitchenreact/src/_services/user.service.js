@@ -5,7 +5,8 @@ export const userService = {
     login,
     logout,
     getAll,
-    add
+    add,
+    update
 };
 
 function login(username, password) {
@@ -38,6 +39,10 @@ function getAll() {
   function add(data) {
     axios.defaults.headers.common =  authHeader()
     return axios.post(`${config.apiUrl}/User`,data);
+  }
+  function update(data) {
+    axios.defaults.headers.common =  authHeader()
+    return axios.put(`${config.apiUrl}/User`,data);
   }
 function getAllo() {
     const requestOptions = {
