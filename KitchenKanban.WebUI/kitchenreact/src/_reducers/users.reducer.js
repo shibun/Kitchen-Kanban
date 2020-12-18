@@ -54,9 +54,8 @@ export function createduser(state = {}, action) {
             loading: true
         };
     case userConstants.CREATE_SUCCESS:
-      return {
-        item: action.payload
-      };
+      return action.payload
+     
     case userConstants.CREATE_FAILURE:
         return {
             error: action.error

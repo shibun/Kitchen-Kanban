@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { userActions } from "../_actions";
+import { userActions,itemsListActions } from "../_actions";
 
 class UserListPage extends React.Component {
   constructor(props) {
@@ -93,16 +93,17 @@ catchFile(e) {
   var file = e.target.files[0];
   var reader = new FileReader();
   var url = reader.readAsDataURL(file);
-
-  this.setState({
-      file: file
-  });
-
+  const formData = new FormData();
+  formData.append("file", file);
   reader.onloadend = function (e) {
-      this.setState({
-          imgSrc: [reader.result]
-      })
-  }.bind(this);
+    this.setState({
+    imgSrc: [reader.result]
+   
+    })
+}.bind(this);
+ this.setState({
+    file: formData
+});
 
 }
   handleSubmit(e) {
@@ -126,7 +127,7 @@ catchFile(e) {
 updateUser(){
   this.setState({ submitted: true });
     const { user } = this.state;
-    console.log('add',user);
+    console.log('update',user);
     if (user.firstName && user.lastName && user.userType) {
       user.userType=parseInt(user.userType);
         this.props.updateUser(user).then(()=>{
@@ -155,30 +156,30 @@ clearForm(){
 }
 
 UNSAFE_componentWillReceiveProps(nextProps) {
-  console.log("nextProps", nextProps);
+  console.log("nextProps", nextProps,this.props.createduser);
   //nextProps.editemployee.DateOfJoining = formatDate(nextProps.editemployee.DateOfJoining);
   if (nextProps.createduser.userId !== this.props.createduser.userId) {
-      console.log(nextProps.user);
+      console.log('createduser',nextProps.user,this.state.file);
       if (this.state.file) {
           console.log("selected file : " + this.state.file);
           this.props.uploadImage(this.state.file, nextProps.createduser.userId, 1);
       }
   }
-  if (this.state.editmode) {
+  if (this.state.editform) {
           if (this.state.file) {
-              console.log("selected file : " + this.state.file);
-              if (this.props.user.imageId > 0) {
-                  this.props.updateImage(this.state.file, this.props.editemployee.ImageId, 1);
+              console.log("selected file : " + this.state.file,this.state.user);
+              if (this.state.user.imageId) {
+                this.props.updateImage(this.state.file,this.state.user.imageId);
               } else {
-                  this.props.uploadImage(this.state.file, this.props.user.usrId, 1);
+                this.props.uploadImage(this.state.file, this.state.user.userId, 1);
               }
-             
+             //this.props.getUsers();
           }
-      this.setState({
-          user: nextProps.user,
-          imgSrc: `${config.apiUrl}api/Media/UserImage?userId=${this.props.location.usrid}&imagetype=3`,
-          editmode: true
-      });
+      // this.setState({
+      //     user: nextProps.user,
+      //     imgSrc: `${config.apiUrl}api/Media/UserImage?userId=${this.props.location.usrid}&imagetype=3`,
+      //     editmode: true
+      // });
   };
 };
 
@@ -215,7 +216,8 @@ UNSAFE_componentWillReceiveProps(nextProps) {
                       <td className="text-center">{index + 1}</td>
                       <td className="text-center">
                         <img
-                          src="../../src/_assets/images/no_user_img.png"
+                        src={'data:image/jpeg;base64,'+ data.imageContent} onError={(e) => { e.target.onerror = null; e.target.src = "../../src/_assets/images/no_user_img.png" }}
+                        
                           className="display-user-img"
                         />
                       </td>
@@ -363,6 +365,9 @@ const actionCreators = {
   getUsers: userActions.getAll,
   addUser: userActions.add,
   updateUser: userActions.update,
+  uploadImage: itemsListActions.uploadImage,
+  updateImage: itemsListActions.updateImage,
+
 }
 
 const connectedUserListPage = connect(mapStateToProps,actionCreators)(UserListPage);
