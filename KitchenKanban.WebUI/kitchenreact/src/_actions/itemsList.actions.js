@@ -49,8 +49,6 @@ function uploadImage(file, ReferenceId, ImageType) {
             });
           });
         }
-
- 
 }
 
 function updateImage(file, ReferenceId) {
