@@ -1,10 +1,16 @@
 import { itemsListConstants } from '../_constants';
 import { itemsListService } from '../_services';
-//import { alertActions } from './';
-//import { history } from '../_helpers';
+import { mediaService } from '../_services';
+import { alertActions } from './';
+import { history } from '../_helpers';
 
 export const itemsListActions = {   
-    getAll,   
+    getAll,
+    addItem,    
+    deleteItem,
+    updateItem,
+    updateImage,
+    uploadImage
 };
 function getAll() {
 
@@ -25,3 +31,109 @@ function getAll() {
           });
         }
       };
+
+function uploadImage(file, ReferenceId, ImageType) {
+      return (dispatch) => {
+        mediaService
+          .uploadImage(file, ReferenceId, ImageType)
+          .then((res) => {
+            dispatch({
+              type: itemsListConstants.IMAGE_CREATE_SUCCESS,
+              payload: res.data,
+            });
+          })
+          .catch((error) => {
+            dispatch({
+              type:itemsListConstants.IMAGE_CREATE_FAILURE,
+              payload: error,
+            });
+          });
+        }
+
+ 
+}
+
+function updateImage(file, ReferenceId) {
+      return (dispatch) => {
+        mediaService
+          .updateImage(file, ReferenceId)
+          .then((res) => {
+            dispatch({
+              type: itemsListConstants.IMAGE_UPDATE_SUCCESS,
+              payload: res.data,
+            });
+          })
+          .catch((error) => {
+            dispatch({
+              type:itemsListConstants.IMAGE_UPDATE_FAILURE,
+              payload: error,
+            });
+          });
+        }
+
+ 
+}
+  function addItem(data) {
+
+    return (dispatch) => {
+        itemsListService
+          .addItem(data)
+          .then((res) => {
+            dispatch({
+              type: itemsListConstants.CREATE_SUCCESS,
+              payload: res.data,
+            });
+          })
+          .catch((error) => {
+            dispatch({
+              type:itemsListConstants.CREATE_FAILURE,
+              payload: error,
+            });
+          });
+        }
+      };
+
+
+ function updateItem(data) {
+
+    return (dispatch) => {
+        itemsListService
+          .updateItem(data)
+          .then((res) => {
+            dispatch({
+              type: itemsListConstants.UPDATE_SUCCESS,
+              payload: res.data,
+            });
+          })
+          .catch((error) => {
+            dispatch({
+              type:itemsListConstants.UPDATE_FAILURE,
+              payload: error,
+            });
+          });
+        }
+      };
+
+
+
+
+function deleteItem(data) {
+
+    return (dispatch) => {
+        itemsListService
+          .deleteItem(data)
+          .then((res) => {
+            dispatch({
+              type: itemsListConstants.DELETE_SUCCESS,
+              payload: res.data,
+            });
+          })
+          .catch((error) => {
+            dispatch({
+              type:itemsListConstants.DELETE_FAILURE,
+              payload: error,
+            });
+          });
+        }
+      };
+      
