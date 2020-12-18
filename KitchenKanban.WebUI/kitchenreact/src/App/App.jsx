@@ -6,13 +6,18 @@ import { Switch, Route, withRouter, Router, Link } from "react-router-dom";
 import { PrivateRoute } from "../_components";
 import { Header } from "../_components/Header";
 import { ItemsList} from '../ItemsListPage';
+import {KitchenCounter} from '../KitchenCounter';
 
 
 
 const LoginPage = lazy(() => import("../LoginPage"));
 const DashboardPage = lazy(() => import("../Dashboard"));
+<<<<<<< HEAD
+const UserListPage = lazy(() => import("../MasterPages"));
+=======
 //const ItemsList = lazy(() => import("../ItemsListPage"));
 //const KitchenCounter=lazy(()=>import("../KitchenCounter"));
+>>>>>>> c06229df90ae777011e3035824b7639aa3c2472f
 
 class App extends React.Component {
   constructor(props) {
@@ -43,10 +48,19 @@ class App extends React.Component {
                   path="/login"
                   component={(props) => <LoginPage {...props} />}
                 />
+                 <Route
+                  path="/userlist"
+                  component={(props) => <UserListPage {...props} />}
+                />
                  <PrivateRoute
                   exact
                   path="/itemsList"
                   component={(props) => <ItemsList {...props} />}
+                />
+                 <PrivateRoute
+                  exact
+                  path="/kitchencounterlist"
+                  component={(props) => <KitchenCounter {...props} />}
                 />
                  
               </Switch>
