@@ -81,9 +81,7 @@ class DashboardPage extends React.Component {
 
 function mapStateToProps(state) {
     const { users } = state;
-    return {
-         users
-    };
+    return { users };
 }
 
 const connectedDashboardPage = connect(mapStateToProps)(DashboardPage);
