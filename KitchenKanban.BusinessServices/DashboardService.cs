@@ -55,6 +55,16 @@ namespace KitchenKanban.BusinessServices
 
                     bucketList.Add(bucket);
                 }
+                else
+                {
+                    flowOrder = flowOrder + 1;
+                    bucketList.Add(new KanbanBucket()
+                    {
+                        BucketName = "New Order",
+                        FlowOrder = flowOrder,
+                        OrderCount = 0
+                    });
+                }
 
                 //BeingPrepared
                 var beingPreparedOrders = _databaseContext.Orders.Include(x => x.OrderLines).Where(x => x.OrderStatus == OrderStatus.BeingPrepared).ToList();
@@ -81,6 +91,16 @@ namespace KitchenKanban.BusinessServices
                     };
 
                     bucketList.Add(bucket);
+                }
+                else
+                {
+                    flowOrder = flowOrder + 1;
+                    bucketList.Add(new KanbanBucket()
+                    {
+                        BucketName = "Being Prepared",
+                        FlowOrder = flowOrder,
+                        OrderCount = 0
+                    });
                 }
 
                 //Prepared
@@ -109,6 +129,16 @@ namespace KitchenKanban.BusinessServices
 
                     bucketList.Add(bucket);
                 }
+                else
+                {
+                    flowOrder = flowOrder + 1;
+                    bucketList.Add(new KanbanBucket()
+                    {
+                        BucketName = "Prepared",
+                        FlowOrder = flowOrder,
+                        OrderCount = 0
+                    });
+                }
 
                 //BeingPacked
                 var packingOrders = _databaseContext.Orders.Include(x => x.OrderLines).Where(x => x.OrderStatus == OrderStatus.Packing).ToList();
@@ -135,6 +165,16 @@ namespace KitchenKanban.BusinessServices
                     };
 
                     bucketList.Add(bucket);
+                }
+                else
+                {
+                    flowOrder = flowOrder + 1;
+                    bucketList.Add(new KanbanBucket()
+                    {
+                        BucketName = "Packing",
+                        FlowOrder = flowOrder,
+                        OrderCount = 0
+                    });
                 }
 
                 //ReadyToBeDelivered
@@ -163,6 +203,16 @@ namespace KitchenKanban.BusinessServices
                     };
 
                     bucketList.Add(bucket);
+                }
+                else
+                {
+                    flowOrder = flowOrder + 1;
+                    bucketList.Add(new KanbanBucket()
+                    {
+                        BucketName = "Ready To Be Delivered",
+                        FlowOrder = flowOrder,
+                        OrderCount = 0
+                    });
                 }
 
                 //Delivered

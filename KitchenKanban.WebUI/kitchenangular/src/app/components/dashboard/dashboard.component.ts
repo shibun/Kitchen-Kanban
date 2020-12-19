@@ -55,7 +55,6 @@ export class DashboardComponent implements OnInit {
   };
   selectedItems: any = [];
   selectedItemName: string = "";
-  selectedOrder: any = {};
   record = {
     order: {
       orderId: null,
@@ -233,7 +232,6 @@ export class DashboardComponent implements OnInit {
       return;
     }
     else {
-      this.selectedOrder = {};
       this.getOrderDetails(order);       
       $("#orderdetailsdiv" + divIdentifier + index).slideToggle();
     }
@@ -282,13 +280,42 @@ export class DashboardComponent implements OnInit {
   {
     this.orderService.getOrderById(order.orderId).subscribe(
       data => {
-        this.selectedOrder = data;
+        Object.assign(order, {"orderLines": data.orderLines });
       },
       err => {
         console.log("Dashboard getOrderDetails : ", err)
         this.messageService.showErrorMessage(err.Message);
       }
     );
+  }
+
+  showMoveToColumn() {
+      $("#moveToColumn").slideToggle();
+  };
+
+  changeOrderStatus(order: any, orderStatus: number)
+  {    
+    if(orderStatus != 7)
+    {
+      let input = {
+        orderId: order.orderId,
+        orderStatus: orderStatus
+      }
+      this.orderService.changeOrderStatus(input).subscribe(
+        data => {
+          this.messageService.showSuccessMessage();
+          this.getKanbanboard();
+        },
+        err => {
+          console.log("Dashboard changeOrderStatus : ", err)
+          this.messageService.showErrorMessage(err.Message);
+        }
+      );
+    }
+    else
+    {
+      this.showCancelOrderPopup(order);
+    }    
   }
 
   closeForm(): void {
