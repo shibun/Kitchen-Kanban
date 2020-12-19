@@ -32,7 +32,12 @@ class DashboardPage extends React.Component {
         this.setState({
             showform:true,      
         });        
-    }   
+    }  
+     handler = (val) => {
+    this.setState({
+      showform: val
+    })
+  } 
    
     render() {
         const { user, users } = this.props;
@@ -80,7 +85,7 @@ class DashboardPage extends React.Component {
       </div>
       </div>
          </section>
-         {this.state.showform && <div className ="tkt-desc"><NewOrder  showorderform={this.state.showform}></NewOrder></div>}
+         {this.state.showform && <div className ="tkt-desc"><NewOrder  handler = {this.handler} showorderform={this.state.showform}></NewOrder></div>}
       
       </div>
         );

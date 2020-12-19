@@ -1,14 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { itemsListActions } from '../_actions';
+import { itemsListActions,orderActions } from '../_actions';
 import { Header } from '../_components/Header';
 class NewOrder extends React.Component {
      constructor(props) {
         super(props); 
       
         this.state={
-            
                     Order: {
                         orderId: "",
                         orderNumber: "",
@@ -36,9 +35,14 @@ class NewOrder extends React.Component {
                     }
 
                 },
+                Orderdetails:{
+                    Order:{},
+                    OrderLines:[]
+                },
                 list:[],               
                 totalqty: 0, 
-                showneworderform:false    
+                showneworderform:false ,
+                editmode:false   
            
         };  
         this.clearForm=this.clearForm.bind(this);  
@@ -168,29 +172,63 @@ class NewOrder extends React.Component {
      }
    
     clearForm(){
+        
         this.setState({         
-           showneworderform:false    
+           showneworderform:false ,
+                      Order: {
+                        orderId: "",
+                        orderNumber: "",
+                        orderDate: new Date(),
+                        customerName: "",
+                        customerContactNumber: "",
+                        orderAmount: 0.0,
+                        orderType: 2,
+                        orderStatus: 1,
+                        orderTakenBy: "",
+                        cancellationReason: "",
+                        orderLines: []
+                    },
+                OrderLine: {
+                    orderLineId: "",
+                    orderId: "",
+                    itemId: "",
+                    orderQuantity: "",
+                    kitchenId: "",
+                    preparedById: "",
+                    item: {
+                        itemId: '',
+                        itemCharge: '',
+                        itemName: ''
+                    }
+
+                },
+                Orderdetails:{
+                    Order:{},
+                    OrderLines:[]
+                },
+                list:[],               
+                totalqty: 0
+            
             
         })   
        
     }
     addNewOrder(){
-        this.setState({
-            Order:{
-                ...this.state.Order,
-                orderLines:this.state.list
-            }
-        },()=>{ console.log('inside',this.state.Order);})
-        console.log('outside',this.state.Order);
+        this.state.Orderdetails.Order=this.state.Order;
+        this.state.Orderdetails.OrderLines=this.state.list;
+         this.props.dispatch(orderActions.addNewOrder(this.state.Orderdetails));
+         this.props.handler(false);
+         this.clearForm();
     }
+       
 
     render() {
-              const { showorderform,items } = this.props;
-        const {Order,OrderLine,list,totalamount,totalqty}=this.state;
+              const { showorderform,items,handler } = this.props;
+        const {Order,OrderLine,list,totalamount,totalqty,showneworderform,editmode}=this.state;
        
         return (
           <div>
-    {this.state.showneworderform && <div >
+    {showneworderform && <div >
         <div className="add-overlay" >
             <div className="add-pop-overlay">
                 <div className="modal-header">
@@ -289,9 +327,9 @@ class NewOrder extends React.Component {
                     </div>
                 </div>
                 <div className="modal-footer">
-                    <button type="button" className="btn btn-default left-btn" data-dismiss="modal" onClick={this.clearForm}>Cancel</button>
-                    <button  type="button" className="btn btn-active" data-dismiss="modal" onClick={this.addNewOrder}>Add</button>
-                    <button  type="button" className="btn btn-active" data-dismiss="modal" >Update</button>
+                    <button type="button" className="btn btn-default left-btn" data-dismiss="modal" onClick={()=>{this.props.handler(false),this.clearForm}}>Cancel</button>
+                   {!editmode && <button  type="button" className="btn btn-active" data-dismiss="modal" onClick={this.addNewOrder}>Add</button> } 
+                    {editmode &&<button  type="button" className="btn btn-active" data-dismiss="modal" >Update</button> }
                 </div>
             </div>
         </div>

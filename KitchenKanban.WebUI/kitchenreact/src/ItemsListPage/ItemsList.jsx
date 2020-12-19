@@ -117,9 +117,9 @@ class ItemsList extends React.Component {
             if (this.state.file) {
                 console.log("selected file : " + this.state.file);
                 this.props.dispatch(itemsListActions.uploadImage(this.state.file, nextProps.createditem.itemId, 2));
-                this.clearForm();
-                this.props.dispatch(itemsListActions.getAll());
-                
+                        this.clearForm();
+                        this.props.dispatch(itemsListActions.getAll());                  
+    
             }
             else
             {
@@ -134,11 +134,13 @@ class ItemsList extends React.Component {
                         this.props.dispatch(itemsListActions.updateImage(this.state.file,this.state.item.imageId));
                         this.clearForm();
                         this.props.dispatch(itemsListActions.getAll());
-                        } else {                             
-                            this.props.dispatch(itemsListActions.uploadImage(this.state.file, this.state.item.itemId, 2,));
-                           this.clearForm(); 
-                          this.props.dispatch(itemsListActions.getAll());
-                        }                    
+                        }
+                      
+                         else {                             
+                            this.props.dispatch(itemsListActions.uploadImage(this.state.file, this.state.item.itemId, 2));
+                        this.clearForm();
+                        this.props.dispatch(itemsListActions.getAll());
+                                }                    
                     }
                      this.clearForm();
                         this.props.dispatch(itemsListActions.getAll());
@@ -150,8 +152,8 @@ class ItemsList extends React.Component {
     deleteItem(itemid) {
        
       this.props.dispatch(itemsListActions.deleteItem(itemid));
-       this.props.dispatch(itemsListActions.getAll());
-       
+          this.clearForm();
+         this.props.dispatch(itemsListActions.getAll());
     }
     handleOnEdit(editeditem){
         this.setState({
