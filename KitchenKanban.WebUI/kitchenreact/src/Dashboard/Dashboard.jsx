@@ -15,22 +15,35 @@ class DashboardPage extends React.Component {
         };
         
         this.handleOnAddClick=this.handleOnAddClick.bind(this);  
-       
-
-   
+     
     }
-  componentDidMount () {
+   
+  componentDidMount () {   
         this.props.dispatch(userActions.getAll());
+    }
+     componentDidUpdate(nextprops,prevprops){
+         console.log('nextprops parent',nextprops);
+         console.log('prevprops parent',prevprops);
+         console.log('propsi n parent',this.props);
+        
+         
     }
      handleOnAddClick(){
         this.setState({
             showform:true,      
-        });
-        
-    }
+        });        
+    }  
+     handler = (val) => {
+    this.setState({
+      showform: val
+    })
+  } 
+   
     render() {
         const { user, users } = this.props;
-        let {showform}=this.state;
+        const {showform}=this.state;
+        console.log('parent render called',this.state.showform);
+     
         return (
           <div>
 
@@ -38,7 +51,7 @@ class DashboardPage extends React.Component {
 
     <div className="breadcrumb">
         <div>Dashboard</div>
-        <div className="current-time">Time</div>
+        <div className="current-time">Time </div>
         <div className="clearfix"></div>
       </div>
  
@@ -72,7 +85,7 @@ class DashboardPage extends React.Component {
       </div>
       </div>
          </section>
-         {showform&& <div className ="tkt-desc"><NewOrder  showorderform={showform}></NewOrder></div>}
+         {this.state.showform && <div className ="tkt-desc"><NewOrder  handler = {this.handler} showorderform={this.state.showform}></NewOrder></div>}
       
       </div>
         );
