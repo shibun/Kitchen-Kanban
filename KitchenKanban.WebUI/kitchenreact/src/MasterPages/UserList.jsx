@@ -1,18 +1,18 @@
 import React from "react";
 import { connect } from "react-redux";
-import { userActions } from "../_actions";
+import { userActions,itemsListActions } from "../_actions";
 
 class UserListPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       user: {
-        userId: "",
-        firstName: "",
-        lastName: "",
-        userName: "",
-        userType: "",
-        password: "",
+        userId: '',
+        firstName: '',
+        lastName: '',
+        userName: '',
+        userType: '',
+        password: '',
       },
       userTypes: [
         { id: 1, value: "Administrator" },
@@ -23,12 +23,11 @@ class UserListPage extends React.Component {
       ],
       currentdate: "",
       submitted: false,
-      editmode: false,
+      editform: false,
+      showform:false,
       imgSrc:'',
       file: ''
     };
-    
-    this.editUser = this.editUser.bind(this);
     this.showAddUser = this.showAddUser.bind(this);
     this.getNow = this.getNow.bind(this);
     
@@ -36,9 +35,10 @@ class UserListPage extends React.Component {
     this.hideAddUser = this.hideAddUser.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.catchFile = this.catchFile.bind(this);
+    this.updateUser = this.updateUser.bind(this);
   }
   componentDidMount() {
-    this.props.dispatch(userActions.getAll());
+    this.props.getUsers(); //dispatch(userActions.getAll());
     this.getNow();
   }
 
@@ -55,21 +55,31 @@ class UserListPage extends React.Component {
 
   showAddUser(){
     this.setState({
-      editmode: true,
+      showform: true,
     });
   }
   hideAddUser(){
     this.setState({
-      editmode: false,
+      showform: false,
+      editform:false
     });
+    this.clearForm();
   }
-  editUser(editUser){
-    console.log('editUser',editUser)
-  }
-
+  handleOnEdit(editeditem){
+    this.setState({
+        showform:true,
+        user:editeditem,
+        editform:true
+    })
+    this.setState({
+        //imgSrc:'data:image/jpeg;base64,'+editeditem.imageContent
+        
+    })
+}
   handleChange(e) {
     const { name, value } = e.target;
     const { user } = this.state;
+   
     this.setState({
       user: {
             ...user,
@@ -83,29 +93,98 @@ catchFile(e) {
   var file = e.target.files[0];
   var reader = new FileReader();
   var url = reader.readAsDataURL(file);
-
-  this.setState({
-      file: file
-  });
-
+  const formData = new FormData();
+  formData.append("file", file);
   reader.onloadend = function (e) {
-      this.setState({
-          imgSrc: [reader.result]
-      })
-  }.bind(this);
+    this.setState({
+    imgSrc: [reader.result]
+   
+    })
+}.bind(this);
+ this.setState({
+    file: formData
+});
 
 }
   handleSubmit(e) {
     e.preventDefault();
-    // this.setState({ submitted: true });
-    // const { employee } = this.state;
-    // if (employee.EmployeeCode && employee.LastName && employee.UserName && employee.Password && employee.DesignationId &&
-    //     employee.DateOfJoining && employee.Email && employee.Phone && employee.TeamId && employee.Gender) {
-    //     this.props.createEmployee(employee);
-    // }
+    this.setState({ submitted: true });
+    const { user } = this.state;
+   
+    console.log('add',user);
+    if (user.firstName && user.lastName && user.userName && user.userType && user.password ) {
+      user.userType=parseInt(user.userType);
+        this.props.addUser(user).then(()=>{
+          this.clearForm();;
+          this.props.getUsers();
+        });
+        
+    }else{
+      alert("Please enter required fields");
+    }
 }
+
+updateUser(){
+  this.setState({ submitted: true });
+    const { user } = this.state;
+    console.log('update',user);
+    if (user.firstName && user.lastName && user.userType) {
+      user.userType=parseInt(user.userType);
+        this.props.updateUser(user).then(()=>{
+           this.clearForm();;
+           this.props.getUsers();
+       })
+    }else{
+      alert("Please enter required fields");
+    }
+}
+clearForm(){
+      this.setState({
+
+        user: {
+          userId: '',
+          firstName: '',
+          lastName: '',
+          userName: '',
+          userType: '',
+          password: '',
+        },
+        imgSrc:'',
+        showform: false,
+        editform:false
+    })
+}
+
+UNSAFE_componentWillReceiveProps(nextProps) {
+  console.log("nextProps", nextProps,this.props.createduser);
+  //nextProps.editemployee.DateOfJoining = formatDate(nextProps.editemployee.DateOfJoining);
+  if (nextProps.createduser.userId !== this.props.createduser.userId) {
+      console.log('createduser',nextProps.user,this.state.file);
+      if (this.state.file) {
+          console.log("selected file : " + this.state.file);
+          this.props.uploadImage(this.state.file, nextProps.createduser.userId, 1);
+      }
+  }
+  if (this.state.editform) {
+          if (this.state.file) {
+              console.log("selected file : " + this.state.file,this.state.user);
+              if (this.state.user.imageId) {
+                this.props.updateImage(this.state.file,this.state.user.imageId);
+              } else {
+                this.props.uploadImage(this.state.file, this.state.user.userId, 1);
+              }
+             //this.props.getUsers();
+          }
+      // this.setState({
+      //     user: nextProps.user,
+      //     imgSrc: `${config.apiUrl}api/Media/UserImage?userId=${this.props.location.usrid}&imagetype=3`,
+      //     editmode: true
+      // });
+  };
+};
+
   render() {
-    const { users } = this.props;
+    const { users,createduser } = this.props;
     let { user} = this.state;
     return (
       <div>
@@ -137,7 +216,8 @@ catchFile(e) {
                       <td className="text-center">{index + 1}</td>
                       <td className="text-center">
                         <img
-                          src="../../src/_assets/images/no_user_img.png"
+                        src={'data:image/jpeg;base64,'+ data.imageContent} onError={(e) => { e.target.onerror = null; e.target.src = "../../src/_assets/images/no_user_img.png" }}
+                        
                           className="display-user-img"
                         />
                       </td>
@@ -148,9 +228,7 @@ catchFile(e) {
                       <td>{data.userType}</td>
                       <td className="text-center">
                         <button
-                          onClick={this.editUser(data)}
-                          data-toggle="modal"
-                          data-target="#addUser"
+                         onClick={e=>this.handleOnEdit(data)}
                           className="trans-btn"
                         >
                           <img src="../../src/_assets/images/edit.png" />
@@ -162,7 +240,7 @@ catchFile(e) {
             </table>
           </div>
 
-{this.state.editmode  &&
+{this.state.showform  &&
 <div className="add-overlay">
       <div className="add-pop-overlay">
         <div className="modal-header">
@@ -194,7 +272,7 @@ catchFile(e) {
                   <div className="form-group">
                     <label>Last Name <span className="asterisk">*</span></label>
                     <input
-                      value={user.lastName} onChange={this.handleChange}
+                      value={user.lastName} onChange={this.handleChange} name="lastName"
                       type="text"
                       className="form-control"
                     />
@@ -205,7 +283,7 @@ catchFile(e) {
                 <div className="col-xs-6">
                   <div className="form-group">
                     <label>User Type <span className="asterisk">*</span></label>
-                    <select className="form-control" value={user.userType} onChange={this.handleChange}>
+                    <select className="form-control" value={user.userType} onChange={this.handleChange} name="userType"> 
                       <option disabled value="">--select--</option>
                       {
                                                 this.state.userTypes &&
@@ -215,23 +293,27 @@ catchFile(e) {
                     </select>
                   </div>
                 </div>
+
+                {!this.state.editform && 
                 <div className="col-xs-6">
                   <div className="form-group">
                     <label>User Name <span className="asterisk">*</span></label>
                     <input
-                      value={user.userName} onChange={this.handleChange}
+                      value={user.userName} onChange={this.handleChange} name="userName"
                       type="text"
                       className="form-control"
                     />
                   </div>
                 </div>
+  }
               </div>
-              <div className="row" v-if="!user.userId">
+              {!this.state.editform && 
+              <div className="row">
                 <div className="col-xs-6">
                   <div className="form-group">
                     <label>Password<span className="asterisk">*</span></label>
                     <input
-                      value={user.password} onChange={this.handleChange}
+                      value={user.password} onChange={this.handleChange} name="password"
                       type="password"
                       className="form-control"
                     />
@@ -239,6 +321,7 @@ catchFile(e) {
                 </div>
                 <div className="col-xs-6"></div>
               </div>
+            }
               <div className="row">
                 <div className="col-xs-4">
                   <div className="form-group">
@@ -258,30 +341,12 @@ catchFile(e) {
           </form>
         </div>
         <div className="modal-footer">
-          <button
-            type="button"
-            onClick={this.hideAddUser}
-            className="btn btn-default left-btn"
-            data-dismiss="modal"
-          >
-            Cancel
-          </button>
-          <button 
-            type="submit"
-            onClick={this.handleSubmit}
-            className="btn btn-active"
-            data-dismiss="modal"
-          >
-            Add
-          </button>
-           <button
-            type="submit"
-            onClick={this.handleSubmit}
-            className="btn btn-active"
-            data-dismiss="modal"
-          >
-            Update
-          </button>
+          <button type="button" onClick={this.hideAddUser} className="btn btn-default left-btn" data-dismiss="modal" > Cancel </button>
+          {!this.state.editform &&
+              <button type="submit" onClick={this.handleSubmit} className="btn btn-active"data-dismiss="modal">Add</button>
+          }  {this.state.editform && 
+            <button type="submit" onClick={this.updateUser} className="btn btn-active" data-dismiss="modal" > Update</button>
+          }
         </div>
       </div>
     </div>
@@ -293,9 +358,17 @@ catchFile(e) {
 }
 
 function mapStateToProps(state) {
-  const { users } = state;
-  return { users };
+  const { users,createduser } = state;
+  return { users,createduser };
+}
+const actionCreators = {
+  getUsers: userActions.getAll,
+  addUser: userActions.add,
+  updateUser: userActions.update,
+  uploadImage: itemsListActions.uploadImage,
+  updateImage: itemsListActions.updateImage,
+
 }
 
-const connectedUserListPage = connect(mapStateToProps)(UserListPage);
+const connectedUserListPage = connect(mapStateToProps,actionCreators)(UserListPage);
 export { connectedUserListPage as UserListPage };

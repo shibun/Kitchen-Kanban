@@ -18,43 +18,26 @@
             <div class="kb-main">
                 <div class="kb-column">
                     <div class="kb-column-header">
-                        <div class="float-left">New Order <span class="order-count">03</span></div>
+                        <div class="float-left">New Order <span class="order-count">{{(newOrderBucket &&
+                                newOrderBucket.orderCount) || 0}}</span></div>
                         <div class="float-right">
                             <button class="add-order" (click)="showAddForm()">+</button>
                         </div>
                         <div class="clearfix"></div>
                     </div>
-                    <div class="ticket-sec">
-
-                        <div class="ticket-main">
-                            <div class="order-detail">
+                    <div class="ticket-sec" *ngIf="newOrderBucket">
+                        <div class="ticket-main" *ngFor="let order of newOrderBucket.orders; index as orderIndex;">
+                            <div class="order-detail" (click)="toggleOrderDetails(order, orderIndex, 'no')">
                                 <div>
-                                    <div class="float-left"><img src="../../assets/images/order_number_icon.png" /> 001</div>
-                                    <div class="float-right"><img src="../../assets/images/time_icon.png" /> Just Now</div>
+                                    <div class="float-left"><img src="../../assets/images/order_number_icon.png" />
+                                        {{ order.orderNumber.substring(9)}}</div>
+                                    <div class="float-right"><img src="../../assets/images/time_icon.png" /> {{
+                                        getOrderAging(order) }}</div>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="ticket-main">
-                            <div class="order-detail">
-                                <div>
-                                    <div class="float-left"><img src="../../assets/images/order_number_icon.png" /> 002</div>
-                                    <div class="float-right"><img src="../../assets/images/time_icon.png" /> 18 mins</div>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="ticket-main">
-                            <div class="order-detail">
-                                <div>
-                                    <div class="float-left"><img src="../../assets/images/order_number_icon.png" /> 003</div>
-                                    <div class="float-right"><img src="../../assets/images/time_icon.png" /> 20 mins</div>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                            <div class="order-description">
+                            <div class="order-description" id="orderdetailsdivno{{ orderIndex }}"
+                                style="display: none;">
                                 <table class="order-tbl">
                                     <tbody>
                                         <tr class="order-tbl-header">
@@ -62,25 +45,11 @@
                                             <td class="text-center">Qty</td>
                                             <td class="text-center">Price</td>
                                         </tr>
-                                        <tr>
-                                            <td>Margherita</td>
-                                            <td class="text-center">01</td>
-                                            <td class="text-right">$120.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Peppy Paneer</td>
-                                            <td class="text-center">01</td>
-                                            <td class="text-right">$150.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Deluxe Veggie</td>
-                                            <td class="text-center">01</td>
-                                            <td class="text-right">$180.00</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Total</th>
-                                            <th class="text-center">03</th>
-                                            <th class="text-right">$120.00</th>
+                                        <tr *ngFor="let item of selectedOrder.orderLines; index as itemIndex;">
+                                            <td>{{ item.itemName }}</td>
+                                            <td class="text-center">{{ item.orderQuantity }}</td>
+                                            <td class="text-right">{{ getOrderLineTotal(item) |
+                                                currency:'USD':true:'1.2-2' }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -100,71 +69,31 @@
                                             </ul>
                                         </div>
                                         <button class="edit-order-btn tkt-left-btn">Edit Order</button>
-                                        <button class="cancel-order-btn">Cancel Order</button>
+                                        <button class="cancel-order-btn" (click)="showCancelOrderPopup(order)">Cancel
+                                            Order</button>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
                 <div class="kb-column">
-                    <div class="kb-column-header">Being Prepared <span class="order-count">03</span></div>
-                    <div class="ticket-sec">
-                        <div class="ticket-main">
-                            <div class="order-detail">
+                    <div class="kb-column-header">Being Prepared <span class="order-count">{{(beingPreparedBucket &&
+                            beingPreparedBucket.orderCount) || 0}}</span></div>
+                    <div class="ticket-sec" *ngIf="beingPreparedBucket">
+                        <div class="ticket-main" *ngFor="let order of beingPreparedBucket.orders; index as orderIndex;">
+                            <div class="order-detail" (click)="toggleOrderDetails(order, orderIndex, 'beingPrepared')">
                                 <div>
-                                    <div class="float-left"><img src="../../assets/images/order_number_icon.png" /> 004</div>
-                                    <div class="float-right"><img src="../../assets/images/time_icon.png" /> 18 mins</div>
+                                    <div class="float-left"><img src="../../assets/images/order_number_icon.png" /> {{
+                                        order.orderNumber.substring(9)}}</div>
+                                    <div class="float-right"><img src="../../assets/images/time_icon.png" /> {{
+                                        getOrderAging(order) }}</div>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="kb-column">
-                    <div class="kb-column-header">Prepared <span class="order-count">03</span></div>
-                    <div class="ticket-sec">
-                        <div class="ticket-main">
-                            <div class="order-detail">
-                                <div>
-                                    <div class="float-left"><img src="../../assets/images/order_number_icon.png" /> 005</div>
-                                    <div class="float-right"><img src="../../assets/images/time_icon.png" /> 18 mins</div>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="kb-column">
-                    <div class="kb-column-header">Packing <span class="order-count">03</span></div>
-                    <div class="ticket-sec">
-                        <div class="ticket-main">
-                            <div class="order-detail">
-                                <div>
-                                    <div class="float-left"><img src="../../assets/images/order_number_icon.png" /> 006</div>
-                                    <div class="float-right"><img src="../../assets/images/time_icon.png" /> 18 mins</div>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="kb-column">
-                    <div class="kb-column-header">Ready To Be Delivered <span class="order-count">03</span></div>
-                    <div class="ticket-sec">
-
-                        <div class="ticket-main">
-                            <div class="order-detail">
-                                <div>
-                                    <div class="float-left"><img src="../../assets/images/order_number_icon.png" /> 007</div>
-                                    <div class="float-right"><img src="../../assets/images/time_icon.png" /> 18 mins</div>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                            <div class="order-description">
+                            <div class="order-description" id="orderdetailsdivbeingPrepared{{ orderIndex }}"
+                                style="display: none;">
                                 <table class="order-tbl">
                                     <tbody>
                                         <tr class="order-tbl-header">
@@ -172,30 +101,190 @@
                                             <td class="text-center">Qty</td>
                                             <td class="text-center">Price</td>
                                         </tr>
-                                        <tr>
-                                            <td>Margherita</td>
-                                            <td class="text-center">01</td>
-                                            <td class="text-right">$120.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Peppy Paneer</td>
-                                            <td class="text-center">01</td>
-                                            <td class="text-right">$150.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Deluxe Veggie</td>
-                                            <td class="text-center">01</td>
-                                            <td class="text-right">$180.00</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Total</th>
-                                            <th class="text-center">03</th>
-                                            <th class="text-right">$120.00</th>
+                                        <tr *ngFor="let item of selectedOrder.orderLines; index as itemIndex;">
+                                            <td>{{ item.itemName }}</td>
+                                            <td class="text-center">{{ item.orderQuantity }}</td>
+                                            <td class="text-right">{{ getOrderLineTotal(item) |
+                                                currency:'USD':true:'1.2-2' }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
                                 <div class="top6">
                                     <div class="float-right">
+                                        <div class="dropup tkt-left-btn">
+                                            <button class="move-order-btn dropdown-toggle" type="button"
+                                                data-toggle="dropdown">
+                                                Move To
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Being Prepared</a></li>
+                                                <li><a href="#">Prepared</a></li>
+                                                <li><a href="#">Packing</a></li>
+                                                <li><a href="#">Ready for Delivery</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="kb-column">
+                    <div class="kb-column-header">Prepared <span class="order-count">{{(preparedBucket &&
+                            preparedBucket.orderCount) || 0}}</span></div>
+                    <div class="ticket-sec" *ngIf="preparedBucket">
+                        <div class="ticket-main" *ngFor="let order of preparedBucket.orders; index as orderIndex;">
+                            <div class="order-detail" (click)="toggleOrderDetails(order, orderIndex, 'prepared')">
+                                <div>
+                                    <div class="float-left"><img src="../../assets/images/order_number_icon.png" /> {{
+                                        order.orderNumber.substring(9)}}</div>
+                                    <div class="float-right"><img src="../../assets/images/time_icon.png" /> {{
+                                        getOrderAging(order) }}</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="order-description" id="orderdetailsdivprepared{{ orderIndex }}"
+                                style="display: none;">
+                                <table class="order-tbl">
+                                    <tbody>
+                                        <tr class="order-tbl-header">
+                                            <td class="text-center">Item Name</td>
+                                            <td class="text-center">Qty</td>
+                                            <td class="text-center">Price</td>
+                                        </tr>
+                                        <tr *ngFor="let item of selectedOrder.orderLines; index as itemIndex;">
+                                            <td>{{ item.itemName }}</td>
+                                            <td class="text-center">{{ item.orderQuantity }}</td>
+                                            <td class="text-right">{{ getOrderLineTotal(item) |
+                                                currency:'USD':true:'1.2-2' }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="top6">
+                                    <div class="float-right">
+                                        <div class="dropup tkt-left-btn">
+                                            <button class="move-order-btn dropdown-toggle" type="button"
+                                                data-toggle="dropdown">
+                                                Move To
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Being Prepared</a></li>
+                                                <li><a href="#">Prepared</a></li>
+                                                <li><a href="#">Packing</a></li>
+                                                <li><a href="#">Ready for Delivery</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="kb-column">
+                    <div class="kb-column-header">Packing <span class="order-count">{{(packingBucket &&
+                            packingBucket.orderCount) || 0}}</span></div>
+                    <div class="ticket-sec" *ngIf="packingBucket">
+                        <div class="ticket-main" *ngFor="let order of packingBucket.orders; index as orderIndex;">
+                            <div class="order-detail" (click)="toggleOrderDetails(order, orderIndex, 'packing')">
+                                <div>
+                                    <div class="float-left"><img src="../../assets/images/order_number_icon.png" /> {{
+                                        order.orderNumber.substring(9)}}</div>
+                                    <div class="float-right"><img src="../../assets/images/time_icon.png" /> {{
+                                        getOrderAging(order) }}</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="order-description" id="orderdetailsdivpacking{{ orderIndex }}"
+                                style="display: none;">
+                                <table class="order-tbl">
+                                    <tbody>
+                                        <tr class="order-tbl-header">
+                                            <td class="text-center">Item Name</td>
+                                            <td class="text-center">Qty</td>
+                                            <td class="text-center">Price</td>
+                                        </tr>
+                                        <tr *ngFor="let item of selectedOrder.orderLines; index as itemIndex;">
+                                            <td>{{ item.itemName }}</td>
+                                            <td class="text-center">{{ item.orderQuantity }}</td>
+                                            <td class="text-right">{{ getOrderLineTotal(item) |
+                                                currency:'USD':true:'1.2-2' }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="top6">
+                                    <div class="float-right">
+                                        <div class="dropup tkt-left-btn">
+                                            <button class="move-order-btn dropdown-toggle" type="button"
+                                                data-toggle="dropdown">
+                                                Move To
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Being Prepared</a></li>
+                                                <li><a href="#">Prepared</a></li>
+                                                <li><a href="#">Packing</a></li>
+                                                <li><a href="#">Ready for Delivery</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="kb-column">
+                    <div class="kb-column-header">Ready To Be Delivered
+                        <span class="order-count">{{(readyOrderBucket && readyOrderBucket.orderCount) || 0}}</span>
+                    </div>
+
+                    <div class="ticket-sec" *ngIf="readyOrderBucket">
+                        <div class="ticket-main" *ngFor="let order of readyOrderBucket.orders; index as orderIndex;">
+                            <div class="order-detail" (click)="toggleOrderDetails(order, orderIndex, 'ready')">
+                                <div>
+                                    <div class="float-left"><img src="../../assets/images/order_number_icon.png" /> {{
+                                        order.orderNumber.substring(9)}}</div>
+                                    <div class="float-right"><img src="../../assets/images/time_icon.png" /> {{
+                                        getOrderAging(order) }}</div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="order-description" id="orderdetailsdivready{{ orderIndex }}"
+                                style="display: none;">
+                                <table class="order-tbl">
+                                    <tbody>
+                                        <tr class="order-tbl-header">
+                                            <td class="text-center">Item Name</td>
+                                            <td class="text-center">Qty</td>
+                                            <td class="text-center">Price</td>
+                                        </tr>
+                                        <tr *ngFor="let item of selectedOrder.orderLines; index as itemIndex;">
+                                            <td>{{ item.itemName }}</td>
+                                            <td class="text-center">{{ item.orderQuantity }}</td>
+                                            <td class="text-right">{{ getOrderLineTotal(item) |
+                                                currency:'USD':true:'1.2-2' }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="top6">
+                                    <div class="float-right">
+                                        <div class="dropup tkt-left-btn">
+                                            <button class="move-order-btn dropdown-toggle" type="button"
+                                                data-toggle="dropdown">
+                                                Move To
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Being Prepared</a></li>
+                                                <li><a href="#">Prepared</a></li>
+                                                <li><a href="#">Packing</a></li>
+                                                <li><a href="#">Ready for Delivery</a></li>
+                                            </ul>
+                                        </div>
                                         <button class="edit-order-btn">Deliver</button>
                                     </div>
                                     <div class="clearfix"></div>
@@ -206,14 +295,15 @@
                         <div class="ticket-main delivered-tkt">
                             <div class="order-detail">
                                 <div>
-                                    <div class="float-left"><img src="../../assets/images/order_number_icon.png" /> 008</div>
-                                    <div class="float-right"><img src="../../assets/images/time_icon.png" /> 18 mins</div>
+                                    <div class="float-left"><img src="../../assets/images/order_number_icon.png" /> 008
+                                    </div>
+                                    <div class="float-right"><img src="../../assets/images/time_icon.png" /> 18 mins
+                                    </div>
                                     <div class="clearfix"></div>
                                 </div>
                                 <div class="delivered-status">Delivered</div>
                             </div>
                         </div>
-
                     </div>
                 </div>
                 <div class="clearfix"></div>
@@ -235,13 +325,15 @@
                     <div class="col-xs-6">
                         <div class="form-group">
                             <label>Customer Name</label>
-                            <input type="text" class="form-control" autocomplete="off" [(ngModel)]="record.order.customerName" name="customerName">
+                            <input type="text" class="form-control" autocomplete="off"
+                                [(ngModel)]="record.order.customerName" name="customerName">
                         </div>
                     </div>
                     <div class="col-xs-6">
                         <div class="form-group">
                             <label>Customer Phone</label>
-                            <input type="text" class="form-control" autocomplete="off" [(ngModel)]="record.order.customerContactNumber" name="customerContactNumber">
+                            <input type="text" class="form-control" autocomplete="off"
+                                [(ngModel)]="record.order.customerContactNumber" name="customerContactNumber">
                         </div>
                     </div>
                 </div>
@@ -249,7 +341,8 @@
                     <div class="col-xs-6">
                         <div class="form-group">
                             <label>Delivery Type <span class="asterisk">*</span></label>
-                            <select [disabled]="true" class="form-control" [(ngModel)]="record.order.orderType" name="orderTypeId">
+                            <select [disabled]="true" class="form-control" [(ngModel)]="record.order.orderType"
+                                name="orderTypeId">
                                 <option *ngFor="let orderType of orderTypes" [ngValue]="orderType.id">{{orderType.text}}
                                 </option>
                             </select>
@@ -269,7 +362,8 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-12">
-                        <input class="form-control" list="itemList" name="itemList" [(ngModel)]='selectedItemName' (change)="onItemChanged(selectedItemName)">
+                        <input class="form-control" list="itemList" name="itemList" [(ngModel)]='selectedItemName'
+                            (change)="onItemChanged(selectedItemName)">
                         <datalist id="itemList">
                             <select>
                                 <option *ngFor="let item of items" [value]="item.itemName"></option>
@@ -303,10 +397,13 @@
                                         <div class="clearfix"></div>
                                     </div>
                                 </td>
-                                <td class="text-right bold">{{selectedItem.itemCharge | currency:'USD':true:'1.2-2'}}</td>
-                                <td class="text-right bold">{{getItemTotalAmount(selectedItem.itemQuantity, selectedItem.itemCharge) | currency:'USD':true:'1.2-2'}}</td>
+                                <td class="text-right bold">{{selectedItem.itemCharge | currency:'USD':true:'1.2-2'}}
+                                </td>
+                                <td class="text-right bold">{{getItemTotalAmount(selectedItem.itemQuantity,
+                                    selectedItem.itemCharge) | currency:'USD':true:'1.2-2'}}</td>
                                 <td class="text-center">
-                                    <button class="trans-btn" (click)="deleteItem(i)"><img src="../../assets/images/delete.png" /></button>
+                                    <button class="trans-btn" (click)="deleteItem(i)"><img
+                                            src="../../assets/images/delete.png" /></button>
                                 </td>
                             </tr>
                             <tr>
@@ -322,8 +419,28 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-default left-btn" data-dismiss="modal" (click)="closeForm()">Cancel</button>
+            <button type="button" class="btn btn-default left-btn" data-dismiss="modal"
+                (click)="closeForm()">Cancel</button>
             <button type="button" class="btn btn-active" data-dismiss="modal" (click)="saveOrder()">Save</button>
+        </div>
+    </div>
+</div>
+
+<div class="overlay" [hidden]="!showOrderCancelPopup">
+    <div class="pop-overlay">
+        <div class="confirm-header">
+            <img src="../../assets/images/error.png" />
+        </div>
+        <div class="text-center pop-header">Confirm!</div>
+        <div class="text-center">
+            <div>Are you sure to cancel order number {{ orderNumberForCancellation }}</div>
+            <div class="top20">
+                <!-- <label><input class="confirm-check" type="checkbox" /> Don't show this message again</label> -->
+            </div>
+        </div>
+        <div class="text-center">
+            <button class="no-btn" (click)="closeOrderCancelPopup()">No</button>
+            <button class="success-btn" (click)="cancelOrder()">Yes</button>
         </div>
     </div>
 </div>
