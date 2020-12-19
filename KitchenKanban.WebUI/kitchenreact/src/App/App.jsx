@@ -12,12 +12,12 @@ import {KitchenCounter} from '../KitchenCounter';
 
 const LoginPage = lazy(() => import("../LoginPage"));
 const DashboardPage = lazy(() => import("../Dashboard"));
-<<<<<<< HEAD
+//<<<<<<< HEAD
 const UserListPage = lazy(() => import("../MasterPages"));
-=======
+//=======
 //const ItemsList = lazy(() => import("../ItemsListPage"));
 //const KitchenCounter=lazy(()=>import("../KitchenCounter"));
->>>>>>> c06229df90ae777011e3035824b7639aa3c2472f
+//>>>>>>> c06229df90ae777011e3035824b7639aa3c2472f
 
 class App extends React.Component {
   constructor(props) {

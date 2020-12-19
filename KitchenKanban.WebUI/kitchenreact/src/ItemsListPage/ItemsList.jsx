@@ -111,7 +111,7 @@ class ItemsList extends React.Component {
       
     }
     UNSAFE_componentWillReceiveProps(nextProps){
-        console.log('nextprops',nextProps);        
+           
          if (nextProps.createditem.itemId !== this.props.createditem.itemId) {
            console.log("selected file if: " + this.state.file);
             if (this.state.file) {
@@ -140,6 +140,9 @@ class ItemsList extends React.Component {
                           this.props.dispatch(itemsListActions.getAll());
                         }                    
                     }
+                     this.clearForm();
+                        this.props.dispatch(itemsListActions.getAll());
+
            
                  };
         
@@ -167,9 +170,7 @@ class ItemsList extends React.Component {
 
     render() {
         const { items,createditem} = this.props;
-        let {item,showform,file,imgSrc,editmode}=this.state;
-        console.log('props items',this.props);
-      
+        let {item,showform,file,imgSrc,editmode}=this.state;    
         return (
       <div>   
             <div>
@@ -223,21 +224,6 @@ class ItemsList extends React.Component {
                                                     </tr>
                     
                                                         )}
-                                        
-                                    
-                                    
-                                    <tr>
-                                        <td className="text-center">3</td>
-                                        <td className="text-center"><img src="images/pizza.png" /></td>
-                                        <td>Deluxe Veggie</td>
-                                        <td className="text-right">$180.00</td>
-                                        <td className="text-center">
-                                            <button className="trans-btn"><img src="images/edit.png" /></button>
-                                        </td>
-                                        <td className="text-center">
-                                            <button className="trans-btn"><img src="images/delete.png" /></button>
-                                        </td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
