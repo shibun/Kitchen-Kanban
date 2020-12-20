@@ -3,7 +3,9 @@ import { authHeader } from '../_helpers';
 import axios from 'axios';
 
 export const orderService = {   
-  addNewOrder
+  addNewOrder,
+  getAllOrders,
+  getOrderById
 };
 
 
@@ -13,4 +15,15 @@ export const orderService = {
     axios.defaults.headers.common =  authHeader()
     return axios.post(`${config.apiUrl}/Order`,data);
   }
+  function getAllOrders() {   
+       axios.defaults.headers.common =  authHeader()
+    return axios.get(`${config.apiUrl}/Order/OrderReport`);  
+    
+}
+ function getOrderById(orderId) {
+    
+    axios.defaults.headers.common =  authHeader()
+    return axios.get(`${config.apiUrl}/Order/GetOrderById?orderId=` + orderId);
+  }
+ 
   
