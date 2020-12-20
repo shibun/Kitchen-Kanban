@@ -30,9 +30,9 @@ export class AuthService {
         // login successful if there's a jwt token in the response
         if (result && result.token) {
           this.loginStatus.next(true);
-          localStorage.setItem('loginStatus', '1');
-          localStorage.setItem('userToken', result.token);
-          localStorage.setItem('user', JSON.stringify(result));
+          sessionStorage.setItem('loginStatus', '1');
+          sessionStorage.setItem('userToken', result.token);
+          sessionStorage.setItem('user', JSON.stringify(result));
           this.UserFullName.next(result.firstName + " " + result.lastName);
         }
         return result;
@@ -42,9 +42,9 @@ export class AuthService {
 
   logout() {
     this.loginStatus.next(false);
-    localStorage.removeItem('userToken');
-    localStorage.removeItem('user');
-    localStorage.setItem('loginStatus', '0');
+    sessionStorage.removeItem('userToken');
+    sessionStorage.removeItem('user');
+    sessionStorage.setItem('loginStatus', '0');
     this.router.navigate(['/login']);
     console.log("Logged Out Successfully");
   }
@@ -52,9 +52,9 @@ export class AuthService {
 
 
   checkLoginStatus(): boolean {
-    var loginCookie = localStorage.getItem("loginStatus");
+    var loginCookie = sessionStorage.getItem("loginStatus");
     if (loginCookie == "1") {
-      if (localStorage.getItem('userToken') === null || localStorage.getItem('userToken') === undefined) {
+      if (sessionStorage.getItem('userToken') === null || sessionStorage.getItem('userToken') === undefined) {
         this.router.navigate(['/login']);
       }
       return true;
@@ -64,7 +64,7 @@ export class AuthService {
   }
 
   getUserFullName(): string {
-    var user = localStorage.getItem("user");
+    var user = sessionStorage.getItem("user");
     if (user != null) {
       var json = JSON.parse(user);
       return json.firstName + " " + json.lastName
