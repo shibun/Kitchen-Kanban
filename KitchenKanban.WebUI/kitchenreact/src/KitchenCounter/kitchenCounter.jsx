@@ -2,22 +2,24 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Header } from '../_components/Header';
-
+import { MessageSuccess } from '../_components/MessageSuccess';
+import { MessageError } from '../_components/MessageError';
 import { kitchenCounterActions } from '../_actions';
 
 class KitchenCounter extends React.Component {
     constructor(props) {
-        super(props);  
-          
+        super(props); 
           this.state={
               showform:false,
-            kitchen:{
-                kitchenId:"",
-                counterNumber:""
+                kitchen:{
+                    kitchenId:"",
+                    counterNumber:""
                 },
                      
              editmode:false,
-               currentdate: "",
+            currentdate: "",
+             successmsg:false,
+             errormsg:false
           };
         this.handleOnAddClick=this.handleOnAddClick.bind(this);  
         this.handleChange = this.handleChange.bind(this);
@@ -46,8 +48,8 @@ class KitchenCounter extends React.Component {
     const dateTime = date + " " + time;
     this.setState({
       currentdate: dateTime,
-    });
-  };
+             });
+     };
       clearForm(){
         this.setState({
              showform:false,
@@ -56,7 +58,9 @@ class KitchenCounter extends React.Component {
                 counterNumber:""
                 },                    
             
-             editmode:false
+             editmode:false,
+              successmsg:false,
+             errormsg:false
         })
     }
      handleChange(e) {
@@ -91,15 +95,35 @@ class KitchenCounter extends React.Component {
          }); 
                 
         }
-    deleteCounter(itemid) {       
-      this.props.dispatch(kitchenCounterActions.deleteCounter(itemid)).then(()=>{
-    this.props.dispatch(kitchenCounterActions.getAll());
-      });
-    }
+        deleteCounter(itemid) {       
+        this.props.dispatch(kitchenCounterActions.deleteCounter(itemid)).then(()=>{
+        this.props.dispatch(kitchenCounterActions.getAll());
+        });
+        }
+        handler = (val) => {
+            this.setState({
+            successmsg: val,
+            errormsg:val
+                })
+        } 
+        UNSAFE_componentWillReceiveProps(nextProps,prevProps){
+                if(this.props.alert!=prevProps.alert){
+                if(this.props.alert.type=='alert-success' )
+            {
+                console.log('alert if',alert);
+                this.state.successmsg=true;
+            }
+            if(this.props.alert.type=='alert-danger' )
+            {
+                console.log('alert if',alert);
+                this.state.errormsg=true;
+            }
+             }
+        }
   
     render() {
-        const { kitchenCounters} = this.props;
-        const {kitchen,editmode,showform,currentdate}=this.state;
+        const { kitchenCounters,alert} = this.props;
+        const {kitchen,editmode,showform,currentdate,successmsg,errormsg}=this.state;
         
         return (
     <div>
@@ -197,6 +221,12 @@ class KitchenCounter extends React.Component {
             </div>
             </div>
         }
+          {this.state.successmsg &&
+               <div className ="tkt-desc"> <MessageSuccess  handler = {this.handler} showsuccessform={this.state.successmsg}/></div>
+            }
+               {this.state.errormsg &&
+               <div className ="tkt-desc"> <MessageError  handler = {this.handler} msg={alert.message.data}showerrorform={this.state.errormsg}/></div>
+            }
   
 
 </div>
@@ -206,8 +236,8 @@ class KitchenCounter extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const {kitchenCounters } = state;
-    return {kitchenCounters};
+    const {kitchenCounters,alert} = state;
+    return {kitchenCounters,alert};
 }
 
 

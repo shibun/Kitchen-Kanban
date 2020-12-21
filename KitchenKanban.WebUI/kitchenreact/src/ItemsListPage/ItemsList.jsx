@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import { itemsListActions } from '../_actions';
 import { Header } from '../_components/Header';
+import { MessageSuccess } from '../_components/MessageSuccess';
+import { MessageError } from '../_components/MessageError';
 
 
 class ItemsList extends React.Component {
@@ -21,6 +23,8 @@ class ItemsList extends React.Component {
              file:'',
              editmode:false,
              currentdate: "",
+             successmsg:false,
+             errormsg:false
         };
         
         this.handleOnAddClick=this.handleOnAddClick.bind(this);  
@@ -65,7 +69,10 @@ class ItemsList extends React.Component {
                 imageContent:''
             },
              imgSrc:'',
-             editmode:false
+               file:'',
+             editmode:false,
+             successmsg:false,
+             errormsg:false
         })
     }
      handleChange(e) {
@@ -122,19 +129,35 @@ class ItemsList extends React.Component {
 
       
     }
-    UNSAFE_componentWillReceiveProps(nextProps){
+    UNSAFE_componentWillReceiveProps(nextProps,prevProps){
+        console.log('props',this.props);
+        console.log('nextprops',nextProps);
+        console.log('prevprops',prevProps);
+        if(this.props.alert!=prevProps.alert){
+                if(this.props.alert.type=='alert-success' )
+            {
+                console.log('alert if',alert);
+                this.state.successmsg=true;
+            }
+            if(this.props.alert.type=='alert-danger' )
+            {
+                console.log('alert if',alert);
+                this.state.errormsg=true;
+            }
+        }
            
          if (nextProps.createditem.itemId !== this.props.createditem.itemId) {          
             if (this.state.file) {               
                 this.props.dispatch(itemsListActions.uploadImage(this.state.file, nextProps.createditem.itemId, 2)).then(()=>{
-                        this.clearForm();
-                        this.props.dispatch(itemsListActions.getAll());   
-                });
+                         this.clearForm();                                         
+                        this.props.dispatch(itemsListActions.getAll());                              
+                })
             }
             else
             {
-                this.clearForm();
+                 this.clearForm();                                   
                 this.props.dispatch(itemsListActions.getAll());
+                  
 
             }
          }
@@ -142,32 +165,41 @@ class ItemsList extends React.Component {
                     if (this.state.file) {                       
                         if (this.state.item.imageId!=null) {                             
                         this.props.dispatch(itemsListActions.updateImage(this.state.file,this.state.item.imageId)).then(()=>{
-                        this.clearForm();
-                        this.props.dispatch(itemsListActions.getAll());
+                      this.clearForm();                                      
+                        this.props.dispatch(itemsListActions.getAll());                  
                         });
                         
                         }
                       
                          else {                             
                             this.props.dispatch(itemsListActions.uploadImage(this.state.file, this.state.item.itemId, 2)).then(()=>{
-                                 this.clearForm();
-                                this.props.dispatch(itemsListActions.getAll());
+                              this.clearForm();                                             
+                            this.props.dispatch(itemsListActions.getAll());
+                               
                             });
                        
                                 }                    
                     }
-                     this.clearForm();
+                    this.clearForm();                                           
                     this.props.dispatch(itemsListActions.getAll());
+                               
                  };
         
     }
     deleteItem(itemid) {
-      this.props.dispatch(itemsListActions.deleteItem(itemid)).then(()=>{
-        this.clearForm();
-         this.props.dispatch(itemsListActions.getAll());
-      });
+      this.props.dispatch(itemsListActions.deleteItem(itemid)).then(()=>{        
+          this.props.dispatch(itemsListActions.getAll());  
+      })
         
     }
+      handler = (val) => {
+            this.setState({
+            successmsg: val,
+            errormsg:val
+                })
+     
+        } 
+    
     handleOnEdit(editeditem){
         this.setState({
             showform:true,
@@ -175,17 +207,16 @@ class ItemsList extends React.Component {
             editmode:true
         })
         this.setState({
-            imgSrc:'data:image/jpeg;base64,'+editeditem.imageContent
-            
+            imgSrc:'data:image/jpeg;base64,'+editeditem.imageContent            
         })
-     
-      
     }
    
 
     render() {
-        const { items,createditem} = this.props;
-        let {item,showform,file,imgSrc,editmode,currentdate}=this.state;    
+        const { items,createditem,alert} = this.props;
+        let {item,showform,file,imgSrc,editmode,currentdate,successmsg,errormsg}=this.state;   
+     
+      
         return (
       <div>   
             <div>
@@ -212,8 +243,8 @@ class ItemsList extends React.Component {
                                         <th className="text-center">Edit</th>
                                         <th className="text-center">Delete</th>
                                     </tr>
-                                    {items.items && items.items.map((itemvalue, index) =>                                         
-                                                    
+                                    {items.items && items.items.length>0 && items.items.map((itemvalue, index) =>                                         
+                                                  
                                                     <tr key={itemvalue.itemId}>
                                                         <td className="text-center">{index+1}</td>     
                                                         <td className="text-center">
@@ -229,7 +260,7 @@ class ItemsList extends React.Component {
                                                          
                                                         </td>                                                                                              
                                                         <td >{itemvalue.itemName}</td>
-                                                        <td className="text-right">${itemvalue.itemCharge.toFixed(2)}</td>
+                                                        <td className="text-right">${itemvalue.itemCharge?itemvalue.itemCharge.toFixed(2):itemvalue.itemCharge}</td>
                                                     
                                                 <td className="text-center">
                                               <button className="trans-btn">
@@ -258,7 +289,7 @@ class ItemsList extends React.Component {
               
          {
              this.state.showform &&
-          <div className="add-overlay" >
+             <div className="add-overlay" >
                 <div className="add-pop-overlay">
                     <div className="modal-header">
                         <button type="button" className="close" data-dismiss="modal"  onClick={this.clearForm}>×</button>
@@ -314,7 +345,13 @@ class ItemsList extends React.Component {
                 </div>
             </div> 
             }
-    
+            {this.state.successmsg &&
+               <div className ="tkt-desc"> <MessageSuccess  handler = {this.handler} showsuccessform={this.state.successmsg}/></div>
+            }
+               {this.state.errormsg &&
+               <div className ="tkt-desc"> <MessageError  handler = {this.handler} msg={alert.message.data}showerrorform={this.state.errormsg}/></div>
+            }
+           
     
     </div>
 
@@ -324,8 +361,8 @@ class ItemsList extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const {items,createditem } = state;
-    return {items,createditem};
+    const {items,createditem,alert } = state;
+    return {items,createditem,alert};
 }
 
 
