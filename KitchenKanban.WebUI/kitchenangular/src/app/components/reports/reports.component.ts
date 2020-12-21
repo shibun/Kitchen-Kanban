@@ -25,7 +25,13 @@ export class ReportsComponent implements OnInit {
   record = {
     order: {
       orderId: null,
+      orderNumber: null,
+      orderStatus: 0,
       orderType: 2,
+      orderAmount: 0,
+      orderDeliveryDate: null,
+      orderDate: null,
+      orderTakenByUserName: null,
       customerName: '',
       customerContactNumber: ''
     },
@@ -44,12 +50,10 @@ export class ReportsComponent implements OnInit {
     this.reportService.getOrderReport().subscribe(
       data => {
         this.orders = data;
-        if(this.orders.length > 0)
-        {
+        if (this.orders.length > 0) {
           this.recordNotFound = false;
         }
-        else
-        {
+        else {
           this.recordNotFound = true;
         }
       },
@@ -60,8 +64,7 @@ export class ReportsComponent implements OnInit {
     );
   }
 
-  getTotalDishesCount()
-  {
+  getTotalDishesCount() {
     if (this.orders) {
       return this.orders.map((t: { noOfItemsInOrder: any; }) => t).reduce((a: any, value: any) => a + value.noOfItemsInOrder, 0);
     }
@@ -80,22 +83,19 @@ export class ReportsComponent implements OnInit {
     return selectedorderStatus == null ? "" : selectedorderStatus.text;
   }
 
-  showReportDetail(orderId: string)
-  {
+  showReportDetail(orderId: string) {
     this.orderService.getOrderById(orderId).subscribe(
       data => {
         this.record = data;
-        if(this.record.order.customerName != null)
-        {
-          var regex =/\b(\w{2})(\w+)(\w)\b/g;
-          this.record.order.customerName =  (this.record.order.customerName.replace(regex,(_, first, middle, last) => `${first}${'x'.repeat(middle.length)}${last}`));        
+        if (this.record.order.customerName != null) {
+          var regex = /\b(\w{2})(\w+)(\w)\b/g;
+          this.record.order.customerName = (this.record.order.customerName.replace(regex, (_, first, middle, last) => `${first}${'x'.repeat(middle.length)}${last}`));
         }
-        if(this.record.order.customerContactNumber != null)
-        {
-          var regex =/\b(\w{2})(\w+)(\w)\b/g;
-          this.record.order.customerContactNumber =  (this.record.order.customerContactNumber.replace(regex,(_, first, middle, last) => `${first}${'x'.repeat(middle.length)}${last}`));        
+        if (this.record.order.customerContactNumber != null) {
+          var regex = /\b(\w{2})(\w+)(\w)\b/g;
+          this.record.order.customerContactNumber = (this.record.order.customerContactNumber.replace(regex, (_, first, middle, last) => `${first}${'x'.repeat(middle.length)}${last}`));
         }
-          this.showPopup = true;
+        this.showPopup = true;
       },
       err => {
         console.log("Report showReportDetail : ", err)
@@ -127,7 +127,13 @@ export class ReportsComponent implements OnInit {
     this.record = {
       order: {
         orderId: null,
-        orderType: 0,
+        orderNumber: null,
+        orderStatus: 0,
+        orderType: 2,
+        orderAmount: 0,
+        orderDeliveryDate: null,
+        orderDate: null,
+        orderTakenByUserName: null,
         customerName: '',
         customerContactNumber: ''
       },
