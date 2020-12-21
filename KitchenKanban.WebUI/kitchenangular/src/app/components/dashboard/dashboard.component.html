@@ -67,7 +67,7 @@
                                             <button class="move-order-btn" (click)="showMoveToColumn()">Move To<span
                                                     class="caret"></span></button>
                                         </div>
-                                        <button class="edit-order-btn tkt-left-btn">Edit Order</button>
+                                        <button class="edit-order-btn tkt-left-btn" (click)="showEditForm(order)">Edit Order</button>
                                         <button class="cancel-order-btn" (click)="showCancelOrderPopup(order)">Cancel
                                             Order</button>
                                     </div>
@@ -386,7 +386,7 @@
                                         <div class="float-left neg-qty-box">
                                             <button class="qty-btn" (click)="reduceQuantity(i)">-</button>
                                         </div>
-                                        <div class="float-left qty-box">{{selectedItem.itemQuantity}}</div>
+                                        <div class="float-left qty-box">{{selectedItem.orderQuantity}}</div>
                                         <div class="float-left pos-qty-box">
                                             <button class="qty-btn" (click)="increaseQuantity(i)">+</button>
                                         </div>
@@ -395,7 +395,7 @@
                                 </td>
                                 <td class="text-right bold">{{selectedItem.itemCharge | currency:'USD':true:'1.2-2'}}
                                 </td>
-                                <td class="text-right bold">{{getItemTotalAmount(selectedItem.itemQuantity,
+                                <td class="text-right bold">{{getItemTotalAmount(selectedItem.orderQuantity,
                                     selectedItem.itemCharge) | currency:'USD':true:'1.2-2'}}</td>
                                 <td class="text-center">
                                     <button class="trans-btn" (click)="deleteItem(i)"><img

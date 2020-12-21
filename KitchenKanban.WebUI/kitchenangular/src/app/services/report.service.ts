@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class OrderService {
+export class ReportService {
 
   constructor(private http: HttpClient) { }
   
@@ -21,21 +21,13 @@ export class OrderService {
     }
     console.log("Error in Item service : ", errorMessage);
     return throwError(errorMessage);
+  }  
+
+  getOrderReport(): Observable<any> {
+    return this.http.get(environment.apiEndpoint + '/Order/OrderReport', { responseType: 'json' }).pipe
+      (
+        catchError(this.handleError)
+      );
   }
 
-  newOrder(order: any): Observable<any> {
-    return this.http.post<any>(environment.apiEndpoint + '/Order', order);
-  }
-
-  updateOrder(order: any): Observable<any> {
-    return this.http.put<any>(environment.apiEndpoint + '/Order', order);
-  }
-
-  changeOrderStatus(input: any): Observable<any> {
-    return this.http.post<any>(environment.apiEndpoint + '/Order/OrderStatus', input);
-  }
-
-  getOrderById(orderId: string): Observable<any> {
-    return this.http.get(environment.apiEndpoint + '/Order/GetOrderById?orderId=' + orderId, { responseType: 'json' }).pipe(catchError(this.handleError));
-  }
 }
