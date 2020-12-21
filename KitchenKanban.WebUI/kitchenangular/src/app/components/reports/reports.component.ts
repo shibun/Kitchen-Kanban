@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ReportService } from '../../services/report.service';
 import { MessageService } from '../../services/message.service';
+import { OrderService } from '../../services/order.service';
 
 @Component({
   selector: 'app-reports',
@@ -15,20 +16,31 @@ export class ReportsComponent implements OnInit {
     { id: 3, text: 'Prepared' },
     { id: 4, text: 'Packing' },
     { id: 5, text: 'Ready To Be Delivered' },
-    { id: 6, text: 'Delevered' },
+    { id: 6, text: 'Delivered' },
     { id: 7, text: 'Cancelled' }
   ];
-
   orders: any = [];
   showPopup = false;
   recordNotFound = false;
   record = {
-    kitchenId: '',
-    counterNumber: ''
+    order: {
+      orderId: null,
+      orderNumber: null,
+      orderStatus: 0,
+      orderType: 2,
+      orderAmount: 0,
+      orderDeliveryDate: null,
+      orderDate: null,
+      orderTakenByUserName: null,
+      customerName: '',
+      customerContactNumber: ''
+    },
+    orderLines: []
   };
 
   currentDate = new Date();
-  constructor(private reportService: ReportService, private messageService: MessageService) { }
+  constructor(private reportService: ReportService, private messageService: MessageService,
+    private orderService: OrderService) { }
 
   ngOnInit(): void {
     this.getOrderReport();
@@ -38,12 +50,10 @@ export class ReportsComponent implements OnInit {
     this.reportService.getOrderReport().subscribe(
       data => {
         this.orders = data;
-        if(this.orders.length > 0)
-        {
+        if (this.orders.length > 0) {
           this.recordNotFound = false;
         }
-        else
-        {
+        else {
           this.recordNotFound = true;
         }
       },
@@ -54,8 +64,7 @@ export class ReportsComponent implements OnInit {
     );
   }
 
-  getTotalDishesCount()
-  {
+  getTotalDishesCount() {
     if (this.orders) {
       return this.orders.map((t: { noOfItemsInOrder: any; }) => t).reduce((a: any, value: any) => a + value.noOfItemsInOrder, 0);
     }
@@ -72,6 +81,64 @@ export class ReportsComponent implements OnInit {
   getOrderStatus(orderStatus: number): string {
     let selectedorderStatus = this.orderStatues.find(x => x.id == orderStatus);
     return selectedorderStatus == null ? "" : selectedorderStatus.text;
+  }
+
+  showReportDetail(orderId: string) {
+    this.orderService.getOrderById(orderId).subscribe(
+      data => {
+        this.record = data;
+        if (this.record.order.customerName != null) {
+          var regex = /\b(\w{2})(\w+)(\w)\b/g;
+          this.record.order.customerName = (this.record.order.customerName.replace(regex, (_, first, middle, last) => `${first}${'x'.repeat(middle.length)}${last}`));
+        }
+        if (this.record.order.customerContactNumber != null) {
+          var regex = /\b(\w{2})(\w+)(\w)\b/g;
+          this.record.order.customerContactNumber = (this.record.order.customerContactNumber.replace(regex, (_, first, middle, last) => `${first}${'x'.repeat(middle.length)}${last}`));
+        }
+        this.showPopup = true;
+      },
+      err => {
+        console.log("Report showReportDetail : ", err)
+        this.messageService.showErrorMessage(err.Message);
+      }
+    );
+  }
+
+  getItemTotalAmount(quantity: any, price: any) {
+    return (quantity * price);
+  }
+
+  getTotalItems() {
+    if (this.record.orderLines) {
+      return this.record.orderLines.map((t: { orderQuantity: any; }) => t).reduce((a: any, value: any) => a + value.orderQuantity, 0);
+    }
+    return 0;
+  }
+
+  getTotalLineAmount() {
+    if (this.record.orderLines) {
+      return this.record.orderLines.map((t: { orderQuantity: any; }) => t).reduce((a: any, value: any) => a + (value.orderQuantity * value.itemCharge), 0);
+    }
+    return 0;
+  }
+
+  closeForm(): void {
+    this.showPopup = false;
+    this.record = {
+      order: {
+        orderId: null,
+        orderNumber: null,
+        orderStatus: 0,
+        orderType: 2,
+        orderAmount: 0,
+        orderDeliveryDate: null,
+        orderDate: null,
+        orderTakenByUserName: null,
+        customerName: '',
+        customerContactNumber: ''
+      },
+      orderLines: []
+    };
   }
 
 }

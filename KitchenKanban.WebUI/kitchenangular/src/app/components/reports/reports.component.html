@@ -35,7 +35,7 @@
                     <td class="text-right">{{ reportData.orderAmount | currency:'USD':true:'1.2-2' }}</td>
                     <td class="text-center" [ngClass]="{'cancelled-order-status': reportData.orderStatus === 7}">{{getOrderStatus(reportData.orderStatus)}}</td>
                     <td class="text-center">
-                        <button class="trans-btn" data-toggle="modal" data-target="#reportDetail"><i
+                        <button class="trans-btn" (click)="showReportDetail(reportData.orderId)"><i
                                 class="glyphicon glyphicon-exclamation-sign"></i></button>
                     </td>
                 </tr>                
@@ -55,44 +55,36 @@
     </section>
     <div class="clearfix"></div>
 </div>
-<div id="reportDetail" class="modal fade" role="dialog">
+<div id="reportDetail"  class="add-overlay" [hidden]="!showPopup">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">123456</h4>
+                <button type="button" class="close" (click)="closeForm()">&times;</button>
+                <h4 class="modal-title">{{ record.order.orderNumber }}</h4>
             </div>
             <div class="modal-body">
                 <table class="report-tbl">
                     <tr>
                         <th>Status</th>
-                        <td>Delivered</td>
+                        <td>{{getOrderStatus(record.order.orderStatus)}}</td>
                         <th>Ordered Date</th>
-                        <td>07/12/2020</td>
+                        <td>{{ record.order.orderDate | date: 'MM/dd/YYYY'}}</td>
                     </tr>
                     <tr>
                         <th>Ordered Time</th>
-                        <td>09.30 am</td>
+                        <td>{{ record.order.orderDate | date: 'shortTime'}}</td>
                         <th>Delivered Time</th>
-                        <td>09.58 am</td>
+                        <td>{{ record.order.orderDeliveryDate && record.order.orderDeliveryDate | date: 'shortTime'}}</td>
                     </tr>
                     <tr>
                         <th>Ordered Taken By</th>
-                        <td>Pramod Karkera</td>
-                        <th>Order Prepared By</th>
-                        <td>Sujeesh Soman</td>
-                    </tr>
-                    <tr>
-                        <th>Ordered Packed By</th>
-                        <td>Sony Reddy</td>
-                        <th>Order Delivered By</th>
-                        <td>Jayanth Joseph</td>
-                    </tr>
-                    <tr>
+                        <td>{{ record.order.orderTakenByUserName }}</td>                        
                         <th>Customer Name</th>
-                        <td>Pxxxxd Kxxxxxa</td>
+                        <td>{{ record.order.customerName && record.order.customerName }}</td>
+                    </tr>
+                    <tr>
                         <th>Customer Phone No</th>
-                        <td>9xxxxxxxx7</td>
+                        <td colspan="3">{{ record.order.customerContactNumber && record.order.customerContactNumber }}</td>                   
                     </tr>
                 </table>
 
@@ -104,34 +96,22 @@
                         <th class="text-center">Quantity</th>
                         <th class="text-center">Price</th>
                     </tr>
-                    <tr>
-                        <td class="text-center">01</td>
-                        <td>Margherita</td>
-                        <td class="text-center">01</td>
-                        <td class="text-right">$150.00</td>
+                    <tr *ngFor='let orderLine of record.orderLines; index as i;'>
+                        <td class="text-center">{{i + 1}}</td>
+                        <td>{{ orderLine.itemName }}</td>
+                        <td class="text-center">{{ orderLine.orderQuantity }}</td>
+                        <td class="text-right">{{getItemTotalAmount(orderLine.orderQuantity, orderLine.itemCharge) | currency:'USD':true:'1.2-2'}}</td>
                     </tr>
                     <tr>
-                        <td class="text-center">02</td>
-                        <td>Peppy Paneer</td>
-                        <td class="text-center">01</td>
-                        <td class="text-right">$150.00</td>
-                    </tr>
-                    <tr>
-                        <td class="text-center">03</td>
-                        <td>Deluxe Veggie</td>
-                        <td class="text-center">01</td>
-                        <td class="text-right">$150.00</td>
-                    </tr>
-                    <tr>
-                        <td class="bold text-center">03</td>
+                        <td class="bold text-center">&nbsp;</td>
                         <td class="bold">&nbsp;</td>
-                        <td class="bold text-center">03</td>
-                        <td class="bold text-right">$600.00</td>
+                        <td class="bold text-center">{{ getTotalItems() }}</td>
+                        <td class="bold text-right">{{ getTotalLineAmount() | currency:'USD':true:'1.2-2' }}</td>
                     </tr>
                 </table>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" (click)="closeForm()">Close</button>
             </div>
         </div>
     </div>

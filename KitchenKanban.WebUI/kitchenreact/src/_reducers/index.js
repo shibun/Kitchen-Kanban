@@ -6,6 +6,7 @@ import { alert } from './alert.reducer';
 import {items,createditem} from './itemsList.reducer';
 import {kitchenCounters} from './kitchenCounter.reducer';
 import {orders,getorder} from './order.reducer';
+import {kanbanorders,orderdetails} from './dashboard.reducer';
 
 const rootReducer = combineReducers({
   authentication,
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
   alert,
   items,createditem,
   kitchenCounters,getorder,
-  orders
+  orders,
+  kanbanorders,orderdetails
 });
 
 export default rootReducer;
