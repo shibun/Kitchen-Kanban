@@ -24,4 +24,7 @@ export const dashboardService = {
     return axios.post(`${config.apiUrl}/Order/OrderStatus`,data);
 }
  
+function updateOrderStatus(data) {
+  return axios.post(`${config.apiUrl}/Order/OrderStatus`,data);
+}
   

@@ -55,6 +55,7 @@ function getAll() {
             type: userConstants.GETALL_FAILURE,
             payload: error,
           });
+          dispatch(alertActions.error(error));
         });
     };
   }
