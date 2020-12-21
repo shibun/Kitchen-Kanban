@@ -11,7 +11,7 @@ import { MessageService } from '../../services/message.service';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  
+
   orderTypes: Array<{ id: number, text: string }> = [
     { id: 1, text: 'Dine In' },
     { id: 2, text: 'Take Away' }
@@ -65,8 +65,8 @@ export class DashboardComponent implements OnInit {
     orderLines: []
   };
 
-  constructor(private messageService: MessageService, private itemService: ItemService, 
-              private orderService: OrderService, private dashboardService: DashboardService) {
+  constructor(private messageService: MessageService, private itemService: ItemService,
+    private orderService: OrderService, private dashboardService: DashboardService) {
     setInterval(() => {
       this.clock = new Date();
     }, 1000)
@@ -77,13 +77,25 @@ export class DashboardComponent implements OnInit {
     this.getKanbanboard();
   }
 
+  showEditForm(order: any) {
+    this.orderService.getOrderById(order.orderId).subscribe(
+      data => {
+        this.record = data;     
+        this.selectedItems = data.orderLines;
+        this.getItems();
+        console.log("Edit : ", this.record = data);
+        this.showPopup = true;
+      },
+      err => {
+        console.log("Dashboard showEditForm : ", err)
+        this.messageService.showErrorMessage(err.Message);
+      }
+    );
+  }
+
   showAddForm(): void {
     this.getItems();
     this.showPopup = true;
-  }
-
-  saveDash(): void {
-    this.messageService.showSuccessMessage();
   }
 
   getItems(): void {
@@ -107,14 +119,20 @@ export class DashboardComponent implements OnInit {
       if (index !== -1) {
         this.selectedItems.splice(index, 1);
       }
-      existingRecord.itemQuantity = existingRecord.itemQuantity + 1;
+      //existingRecord.itemQuantity = existingRecord.itemQuantity + 1;
       existingRecord.orderQuantity = existingRecord.orderQuantity + 1;
       this.selectedItems.push(existingRecord);
     }
     else {
-      selectedRecord.itemQuantity = 1;
-      selectedRecord.orderQuantity = 1;
-      this.selectedItems.push(selectedRecord);
+      var newItem = {
+        orderLineId: null,
+        orderId: null,
+        itemId: selectedRecord.itemId,
+        itemName: selectedRecord.itemName,
+        itemCharge: selectedRecord.itemCharge,
+        orderQuantity: 1
+      }
+      this.selectedItems.push(newItem);
     }
 
     this.selectedItemName = '';
@@ -122,14 +140,14 @@ export class DashboardComponent implements OnInit {
 
   getTotalItems() {
     if (this.selectedItems) {
-      return this.selectedItems.map((t: { itemQuantity: any; }) => t).reduce((a: any, value: any) => a + value.itemQuantity, 0);
+      return this.selectedItems.map((t: { orderQuantity: any; }) => t).reduce((a: any, value: any) => a + value.orderQuantity, 0);
     }
     return 0;
   }
 
   getTotalAmount() {
     if (this.selectedItems) {
-      return this.selectedItems.map((t: { itemQuantity: any; }) => t).reduce((a: any, value: any) => a + (value.itemQuantity * value.itemCharge), 0);
+      return this.selectedItems.map((t: { orderQuantity: any; }) => t).reduce((a: any, value: any) => a + (value.orderQuantity * value.itemCharge), 0);
     }
     return 0;
   }
@@ -140,34 +158,37 @@ export class DashboardComponent implements OnInit {
 
   increaseQuantity(index: number) {
     this.selectedItems[index].orderQuantity++;
-    this.selectedItems[index].itemQuantity++;
   }
 
   reduceQuantity(index: number) {
-    if(this.selectedItems[index].itemQuantity > 1)
-    {
+    if (this.selectedItems[index].orderQuantity > 1) {
       this.selectedItems[index].orderQuantity--;
-      this.selectedItems[index].itemQuantity--;
     }
   }
 
-  deleteItem(index: number)
-  {
+  deleteItem(index: number) {
     this.selectedItems.splice(index, 1);
   }
 
   saveOrder(): void {
-    if(this.selectedItems == null || this.selectedItems.length == 0)
-    {
+    if (this.selectedItems == null || this.selectedItems.length == 0) {
       this.messageService.showErrorMessage("Please add items to order.");
       return;
     }
     this.record.orderLines = this.selectedItems;
     if (this.record.order.orderId != null && this.record.order.orderId != '') {
-      
+      this.orderService.updateOrder(this.record).subscribe(
+        data => {
+          this.messageService.showSuccessMessage();
+          this.getKanbanboard();
+          this.closeForm();
+        },
+        err => {
+          console.log("Dashboard saveOrder : ", err.error)
+        }
+      );
     }
-    else
-    {
+    else {
       this.orderService.newOrder(this.record).subscribe(
         data => {
           this.messageService.showSuccessMessage();
@@ -184,23 +205,21 @@ export class DashboardComponent implements OnInit {
   getKanbanboard(): void {
     this.dashboardService.getKanbanboard().subscribe(
       data => {
-        this.kanbanBuckets = data;   
-        if(this.kanbanBuckets.length > 0)
-        {
+        this.kanbanBuckets = data;
+        if (this.kanbanBuckets.length > 0) {
           this.newOrderBucket = this.kanbanBuckets.find((x: { flowOrder: number; }) => x.flowOrder == 1);
           this.beingPreparedBucket = this.kanbanBuckets.find((x: { flowOrder: number; }) => x.flowOrder == 2);
           this.preparedBucket = this.kanbanBuckets.find((x: { flowOrder: number; }) => x.flowOrder == 3);
           this.packingBucket = this.kanbanBuckets.find((x: { flowOrder: number; }) => x.flowOrder == 4);
           this.readyOrderBucket = this.kanbanBuckets.find((x: { flowOrder: number; }) => x.flowOrder == 5);
-        } 
-        else
-        {
+        }
+        else {
           this.newOrderBucket = [];
           this.beingPreparedBucket = [];
           this.preparedBucket = [];
           this.packingBucket = [];
           this.readyOrderBucket = [];
-        }    
+        }
       },
       err => {
         console.log("Dashboard getKanbanboard : ", err)
@@ -218,11 +237,10 @@ export class DashboardComponent implements OnInit {
     if (diffHrs && diffHrs > 0) {
       return (diffHrs == 1 ? diffHrs + "hr" : diffHrs + "hrs");
     }
-    else if(diffMins > 0) {
+    else if (diffMins > 0) {
       return (diffMins == 1 ? diffMins + "min" : diffMins + "mins");
     }
-    else
-    {
+    else {
       return "Just Now";
     }
   }
@@ -232,27 +250,24 @@ export class DashboardComponent implements OnInit {
       return;
     }
     else {
-      this.getOrderDetails(order);       
+      this.getOrderDetails(order);
       $("#orderdetailsdiv" + divIdentifier + index).slideToggle();
     }
   }
 
-  showCancelOrderPopup(order: any)
-  {
+  showCancelOrderPopup(order: any) {
     this.orderIdForCancellation = order.orderId;
     this.orderNumberForCancellation = order.orderNumber;
     this.showOrderCancelPopup = true;
   }
 
-  closeOrderCancelPopup()
-  {
+  closeOrderCancelPopup() {
     this.orderIdForCancellation = '';
     this.orderNumberForCancellation = '';
     this.showOrderCancelPopup = false;
   }
 
-  cancelOrder()
-  {
+  cancelOrder() {
     let input = {
       orderId: this.orderIdForCancellation,
       orderStatus: 7,
@@ -271,16 +286,14 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  getOrderLineTotal(item : any)
-  {
+  getOrderLineTotal(item: any) {
     return (item.orderQuantity * item.itemCharge);
   }
 
-  getOrderDetails(order: any)
-  {
+  getOrderDetails(order: any) {
     this.orderService.getOrderById(order.orderId).subscribe(
       data => {
-        Object.assign(order, {"orderLines": data.orderLines });
+        Object.assign(order, { "orderLines": data.orderLines });
       },
       err => {
         console.log("Dashboard getOrderDetails : ", err)
@@ -290,13 +303,11 @@ export class DashboardComponent implements OnInit {
   }
 
   showMoveToColumn() {
-      $("#moveToColumn").slideToggle();
+    $("#moveToColumn").slideToggle();
   };
 
-  changeOrderStatus(order: any, orderStatus: number)
-  {    
-    if(orderStatus != 7)
-    {
+  changeOrderStatus(order: any, orderStatus: number) {
+    if (orderStatus != 7) {
       let input = {
         orderId: order.orderId,
         orderStatus: orderStatus
@@ -312,10 +323,9 @@ export class DashboardComponent implements OnInit {
         }
       );
     }
-    else
-    {
+    else {
       this.showCancelOrderPopup(order);
-    }    
+    }
   }
 
   closeForm(): void {
@@ -323,7 +333,7 @@ export class DashboardComponent implements OnInit {
     this.items = [];
     this.selectedItems = [];
     this.record = {
-      order: {  
+      order: {
         orderId: null,
         orderType: 2,
         customerName: null,

@@ -27,6 +27,10 @@ export class OrderService {
     return this.http.post<any>(environment.apiEndpoint + '/Order', order);
   }
 
+  updateOrder(order: any): Observable<any> {
+    return this.http.put<any>(environment.apiEndpoint + '/Order', order);
+  }
+
   changeOrderStatus(input: any): Observable<any> {
     return this.http.post<any>(environment.apiEndpoint + '/Order/OrderStatus', input);
   }
