@@ -16,7 +16,8 @@ class KitchenCounter extends React.Component {
                 counterNumber:""
                 },
                      
-             editmode:false
+             editmode:false,
+               currentdate: "",
           };
         this.handleOnAddClick=this.handleOnAddClick.bind(this);  
         this.handleChange = this.handleChange.bind(this);
@@ -25,17 +26,28 @@ class KitchenCounter extends React.Component {
         this.deleteCounter=this.deleteCounter.bind(this); 
         this.handleOnEdit=this.handleOnEdit.bind(this);  
         this.updateCounter=this.updateCounter.bind(this); 
+         this.getNow = this.getNow.bind(this);
    
     }
      componentDidMount() {
         this.props.dispatch(kitchenCounterActions.getAll());
+        this.getNow();
     }
-        handleOnAddClick(){
+    handleOnAddClick(){
         this.setState({
             showform:true,      
         });
         
     }
+      getNow = function () {
+    const today = new Date();
+    const date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" +today.getDate();
+    const time =today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    const dateTime = date + " " + time;
+    this.setState({
+      currentdate: dateTime,
+    });
+  };
       clearForm(){
         this.setState({
              showform:false,
@@ -66,24 +78,28 @@ class KitchenCounter extends React.Component {
         })
     }
      addCounter(){          
-            this.props.dispatch(kitchenCounterActions.addCounter(this.state.kitchen));  
+            this.props.dispatch(kitchenCounterActions.addCounter(this.state.kitchen)).then(()=>{
             this.clearForm();
-              this.props.dispatch(kitchenCounterActions.getAll());          
+            this.props.dispatch(kitchenCounterActions.getAll());       
+            });  
+             
     }
         updateCounter(){             
-         this.props.dispatch(kitchenCounterActions.updateCounter(this.state.kitchen)); 
-         this.clearForm();
-        this.props.dispatch(kitchenCounterActions.getAll());            
+         this.props.dispatch(kitchenCounterActions.updateCounter(this.state.kitchen)).then(()=>{
+        this.clearForm();
+        this.props.dispatch(kitchenCounterActions.getAll());    
+         }); 
+                
         }
     deleteCounter(itemid) {       
-      this.props.dispatch(kitchenCounterActions.deleteCounter(itemid));
-       this.props.dispatch(kitchenCounterActions.getAll());
-       
+      this.props.dispatch(kitchenCounterActions.deleteCounter(itemid)).then(()=>{
+    this.props.dispatch(kitchenCounterActions.getAll());
+      });
     }
   
     render() {
         const { kitchenCounters} = this.props;
-        const {kitchen,editmode,showform}=this.state;
+        const {kitchen,editmode,showform,currentdate}=this.state;
         
         return (
     <div>
@@ -91,7 +107,11 @@ class KitchenCounter extends React.Component {
          <div>
        <Header/>
          <section>
-            <div className="breadcrumb">Kitchen Counter List</div>
+           <div className="breadcrumb">
+                <div>Kitchen Counter List</div>
+                 <div className="current-time">{currentdate}</div>
+                   <div className="clearfix"></div>
+            </div>
             <div className="list-sec">
                 <div className="text-right">
                     <button className="trans-btn">
@@ -108,7 +128,7 @@ class KitchenCounter extends React.Component {
                         </tr>
                                  {kitchenCounters && kitchenCounters.items &&kitchenCounters.items.map((counter, index) =>                                         
                                                     
-                                                    <tr key={counter.counterId}>
+                                                    <tr key={counter.kitchenId}>
                                                         <td className="text-center">{index+1}</td>                                            
                                                         <td>{counter.counterNumber}</td>
                                                     
@@ -120,6 +140,14 @@ class KitchenCounter extends React.Component {
                                                     </tr>
                     
                                                         )}
+                                      {
+                                           
+                                         kitchenCounters && kitchenCounters.items && kitchenCounters.items.length==0 &&
+                                        <tr>
+                                        <td className="text-center" colSpan="6">   <img src="images/norecordfound.png" /></td>
+                                        </tr>
+                                                        
+                                      }                  
                       
                        
                         

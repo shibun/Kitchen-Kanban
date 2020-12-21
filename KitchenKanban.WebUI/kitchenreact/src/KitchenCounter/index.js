@@ -1,1 +1,1 @@
-export * from './KitchenCounter';
+export {KitchenCounter as default} from './KitchenCounter';
