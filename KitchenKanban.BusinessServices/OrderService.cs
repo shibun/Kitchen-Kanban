@@ -32,6 +32,7 @@ namespace KitchenKanban.BusinessServices
         {
             try
             {
+                decimal totalOrderAmount = 0.00M;
                 var documentNumber = _documentSequenceService.GetDocumentNumber(DocumentType.Order);
 
                 var newOrder = new Order()
@@ -52,6 +53,11 @@ namespace KitchenKanban.BusinessServices
 
                 foreach (var item in input.OrderLines)
                 {
+                    var addedItem = _databaseContext.Items.Where(x => x.ItemId == item.ItemId).FirstOrDefault();
+                    if(addedItem != null)
+                    {
+                        totalOrderAmount = totalOrderAmount + (item.OrderQuantity * addedItem.ItemCharge);
+                    }
                     var newOrderLine = new OrderLine()
                     {
                         CreatedBy = _userInfo.UserId,
@@ -63,6 +69,12 @@ namespace KitchenKanban.BusinessServices
                     };
                     _databaseContext.OrderLines.Add(newOrderLine);
                 }
+
+                _databaseContext.SaveChanges();
+
+                var order = _databaseContext.Orders.Include(x => x.OrderLines).Where(x => x.OrderId == newOrder.OrderId).FirstOrDefault();
+                order.OrderAmount = totalOrderAmount;
+                _databaseContext.Orders.Update(order);
 
                 _databaseContext.SaveChanges();
 
@@ -343,6 +355,25 @@ namespace KitchenKanban.BusinessServices
                     }
 
                     _databaseContext.SaveChanges();
+
+                    decimal totalOrderAmount = 0.00M;
+                    var orderLines = _databaseContext.OrderLines.Where(x => x.OrderId == order.OrderId).ToList();
+                    if(orderLines != null && orderLines.Count() > 0)
+                    {
+                        foreach (var item in orderLines)
+                        {
+                            var addedItem = _databaseContext.Items.Where(x => x.ItemId == item.ItemId).FirstOrDefault();
+                            if (addedItem != null)
+                            {
+                                totalOrderAmount = totalOrderAmount + (item.OrderQuantity * addedItem.ItemCharge);
+                            }
+                        }
+
+                        order.OrderAmount = totalOrderAmount;
+                        _databaseContext.Orders.Update(order);
+
+                        _databaseContext.SaveChanges();
+                    }
 
                     return true;
                 }
