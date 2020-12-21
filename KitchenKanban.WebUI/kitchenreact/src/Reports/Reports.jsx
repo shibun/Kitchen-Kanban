@@ -150,16 +150,24 @@ class Reports extends React.Component {
                         </tr>
                        )
                        }
-                    <tr className="custom-btl-row">
+                       {
+                           filtereditems && filtereditems.length==0 &&
+                            <tr>
+                            <td className="text-center" colSpan="8">   <img src="images/norecordfound.png" /></td>
+                             </tr>
+
+                       }
+                       {filtereditems.length>0 &&  <tr className="custom-btl-row">
                         <td colSpan="3">&nbsp;</td>
                         <td className="text-center bold">{totalqty}</td>
                         <td className="text-right bold">Total</td>
                         <td className="text-right bold">{totalamount }</td>
                         <td colSpan="2">&nbsp;</td>
-                    </tr>
-                    </tbody>
+                         </tr>
+
+                       }
                    
-                
+                    </tbody>
                     
                 </table>
             </div>

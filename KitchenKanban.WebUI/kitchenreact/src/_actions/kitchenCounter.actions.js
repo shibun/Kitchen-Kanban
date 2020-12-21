@@ -31,7 +31,7 @@ function getAll() {
  function addCounter(data) {
 
     return (dispatch) => {
-        kitchenCounterService
+      return  kitchenCounterService
           .addCounter(data)
           .then((res) => {
             dispatch({
@@ -52,7 +52,7 @@ function getAll() {
  function updateCounter(data) {
 
     return (dispatch) => {
-        kitchenCounterService
+      return  kitchenCounterService
           .updateCounter(data)
           .then((res) => {
             dispatch({
@@ -71,7 +71,7 @@ function getAll() {
 function deleteCounter(data) {
 
     return (dispatch) => {
-        kitchenCounterService
+      return  kitchenCounterService
           .deleteCounter(data)
           .then((res) => {
             dispatch({
