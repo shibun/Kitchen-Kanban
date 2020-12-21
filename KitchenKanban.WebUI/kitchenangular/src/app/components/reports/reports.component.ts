@@ -88,7 +88,13 @@ export class ReportsComponent implements OnInit {
         if(this.record.order.customerName != null)
         {
           var regex =/\b(\w{2})(\w+)(\w)\b/g;
-          this.record.order.customerName =  (this.record.order.customerName.replace(regex,(_, first, middle, last) => `${first}${'x'.repeat(middle.length)}${last}`));        }
+          this.record.order.customerName =  (this.record.order.customerName.replace(regex,(_, first, middle, last) => `${first}${'x'.repeat(middle.length)}${last}`));        
+        }
+        if(this.record.order.customerContactNumber != null)
+        {
+          var regex =/\b(\w{2})(\w+)(\w)\b/g;
+          this.record.order.customerContactNumber =  (this.record.order.customerContactNumber.replace(regex,(_, first, middle, last) => `${first}${'x'.repeat(middle.length)}${last}`));        
+        }
           this.showPopup = true;
       },
       err => {
