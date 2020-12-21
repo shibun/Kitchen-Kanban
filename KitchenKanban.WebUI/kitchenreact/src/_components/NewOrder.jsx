@@ -304,8 +304,8 @@ class NewOrder extends React.Component {
                                                 <div className="clearfix"></div>
                                             </div>
                                         </td>        
-                                        <td className="text-right bold">{listitem.item.itemCharge }</td>
-                                        <td className="text-right bold">{listitem.item.itemCharge*listitem.orderQuantity }</td>
+                                        <td className="text-right bold">{listitem.item.itemCharge.toFixed(2) }</td>
+                                        <td className="text-right bold">{listitem.item.itemCharge*listitem.orderQuantity.toFixed(2) }</td>
                                         <td className="text-center">
                                                     <button className="trans-btn" ><img src="/images/delete.png" onClick={e=>this.deleteorderline(listitem,index)}/></button>
                                                 </td>
@@ -317,7 +317,7 @@ class NewOrder extends React.Component {
                                         <td colSpan="2" className="text-center bold">Total</td>
                                         <td className="text-center bold">{this.state.totalqty}</td>
                                         <td>&nbsp;</td>
-                                        <td className="text-right bold">{this.state.Order.orderAmount}</td>
+                                        <td className="text-right bold">${this.state.Order.orderAmount.toFixed(2)}</td>
                                          <td>&nbsp;</td>
                                     </tr>
                                     </tbody>

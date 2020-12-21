@@ -229,7 +229,7 @@ class ItemsList extends React.Component {
                                                          
                                                         </td>                                                                                              
                                                         <td >{itemvalue.itemName}</td>
-                                                        <td className="text-right">{itemvalue.itemCharge}</td>
+                                                        <td className="text-right">${itemvalue.itemCharge.toFixed(2)}</td>
                                                     
                                                 <td className="text-center">
                                               <button className="trans-btn">
