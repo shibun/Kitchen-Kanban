@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { itemsListActions,orderActions } from '../_actions';
 import { Header } from '../_components/Header';
+import { MessageSuccess } from '../_components/MessageSuccess';
+import { MessageError } from '../_components/MessageError';
 class NewOrder extends React.Component {
      constructor(props) {
         super(props); 
@@ -42,7 +44,9 @@ class NewOrder extends React.Component {
                 list:[],               
                 totalqty: 0, 
                 showneworderform:false ,
-                editmode:false   
+                editmode:false ,
+                successmsg:false,
+                errormsg:false  
            
         };  
         this.clearForm=this.clearForm.bind(this);  
@@ -54,23 +58,42 @@ class NewOrder extends React.Component {
            this.deleteorderline=this.deleteorderline.bind(this);
            this.totalCalculation=this.totalCalculation.bind(this);
            this.addNewOrder=this.addNewOrder.bind(this);
+           this.updateNewOrder=this.updateNewOrder.bind(this);
      
     
     }
   componentDidMount () 
     {  
-      
+       console.log('mountordertobeedited',this.props.ordertobeedited);
+      if(this.props.ordertobeedited.orderId){
+        this.state.Order=this.props.ordertobeedited,       
+        this.state.list=this.props.ordertobeedited.orderLines,
+        this.state.editmode=true     
+        
+      }
       this.setState({
           showneworderform:this.props.showorderform
       })
        this.props.dispatch(itemsListActions.getAll());
        
     }
-    componentDidUpdate(nextprops,prevprops){
-        
-         //console.log('nextprops child',nextprops);        
-         //console.log('prev child',prevprops.list.length);
-        // console.log('propsi n child',this.state.list.length);       
+        UNSAFE_componentWillReceiveProps(nextProps,prevProps){
+            
+         console.log('nextprops child',nextProps);        
+         console.log('prev child',prevProps);
+         console.log('propsi n child',this.props);  
+            if(this.props.alert!=prevProps.alert){
+                if(this.props.alert.type=='alert-success' )
+            {
+                console.log('alert if',alert);
+                this.state.successmsg=true;
+            }
+            if(this.props.alert.type=='alert-danger' )
+            {
+                console.log('alert if',alert);
+                this.state.errormsg=true;
+            }
+        }     
          
     }
      handleChange(e) {
@@ -109,7 +132,7 @@ class NewOrder extends React.Component {
             
     }
     handleitemdisplay(evalue){      
-                    if(this.state.list.length==0){                        
+                    if(this.state.list &&this.state.list.length==0){                        
                             this.state.list.push(this.state.OrderLine); 
                                this.setState({
                         list: [...this.state.list]},()=>{  this.totalCalculation();});                          
@@ -207,32 +230,60 @@ class NewOrder extends React.Component {
                     OrderLines:[]
                 },
                 list:[],               
-                totalqty: 0
+                totalqty: 0,
+                successmsg:false,
+                 errormsg:false
             
             
         })   
        
     }
+     handler = (val) => {
+            this.setState({
+            successmsg: val,
+            errormsg:val
+                })
+     
+        } 
     addNewOrder(){
         this.state.Orderdetails.Order=this.state.Order;
         this.state.Orderdetails.OrderLines=this.state.list;
-         this.props.dispatch(orderActions.addNewOrder(this.state.Orderdetails));
-         this.props.handler(false);
+        if(this.state.Orderdetails.OrderLines.length>0)
+        {
+        this.props.dispatch(orderActions.addNewOrder(this.state.Orderdetails));
+        this.props.handler(false);
          this.clearForm();
+        }
+        else{
+            alert("please Add Atleast one Item");
+        }
+       
+    }
+        updateNewOrder(){
+        this.state.Orderdetails.Order=this.state.Order;
+        this.state.Orderdetails.OrderLines=this.state.list;
+        if(this.state.Orderdetails.OrderLines.length>0){
+         this.props.dispatch(orderActions.updateNewOrder(this.state.Orderdetails));
+       this.props.handler(false);
+        this.clearForm();
+        }
+        else{
+              alert("please Add Atleast one Item");
+        }
     }
        
 
     render() {
-              const { showorderform,items,handler } = this.props;
-        const {Order,OrderLine,list,totalamount,totalqty,showneworderform,editmode}=this.state;
-       
+              const { showorderform,items,handler,alert,createdorder,ordertobeedited } = this.props;
+        const {Order,OrderLine,list,totalamount,totalqty,showneworderform,editmode,successmsg,errormsg}=this.state;
+      
         return (
           <div>
     {showneworderform && <div >
         <div className="add-overlay" >
             <div className="add-pop-overlay">
                 <div className="modal-header">
-                    <button type="button" className="close" data-dismiss="modal" onClick={this.clearForm}>×</button>
+                    <button type="button" className="close" data-dismiss="modal" onClick={()=>{this.props.handler(false),this.clearForm}}>×</button>
                     <h4 className="modal-title">New Order</h4>
                 </div>
                 <div className="modal-body">
@@ -317,7 +368,7 @@ class NewOrder extends React.Component {
                                         <td colSpan="2" className="text-center bold">Total</td>
                                         <td className="text-center bold">{this.state.totalqty}</td>
                                         <td>&nbsp;</td>
-                                        <td className="text-right bold">${this.state.Order.orderAmount.toFixed(2)}</td>
+                                        <td className="text-right bold">${this.state.Order.orderAmount?this.state.Order.orderAmount.toFixed(2):this.state.Order.orderAmount}</td>
                                          <td>&nbsp;</td>
                                     </tr>
                                     </tbody>
@@ -329,12 +380,18 @@ class NewOrder extends React.Component {
                 <div className="modal-footer">
                     <button type="button" className="btn btn-default left-btn" data-dismiss="modal" onClick={()=>{this.props.handler(false),this.clearForm}}>Cancel</button>
                    {!editmode && <button  type="button" className="btn btn-active" data-dismiss="modal" onClick={this.addNewOrder}>Add</button> } 
-                    {editmode &&<button  type="button" className="btn btn-active" data-dismiss="modal" >Update</button> }
+                    {editmode &&<button  type="button" className="btn btn-active" data-dismiss="modal" onClick={this.updateNewOrder}>Update</button> }
                 </div>
             </div>
         </div>
       
     </div>}
+     {this.state.successmsg &&
+               <div className ="tkt-desc"> <MessageSuccess  handler = {this.handler} showsuccessform={this.state.successmsg}/></div>
+            }
+               {this.state.errormsg &&
+               <div className ="tkt-desc"> <MessageError  handler = {this.handler} msg={alert.message.data}showerrorform={this.state.errormsg}/></div>
+            }
         
       </div>
         );
@@ -342,9 +399,8 @@ class NewOrder extends React.Component {
 }
 
 function mapStateToProps(state) {
-    const { items } = state;
-    return {items
-         
+    const { items,alert,createdorder } = state;
+    return {items,alert,createdorder     
     };
 }
 

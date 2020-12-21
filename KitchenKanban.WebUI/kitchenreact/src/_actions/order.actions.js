@@ -6,7 +6,8 @@ import { history } from '../_helpers';
 export const orderActions = {
    addNewOrder,
    getAllOrders,
-   getOrderById
+   getOrderById,
+   updateNewOrder
 };
 
   function addNewOrder(data) {
@@ -18,12 +19,14 @@ export const orderActions = {
             type: orderConstants.CREATENEWORDER_SUCCESS,
             payload: res.data,
           });
+            dispatch(alertActions.success(res))
         })
         .catch((error) => {
           dispatch({
             type: orderConstants.CREATENEWORDER_FAILURE,
             payload: error,
           });
+           dispatch(alertActions.error(error.response))
         });
     };
   }
@@ -60,6 +63,26 @@ export const orderActions = {
             type: orderConstants.GETORDERBYID_FAILURE,
             payload: error,
           });
+        });
+    };
+  }
+   function updateNewOrder(data) {
+    return (dispatch) => {
+      return orderService
+        .updateNewOrder(data)
+        .then((res) => {
+          dispatch({
+            type: orderConstants.UPDATE_NEWORDER_SUCCESS,
+            payload: res.data,
+          });
+            dispatch(alertActions.success(res))
+        })
+        .catch((error) => {
+          dispatch({
+            type: orderConstants.UPDATE_NEWORDER_FAILURE,
+            payload: error,
+          });
+           dispatch(alertActions.error(error.response))
         });
     };
   }

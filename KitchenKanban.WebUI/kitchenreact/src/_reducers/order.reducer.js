@@ -37,4 +37,21 @@ export function getorder(state = {}, action) {
       return state
   }
 }
+export function createdorder(state = {}, action) {
+  switch (action.type) {
+  
+    case orderConstants.CREATENEWORDER_SUCCESS:
+      return {
+        item: action.payload
+      };
+    case orderConstants.CREATENEWORDER_FAILURE:
+      return { 
+        error: action.payload
+      };
+
+  
+    default:
+      return state
+  }
+}
 

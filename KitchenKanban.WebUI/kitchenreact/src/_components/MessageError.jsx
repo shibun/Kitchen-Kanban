@@ -25,7 +25,7 @@ class MessageError extends React.Component {
     }
     componentDidUpdate(nextprops,prevprops){         
         setTimeout(() =>this.props.handler(false) , 
-            2000);
+            1000);
     }
     
     render() {

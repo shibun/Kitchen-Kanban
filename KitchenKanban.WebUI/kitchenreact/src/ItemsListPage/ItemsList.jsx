@@ -72,7 +72,8 @@ class ItemsList extends React.Component {
                file:'',
              editmode:false,
              successmsg:false,
-             errormsg:false
+             errormsg:false,
+             validationerrormsg:false
         })
     }
      handleChange(e) {
@@ -88,6 +89,8 @@ class ItemsList extends React.Component {
     }
     addItem(){
          const { item } = this.state;
+          if (item.itemName && item.itemCharge  ) {
+
          this.setState({
             item: {
                 ...item,
@@ -95,19 +98,33 @@ class ItemsList extends React.Component {
             }
         },()=>{
     this.props.dispatch(itemsListActions.addItem(this.state.item));
-        });    
+        }); 
+          }
+          else{
+              this.setState({
+              validationerrormsg:true
+            })
+          }   
           
     }
         updateItem(){
               const { item } = this.state;
-         this.setState({
-            item: {
-                ...item,
-               itemCharge:parseFloat(this.state.item.itemCharge)
-            }
-        },()=>{
-         this.props.dispatch(itemsListActions.updateItem(this.state.item));
-        });          
+               if (item.itemName && item.itemCharge  ) {
+                this.setState({
+                    item: {
+                        ...item,
+                    itemCharge:parseFloat(this.state.item.itemCharge)
+                    }
+                },()=>{
+                this.props.dispatch(itemsListActions.updateItem(this.state.item));
+                }); 
+               }
+               else{
+                      this.setState({
+                         validationerrormsg:true
+                         })
+               }
+
         }
   
      catchFile(e) {
@@ -195,7 +212,8 @@ class ItemsList extends React.Component {
       handler = (val) => {
             this.setState({
             successmsg: val,
-            errormsg:val
+            errormsg:val,
+            validationerrormsg:val
                 })
      
         } 
@@ -214,7 +232,7 @@ class ItemsList extends React.Component {
 
     render() {
         const { items,createditem,alert} = this.props;
-        let {item,showform,file,imgSrc,editmode,currentdate,successmsg,errormsg}=this.state;   
+        let {item,showform,file,imgSrc,editmode,currentdate,successmsg,errormsg,validationerrormsg}=this.state;   
      
       
         return (
@@ -351,6 +369,10 @@ class ItemsList extends React.Component {
                {this.state.errormsg &&
                <div className ="tkt-desc"> <MessageError  handler = {this.handler} msg={alert.message.data}showerrorform={this.state.errormsg}/></div>
             }
+            {this.state.validationerrormsg &&
+               <div className ="tkt-desc"> <MessageError  handler = {this.handler} msg={'Please fill mandatory fields'}showerrorform={this.state.validationerrormsg}/></div>
+            }
+           
            
     
     </div>

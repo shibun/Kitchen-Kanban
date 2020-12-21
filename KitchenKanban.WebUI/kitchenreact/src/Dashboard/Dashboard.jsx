@@ -13,7 +13,8 @@ class DashboardPage extends React.Component {
         super(props); 
         this.state={
             currentdate:moment(new Date()).format("DD/MM/YYYY hh:mm a"),
-            showform:false,          
+            showform:false, 
+            ordertobeedited:{},         
             neworders: [],
             beingpreparedorders: [],
             preparedorders: [],
@@ -47,7 +48,8 @@ class DashboardPage extends React.Component {
 
   handleOnAddClick(){
         this.setState({
-            showform:true,      
+            showform:true,
+            ordertobeedited:{}      
         });        
     }  
      handler = (val) => {
@@ -160,15 +162,19 @@ class DashboardPage extends React.Component {
     this.changeOrderStatus(orderid,statusid,reason);
 }
 
-editOrder(orderid) {
-  // this.editorderid = orderid;
+editOrder(order) {
+  // this.ordertobeedited = orderid;
   // this.isAddOrder = true;
-  console.log("editorder", orderid);
+  this.setState({
+    showform:true,
+    ordertobeedited:order
+  })
+  //console.log("editorder", orderid);
 }
 
     render() {
       const { kanbanorders,orderdetails } = this.props;
-      const {neworders,beingpreparedorders,preparedorders,packingorders,readyorders,deliveredorders,showform,currentdate}=this.state;
+      const {neworders,beingpreparedorders,preparedorders,packingorders,readyorders,deliveredorders,showform,currentdate,ordertobeedited}=this.state;
         return (
           <div>
 
@@ -268,7 +274,7 @@ editOrder(orderid) {
                           ))}
                         </ul>
                       </div>
-                      <button onClick={e=>this.editOrder(order.orderId)} className="edit-order-btn tkt-left-btn">
+                      <button onClick={e=>this.editOrder(order)} className="edit-order-btn tkt-left-btn">
                       Edit Order
                     </button>
                     <button className="cancel-order-btn" onClick={e=>this.showWarningCancel(order.orderId, 7, 'Incorrect order')}>
@@ -647,7 +653,7 @@ editOrder(orderid) {
       </div>
       </div>
          </section>
-         {this.state.showform && <div className ="tkt-desc"><NewOrder  handler = {this.handler} showorderform={this.state.showform}></NewOrder></div>}
+         {this.state.showform && <div className ="tkt-desc"><NewOrder  handler = {this.handler} showorderform={this.state.showform} ordertobeedited={ordertobeedited}></NewOrder></div>}
       
       </div>
         );

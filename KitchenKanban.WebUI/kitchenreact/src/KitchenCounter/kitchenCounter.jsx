@@ -19,7 +19,8 @@ class KitchenCounter extends React.Component {
              editmode:false,
             currentdate: "",
              successmsg:false,
-             errormsg:false
+             errormsg:false,
+             validationerrormsg:false
           };
         this.handleOnAddClick=this.handleOnAddClick.bind(this);  
         this.handleChange = this.handleChange.bind(this);
@@ -60,7 +61,8 @@ class KitchenCounter extends React.Component {
             
              editmode:false,
               successmsg:false,
-             errormsg:false
+             errormsg:false,
+             validationerrormsg:false
         })
     }
      handleChange(e) {
@@ -81,18 +83,33 @@ class KitchenCounter extends React.Component {
             editmode:true
         })
     }
-     addCounter(){          
+     addCounter(){   
+        
+          if (this.state.kitchen.counterNumber) {       
             this.props.dispatch(kitchenCounterActions.addCounter(this.state.kitchen)).then(()=>{
             this.clearForm();
             this.props.dispatch(kitchenCounterActions.getAll());       
             });  
+          }
+          else{
+               this.setState({
+              validationerrormsg:true
+            })
+          }
              
     }
-        updateCounter(){             
-         this.props.dispatch(kitchenCounterActions.updateCounter(this.state.kitchen)).then(()=>{
-        this.clearForm();
-        this.props.dispatch(kitchenCounterActions.getAll());    
-         }); 
+        updateCounter(){   
+             if (this.state.kitchen.counterNumber) {            
+                this.props.dispatch(kitchenCounterActions.updateCounter(this.state.kitchen)).then(()=>{
+                this.clearForm();
+                this.props.dispatch(kitchenCounterActions.getAll());    
+                }); 
+             }
+             else{
+                   this.setState({
+              validationerrormsg:true
+                     })
+             }
                 
         }
         deleteCounter(itemid) {       
@@ -103,7 +120,8 @@ class KitchenCounter extends React.Component {
         handler = (val) => {
             this.setState({
             successmsg: val,
-            errormsg:val
+            errormsg:val,
+            validationerrormsg:val
                 })
         } 
         UNSAFE_componentWillReceiveProps(nextProps,prevProps){
@@ -123,7 +141,7 @@ class KitchenCounter extends React.Component {
   
     render() {
         const { kitchenCounters,alert} = this.props;
-        const {kitchen,editmode,showform,currentdate,successmsg,errormsg}=this.state;
+        const {kitchen,editmode,showform,currentdate,successmsg,errormsg,validationerrormsg}=this.state;
         
         return (
     <div>
@@ -226,6 +244,9 @@ class KitchenCounter extends React.Component {
             }
                {this.state.errormsg &&
                <div className ="tkt-desc"> <MessageError  handler = {this.handler} msg={alert.message.data}showerrorform={this.state.errormsg}/></div>
+            }
+             {this.state.validationerrormsg &&
+               <div className ="tkt-desc"> <MessageError  handler = {this.handler} msg={'Please fill mandatory fields'}showerrorform={this.state.validationerrormsg}/></div>
             }
   
 
