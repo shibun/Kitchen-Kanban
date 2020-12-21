@@ -19,7 +19,8 @@ class ItemsList extends React.Component {
             },
              imgSrc:'',
              file:'',
-             editmode:false
+             editmode:false,
+             currentdate: "",
         };
         
         this.handleOnAddClick=this.handleOnAddClick.bind(this);  
@@ -30,11 +31,13 @@ class ItemsList extends React.Component {
         this.deleteItem=this.deleteItem.bind(this); 
         this.handleOnEdit=this.handleOnEdit.bind(this);  
         this.updateItem=this.updateItem.bind(this); 
+        this.getNow = this.getNow.bind(this);
 
    
     }
      componentDidMount() {
         this.props.dispatch(itemsListActions.getAll());
+            this.getNow();
     }
     handleOnAddClick(){
         this.setState({
@@ -42,6 +45,15 @@ class ItemsList extends React.Component {
         });
         
     }
+          getNow = function () {
+    const today = new Date();
+    const date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" +today.getDate();
+    const time =today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    const dateTime = date + " " + time;
+    this.setState({
+      currentdate: dateTime,
+    });
+  };
       clearForm(){
         this.setState({
              showform:false,
@@ -112,14 +124,12 @@ class ItemsList extends React.Component {
     }
     UNSAFE_componentWillReceiveProps(nextProps){
            
-         if (nextProps.createditem.itemId !== this.props.createditem.itemId) {
-           console.log("selected file if: " + this.state.file);
-            if (this.state.file) {
-                console.log("selected file : " + this.state.file);
-                this.props.dispatch(itemsListActions.uploadImage(this.state.file, nextProps.createditem.itemId, 2));
+         if (nextProps.createditem.itemId !== this.props.createditem.itemId) {          
+            if (this.state.file) {               
+                this.props.dispatch(itemsListActions.uploadImage(this.state.file, nextProps.createditem.itemId, 2)).then(()=>{
                         this.clearForm();
-                        this.props.dispatch(itemsListActions.getAll());                  
-    
+                        this.props.dispatch(itemsListActions.getAll());   
+                });
             }
             else
             {
@@ -131,29 +141,32 @@ class ItemsList extends React.Component {
                if (this.state.editmode) {                 
                     if (this.state.file) {                       
                         if (this.state.item.imageId!=null) {                             
-                        this.props.dispatch(itemsListActions.updateImage(this.state.file,this.state.item.imageId));
+                        this.props.dispatch(itemsListActions.updateImage(this.state.file,this.state.item.imageId)).then(()=>{
                         this.clearForm();
                         this.props.dispatch(itemsListActions.getAll());
+                        });
+                        
                         }
                       
                          else {                             
-                            this.props.dispatch(itemsListActions.uploadImage(this.state.file, this.state.item.itemId, 2));
-                        this.clearForm();
-                        this.props.dispatch(itemsListActions.getAll());
+                            this.props.dispatch(itemsListActions.uploadImage(this.state.file, this.state.item.itemId, 2)).then(()=>{
+                                 this.clearForm();
+                                this.props.dispatch(itemsListActions.getAll());
+                            });
+                       
                                 }                    
                     }
                      this.clearForm();
-                        this.props.dispatch(itemsListActions.getAll());
-
-           
+                    this.props.dispatch(itemsListActions.getAll());
                  };
         
     }
     deleteItem(itemid) {
-       
-      this.props.dispatch(itemsListActions.deleteItem(itemid));
-          this.clearForm();
+      this.props.dispatch(itemsListActions.deleteItem(itemid)).then(()=>{
+        this.clearForm();
          this.props.dispatch(itemsListActions.getAll());
+      });
+        
     }
     handleOnEdit(editeditem){
         this.setState({
@@ -172,13 +185,17 @@ class ItemsList extends React.Component {
 
     render() {
         const { items,createditem} = this.props;
-        let {item,showform,file,imgSrc,editmode}=this.state;    
+        let {item,showform,file,imgSrc,editmode,currentdate}=this.state;    
         return (
       <div>   
             <div>
                     <Header />
                     <section>
-                        <div className="breadcrumb">Item List</div>
+                    <div className="breadcrumb">
+                        <div>Item List</div>
+                        <div className="current-time">{currentdate}</div>
+                        <div className="clearfix"></div>
+                    </div>
                         <div className="list-sec">
                             <div className="text-right">
                                 <button className="trans-btn">
@@ -212,7 +229,7 @@ class ItemsList extends React.Component {
                                                          
                                                         </td>                                                                                              
                                                         <td >{itemvalue.itemName}</td>
-                                                        <td className="text-right">{itemvalue.itemCharge}</td>
+                                                        <td className="text-right">${itemvalue.itemCharge.toFixed(2)}</td>
                                                     
                                                 <td className="text-center">
                                               <button className="trans-btn">
@@ -226,6 +243,12 @@ class ItemsList extends React.Component {
                                                     </tr>
                     
                                                         )}
+                                                        {
+                                                            items.items && items.items.length==0 &&
+                                                            <tr>
+                                                              <td className="text-center" colSpan="6">   <img src="images/norecordfound.png" /></td>
+                                                            </tr>
+                                                        }
                                 </tbody>
                             </table>
                         </div>

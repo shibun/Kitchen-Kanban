@@ -34,7 +34,7 @@ function getAll() {
 
 function uploadImage(file, ReferenceId, ImageType) {
       return (dispatch) => {
-        mediaService
+        return mediaService
           .uploadImage(file, ReferenceId, ImageType)
           .then((res) => {
             dispatch({
@@ -53,7 +53,7 @@ function uploadImage(file, ReferenceId, ImageType) {
 
 function updateImage(file, ReferenceId) {
       return (dispatch) => {
-        mediaService
+       return mediaService
           .updateImage(file, ReferenceId)
           .then((res) => {
             dispatch({
@@ -74,7 +74,7 @@ function updateImage(file, ReferenceId) {
   function addItem(data) {
 
     return (dispatch) => {
-        itemsListService
+      return  itemsListService
           .addItem(data)
           .then((res) => {
             dispatch({
@@ -95,7 +95,7 @@ function updateImage(file, ReferenceId) {
  function updateItem(data) {
 
     return (dispatch) => {
-        itemsListService
+       return itemsListService
           .updateItem(data)
           .then((res) => {
             dispatch({
@@ -118,7 +118,7 @@ function updateImage(file, ReferenceId) {
 function deleteItem(data) {
 
     return (dispatch) => {
-        itemsListService
+       return itemsListService
           .deleteItem(data)
           .then((res) => {
             dispatch({

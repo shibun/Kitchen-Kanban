@@ -8,7 +8,7 @@
                         &nbsp;
                     </div>
                     <div class="col-xs-6 text-center current-date">
-                        07/12/2020
+                        {{ currentDate | date: 'MM/dd/YYYY'}}
                     </div>
                     <div class="col-xs-3">
                         <input type="search" placeholder="Search Order" class="form-control" />
@@ -26,66 +26,30 @@
                     <th class="text-center">Order Status</th>
                     <th class="text-center">Detail</th>
                 </tr>
-                <tr class="custom-btl-row">
-                    <td class="text-center">01</td>
-                    <td>120820-001</td>
-                    <td>09.20 am</td>
-                    <td class="text-center">03</td>
-                    <td>Pramod Karkera</td>
-                    <td class="text-right">$150.00</td>
-                    <td class="text-center">Delivered</td>
+                <tr class="custom-btl-row" *ngFor='let reportData of orders; index as i;'>
+                    <td class="text-center">{{i + 1}}</td>
+                    <td>{{reportData.orderNumber}}</td>
+                    <td>{{reportData.orderDate | date: 'shortTime'}}</td>
+                    <td class="text-center">{{reportData.noOfItemsInOrder}}</td>
+                    <td>{{reportData.orderTakenByUserName}}</td>
+                    <td class="text-right">{{ reportData.orderAmount | currency:'USD':true:'1.2-2' }}</td>
+                    <td class="text-center" [ngClass]="{'cancelled-order-status': reportData.orderStatus === 7}">{{getOrderStatus(reportData.orderStatus)}}</td>
                     <td class="text-center">
                         <button class="trans-btn" data-toggle="modal" data-target="#reportDetail"><i
                                 class="glyphicon glyphicon-exclamation-sign"></i></button>
                     </td>
-                </tr>
-                <tr class="custom-btl-row">
-                    <td class="text-center">02</td>
-                    <td>120820-002</td>
-                    <td>10.13 am</td>
-                    <td class="text-center">03</td>
-                    <td>Pramod Karkera</td>
-                    <td class="text-right">$150.00</td>
-                    <td class="text-center cancelled-order-status">Cancelled</td>
-                    <td class="text-center">
-                        <button class="trans-btn" data-toggle="modal" data-target="#reportDetail"><i
-                                class="glyphicon glyphicon-exclamation-sign"></i></button>
-                    </td>
-                </tr>
-                <tr class="custom-btl-row">
-                    <td class="text-center">03</td>
-                    <td>120820-003</td>
-                    <td>10.22 am</td>
-                    <td class="text-center">03</td>
-                    <td>Pramod Karkera</td>
-                    <td class="text-right">$150.00</td>
-                    <td class="text-center">Preparing</td>
-                    <td class="text-center">
-                        <button class="trans-btn" data-toggle="modal" data-target="#reportDetail"><i
-                                class="glyphicon glyphicon-exclamation-sign"></i></button>
-                    </td>
-                </tr>
-                <tr class="custom-btl-row">
-                    <td class="text-center">04</td>
-                    <td>120820-004</td>
-                    <td>11.15 am</td>
-                    <td class="text-center">03</td>
-                    <td>Pramod Karkera</td>
-                    <td class="text-right">$150.00</td>
-                    <td class="text-center">Packing</td>
-                    <td class="text-center">
-                        <button class="trans-btn" data-toggle="modal" data-target="#reportDetail"><i
-                                class="glyphicon glyphicon-exclamation-sign"></i></button>
-                    </td>
-                </tr>
-                <tr class="custom-btl-row">
-                    <td class="text-center bold">04</td>
+                </tr>                
+                <tr class="custom-btl-row" [hidden]="recordNotFound">
+                    <td class="text-center bold">&nbsp;</td>
                     <td colspan="2">&nbsp;</td>
-                    <td class="text-center bold">12</td>
+                    <td class="text-center bold">{{ getTotalDishesCount() }}</td>
                     <td class="text-right bold">Total</td>
-                    <td class="text-right bold">$600.00</td>
+                    <td class="text-right bold">{{ getTotalAmount() | currency:'USD':true:'1.2-2' }}</td>
                     <td colspan="2">&nbsp;</td>
                 </tr>
+                <tr [hidden]="!recordNotFound">
+                    <td class="text-center" colspan="8">   <img src="../../assets/images/norecordfound.png" /></td>
+                   </tr>
             </table>
         </div>
     </section>

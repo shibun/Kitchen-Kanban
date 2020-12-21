@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import {orderActions  } from "../_actions";
+import moment from 'moment';
 
 class Reports extends React.Component {
   constructor(props) {
@@ -130,10 +131,10 @@ class Reports extends React.Component {
                         <tr key={order.orderId}>
                         <td className="text-center">{index+1}</td>
                         <td>{order.orderNumber}</td>
-                        <td>{order.orderDate }</td>
+                        <td>{moment(order.orderDate).format('hh:mm a') }</td>
                         <td className="text-center">{order.noOfItemsInOrder}</td>
                         <td>{order.orderTakenByUserName}</td>
-                        <td className="text-right">{order.orderAmount  }</td>
+                        <td className="text-right">${order.orderAmount.toFixed(2)  }</td>
                         <td className="text-center">
                         { order.orderStatus==1 && <span >NewOrder</span>}
                         {order.orderStatus==2 &&  <span>BeingPrepared</span>}
@@ -150,16 +151,24 @@ class Reports extends React.Component {
                         </tr>
                        )
                        }
-                    <tr className="custom-btl-row">
+                       {
+                           filtereditems && filtereditems.length==0 &&
+                            <tr>
+                            <td className="text-center" colSpan="8">   <img src="images/norecordfound.png" /></td>
+                             </tr>
+
+                       }
+                       {filtereditems.length>0 &&  <tr className="custom-btl-row">
                         <td colSpan="3">&nbsp;</td>
                         <td className="text-center bold">{totalqty}</td>
                         <td className="text-right bold">Total</td>
-                        <td className="text-right bold">{totalamount }</td>
+                        <td className="text-right bold">${totalamount.toFixed(2) }</td>
                         <td colSpan="2">&nbsp;</td>
-                    </tr>
-                    </tbody>
+                         </tr>
+
+                       }
                    
-                
+                    </tbody>
                     
                 </table>
             </div>
@@ -192,14 +201,14 @@ class Reports extends React.Component {
    
                             </td>
                             <th>Ordered Date</th>
-                            <td>{getorder.item.order.orderDate }</td>
+                            <td>{moment(getorder.item.order.orderDate).format('DD/MM/YYYY hh:mm a') }</td>
                         </tr>
                              <tr>
                             <th>Ordered Time</th>
-                            <td>{getorder.item.order.orderDate}</td>
+                            <td>{moment(getorder.item.order.orderDate).format('DD/MM/YYYY hh:mm a')}</td>
                             <th>Delivered Time</th>
                             <td>
-                            <span >{getorder.item.order.orderDeliveryDate}</span></td>
+                            <span >{moment(getorder.item.order.orderDeliveryDate).format('DD/MM/YYYY hh:mm a')}</span></td>
                         </tr>
                         <tr>
                             <th>Ordered Taken By</th>
@@ -230,14 +239,14 @@ class Reports extends React.Component {
                       <td className="text-center">{index+1}</td>
                             <td>{data.itemName}</td>
                             <td className="text-center">{data.orderQuantity}</td>
-                            <td className="text-right">{(data.orderQuantity)*(data.itemCharge)}</td>
+                            <td className="text-right">${((data.orderQuantity)*(data.itemCharge)).toFixed(2)}</td>
                         </tr>)                      
                      }
                       <tr>
                             <td className="bold ">&nbsp;</td>
                             <td className="bold">&nbsp;</td>
                             <td className="bold text-center">{totalitemcount}</td>
-                            <td className="bold text-right">{totalitemamount} </td>
+                            <td className="bold text-right">${totalitemamount.toFixed(2)} </td>
                         </tr>
                       
                        
