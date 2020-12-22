@@ -118,6 +118,7 @@ class KitchenCounter extends React.Component {
         });
         }
         handler = (val) => {
+            console.log('msgchildhandler',val);
             this.setState({
             successmsg: val,
             errormsg:val,
@@ -130,6 +131,7 @@ class KitchenCounter extends React.Component {
             {
                 console.log('alert if',alert);
                 this.state.successmsg=true;
+                
             }
             if(this.props.alert.type=='alert-danger' )
             {

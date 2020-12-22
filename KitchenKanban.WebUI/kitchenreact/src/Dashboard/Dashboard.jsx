@@ -11,6 +11,7 @@ import moment from 'moment';
 class DashboardPage extends React.Component {
  constructor(props) {
         super(props); 
+        this._isMounted = false;
         this.state={
             currentdate:moment(new Date()).format("DD/MM/YYYY hh:mm a"),
             showform:false, 
@@ -43,8 +44,13 @@ class DashboardPage extends React.Component {
       }
    
   componentDidMount () {   
-        this.props.getKanboard();
+    this._isMounted = true;
+    this._isMounted && this.props.getKanboard();
     }
+
+    componentWillUnmount() {
+      this._isMounted = false;
+   }
 
   handleOnAddClick(){
         this.setState({
@@ -52,7 +58,7 @@ class DashboardPage extends React.Component {
             ordertobeedited:{}      
         });        
     }  
-     handler = (val) => {
+  handler = (val) => {
     this.setState({
       showform: val
     })
@@ -653,7 +659,7 @@ editOrder(order) {
       </div>
       </div>
          </section>
-         {this.state.showform && <div className ="tkt-desc"><NewOrder  handler = {this.handler} showorderform={this.state.showform} ordertobeedited={ordertobeedited}></NewOrder></div>}
+         {this.state.showform && <div className ="tkt-desc"><NewOrder   handler = {this.handler} showorderform={this.state.showform} ordertobeedited={ordertobeedited}></NewOrder></div>}
       
       </div>
         );

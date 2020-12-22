@@ -19,7 +19,7 @@ export const orderActions = {
             type: orderConstants.CREATENEWORDER_SUCCESS,
             payload: res.data,
           });
-            dispatch(alertActions.success(res))
+         //dispatch(alertActions.success(res))
         })
         .catch((error) => {
           dispatch({
@@ -75,7 +75,7 @@ export const orderActions = {
             type: orderConstants.UPDATE_NEWORDER_SUCCESS,
             payload: res.data,
           });
-            dispatch(alertActions.success(res))
+           // dispatch(alertActions.success(res))
         })
         .catch((error) => {
           dispatch({
