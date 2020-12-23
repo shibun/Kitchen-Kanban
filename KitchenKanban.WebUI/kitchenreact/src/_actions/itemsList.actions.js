@@ -41,12 +41,14 @@ function uploadImage(file, ReferenceId, ImageType) {
               type: itemsListConstants.IMAGE_CREATE_SUCCESS,
               payload: res.data,
             });
+            dispatch(alertActions.success(res))
           })
           .catch((error) => {
             dispatch({
               type:itemsListConstants.IMAGE_CREATE_FAILURE,
               payload: error,
             });
+            dispatch(alertActions.error(error.response))
           });
         }
 }
@@ -60,12 +62,14 @@ function updateImage(file, ReferenceId) {
               type: itemsListConstants.IMAGE_UPDATE_SUCCESS,
               payload: res.data,
             });
+            dispatch(alertActions.success(res))
           })
           .catch((error) => {
             dispatch({
               type:itemsListConstants.IMAGE_UPDATE_FAILURE,
               payload: error,
             });
+            dispatch(alertActions.error(error.response))
           });
         }
 
@@ -81,12 +85,14 @@ function updateImage(file, ReferenceId) {
               type: itemsListConstants.CREATE_SUCCESS,
               payload: res.data,
             });
+             dispatch(alertActions.success(res))
           })
           .catch((error) => {
             dispatch({
               type:itemsListConstants.CREATE_FAILURE,
               payload: error,
             });
+              dispatch(alertActions.error(error.response))
           });
         }
       };
@@ -102,12 +108,15 @@ function updateImage(file, ReferenceId) {
               type: itemsListConstants.UPDATE_SUCCESS,
               payload: res.data,
             });
+             dispatch(alertActions.success(res))
+            
           })
           .catch((error) => {
             dispatch({
               type:itemsListConstants.UPDATE_FAILURE,
               payload: error,
             });
+            dispatch(alertActions.error(error.response))
           });
         }
       };
@@ -125,12 +134,14 @@ function deleteItem(data) {
               type: itemsListConstants.DELETE_SUCCESS,
               payload: res.data,
             });
+            dispatch(alertActions.success(res))
           })
           .catch((error) => {
             dispatch({
               type:itemsListConstants.DELETE_FAILURE,
-              payload: error,
+              payload: error,              
             });
+             dispatch(alertActions.error(error.response))
           });
         }
       };

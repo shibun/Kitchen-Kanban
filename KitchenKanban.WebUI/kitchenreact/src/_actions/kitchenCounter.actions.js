@@ -1,6 +1,6 @@
 import { kitchenCounterConstants } from '../_constants';
 import { kitchenCounterService } from '../_services';
-//import { alertActions } from './';
+import { alertActions } from './';
 //import { history } from '../_helpers';
 
 export const kitchenCounterActions = {   
@@ -19,6 +19,7 @@ function getAll() {
               type: kitchenCounterConstants.GETALL_SUCCESS,
               payload: res.data,
             });
+            
           })
           .catch((error) => {
             dispatch({
@@ -38,12 +39,14 @@ function getAll() {
               type: kitchenCounterConstants.CREATE_SUCCESS,
               payload: res.data,
             });
+             dispatch(alertActions.success(res))
           })
           .catch((error) => {
             dispatch({
               type:kitchenCounterConstants.CREATE_FAILURE,
               payload: error,
             });
+            dispatch(alertActions.error(error.response))
           });
         }
       };
@@ -59,12 +62,14 @@ function getAll() {
               type: kitchenCounterConstants.UPDATE_SUCCESS,
               payload: res.data,
             });
+             dispatch(alertActions.success(res))
           })
           .catch((error) => {
             dispatch({
               type:kitchenCounterConstants.UPDATE_FAILURE,
               payload: error,
             });
+            dispatch(alertActions.error(error.response))
           });
         }
       };
@@ -78,12 +83,14 @@ function deleteCounter(data) {
               type: kitchenCounterConstants.DELETE_SUCCESS,
               payload: res.data,
             });
+             dispatch(alertActions.success(res))
           })
           .catch((error) => {
             dispatch({
               type:kitchenCounterConstants.DELETE_FAILURE,
               payload: error,
             });
+            dispatch(alertActions.error(error.response))
           });
         }
       };

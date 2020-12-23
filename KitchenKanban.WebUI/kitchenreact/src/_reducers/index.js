@@ -5,7 +5,7 @@ import { users,createduser } from './users.reducer';
 import { alert } from './alert.reducer';
 import {items,createditem} from './itemsList.reducer';
 import {kitchenCounters} from './kitchenCounter.reducer';
-import {orders,getorder} from './order.reducer';
+import {orders,getorder,createdorder} from './order.reducer';
 import {kanbanorders,orderdetails} from './dashboard.reducer';
 
 const rootReducer = combineReducers({
@@ -13,8 +13,8 @@ const rootReducer = combineReducers({
   users,createduser,
   alert,
   items,createditem,
-  kitchenCounters,getorder,
-  orders,
+  kitchenCounters,
+  orders,getorder,createdorder,
   kanbanorders,orderdetails
 });
 
