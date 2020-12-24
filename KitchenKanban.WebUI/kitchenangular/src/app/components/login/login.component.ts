@@ -14,11 +14,17 @@ export class LoginComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router, private formBuilder: FormBuilder, private messageService: MessageService) { }
   loginInput: AuthenticationRequest = { userName: '', password: '' }
   isLoginFailed = false;
+  isFormValid = true;
   errorMessage = '';
   ngOnInit() {
   }
 
   signIn(): void {
+    if(this.loginInput.userName ==  null || this.loginInput.userName == '' || this.loginInput.password ==  null || this.loginInput.password == '' )
+    {
+      this.isFormValid = false;
+      return;
+    }
     this.authService.login(this.loginInput).subscribe(
       data => {
         this.isLoginFailed = false;
