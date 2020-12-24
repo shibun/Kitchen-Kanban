@@ -31,6 +31,10 @@ describe('LoginComponent', () => {
     fixture.detectChanges();
   });
 
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
   it('login service to be called', 
     waitForAsync(() => {
     inject([AuthService], ((authService: AuthService) => {
