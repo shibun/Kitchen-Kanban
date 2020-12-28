@@ -262,7 +262,13 @@ class NewOrder extends React.Component {
                 });
         }
         else{
-            alert("please Add Atleast one Item");
+
+            this.setState({
+               // errormsg:true
+                errormsg:'please Add Atleast one Item'
+            })
+            //this.state.errormsg=true;
+            //alert("please Add Atleast one Item");
         }
        
     }
@@ -408,7 +414,7 @@ class NewOrder extends React.Component {
                <div className ="tkt-desc"> <MessageSuccess  handler = {this.msgchildhandler} showsuccessform={this.state.successmsg}/></div>
             }
                {this.state.errormsg &&
-               <div className ="tkt-desc"> <MessageError   handler = {this.msgchildhandler} msg={alert.message.data} showerrorform={this.state.errormsg}/></div>
+               <div className ="tkt-desc"> <MessageError   handler = {this.msgchildhandler} msg={'Please fill mandatory fields'} showerrorform={this.state.errormsg}/></div>
             }
         
       </div>
