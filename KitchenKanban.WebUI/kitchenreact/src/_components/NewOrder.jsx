@@ -8,7 +8,7 @@ import { MessageError } from '../_components/MessageError';
 class NewOrder extends React.Component {
      constructor(props) {
         super(props); 
-      
+        this._isMounted = false;
         this.state={
                     Order: {
                         orderId: "",
@@ -59,16 +59,17 @@ class NewOrder extends React.Component {
            this.totalCalculation=this.totalCalculation.bind(this);
            this.addNewOrder=this.addNewOrder.bind(this);
            this.updateNewOrder=this.updateNewOrder.bind(this);
-     
+            this.callParentUpdate=this.callParentUpdate.bind(this)
     
     }
   componentDidMount () 
     {  
+        this._isMounted = true;
        console.log('mountordertobeedited',this.props.ordertobeedited);
-      if(this.props.ordertobeedited.orderId){
-        this.state.Order=this.props.ordertobeedited,       
-        this.state.list=this.props.ordertobeedited.orderLines,
-        this.state.editmode=true     
+     if( this._isMounted && this.props.ordertobeedited.orderId){
+            this.state.Order=this.props.ordertobeedited,       
+            this.state.list=this.props.ordertobeedited.orderLines,
+            this.state.editmode=true     
         
       }
       this.setState({
@@ -77,25 +78,11 @@ class NewOrder extends React.Component {
        this.props.dispatch(itemsListActions.getAll());
        
     }
-        UNSAFE_componentWillReceiveProps(nextProps,prevProps){
-            
-         console.log('nextprops child',nextProps);        
-         console.log('prev child',prevProps);
-         console.log('propsi n child',this.props);  
-            if(this.props.alert!=prevProps.alert){
-                if(this.props.alert.type=='alert-success' )
-            {
-                console.log('alert if',alert);
-                this.state.successmsg=true;
-            }
-            if(this.props.alert.type=='alert-danger' )
-            {
-                console.log('alert if',alert);
-                this.state.errormsg=true;
-            }
-        }     
-         
-    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+     }
+       
      handleChange(e) {
         const { name, value } = e.target;      
          const { Order } = this.state;
@@ -197,7 +184,7 @@ class NewOrder extends React.Component {
     clearForm(){
         
         this.setState({         
-           showneworderform:false ,
+           //showneworderform:false ,
                       Order: {
                         orderId: "",
                         orderNumber: "",
@@ -231,31 +218,57 @@ class NewOrder extends React.Component {
                 },
                 list:[],               
                 totalqty: 0,
-                successmsg:false,
-                 errormsg:false
+                //successmsg:false,
+                //errormsg:false
             
             
         })   
        
     }
-     handler = (val) => {
+    msgchildhandler = (val) => {
+
+        console.log('msgchildhandler',val);
             this.setState({
             successmsg: val,
             errormsg:val
                 })
      
         } 
+
+        callParentUpdate(){
+            setTimeout(() => {
+                this.props.handler(false);
+            }, 600);
+        }
     addNewOrder(){
+       
+       
         this.state.Orderdetails.Order=this.state.Order;
         this.state.Orderdetails.OrderLines=this.state.list;
         if(this.state.Orderdetails.OrderLines.length>0)
         {
-        this.props.dispatch(orderActions.addNewOrder(this.state.Orderdetails));
-        this.props.handler(false);
-         this.clearForm();
+                this.props.dispatch(orderActions.addNewOrder(this.state.Orderdetails))
+                .then((response) => {
+                    this.setState({
+                            successmsg:true
+                        })
+                        this.callParentUpdate();
+                    }
+                ) .catch((error) => {
+                    this.setState({
+                        successmsg:false
+                    })
+                    this.callParentUpdate();
+                });
         }
         else{
-            alert("please Add Atleast one Item");
+
+            this.setState({
+               // errormsg:true
+                errormsg:'please Add Atleast one Item'
+            })
+            //this.state.errormsg=true;
+            //alert("please Add Atleast one Item");
         }
        
     }
@@ -263,9 +276,20 @@ class NewOrder extends React.Component {
         this.state.Orderdetails.Order=this.state.Order;
         this.state.Orderdetails.OrderLines=this.state.list;
         if(this.state.Orderdetails.OrderLines.length>0){
-         this.props.dispatch(orderActions.updateNewOrder(this.state.Orderdetails));
-       this.props.handler(false);
-        this.clearForm();
+         this.props.dispatch(orderActions.updateNewOrder(this.state.Orderdetails))
+         .then((response) => {
+            this.setState({
+                    successmsg:true
+                })
+                this.callParentUpdate();
+            }
+        ) .catch((error) => {
+            this.setState({
+                successmsg:false
+            })
+            this.callParentUpdate();
+        });
+        //this.clearForm();
         }
         else{
               alert("please Add Atleast one Item");
@@ -387,10 +411,10 @@ class NewOrder extends React.Component {
       
     </div>}
      {this.state.successmsg &&
-               <div className ="tkt-desc"> <MessageSuccess  handler = {this.handler} showsuccessform={this.state.successmsg}/></div>
+               <div className ="tkt-desc"> <MessageSuccess  handler = {this.msgchildhandler} showsuccessform={this.state.successmsg}/></div>
             }
                {this.state.errormsg &&
-               <div className ="tkt-desc"> <MessageError  handler = {this.handler} msg={alert.message.data}showerrorform={this.state.errormsg}/></div>
+               <div className ="tkt-desc"> <MessageError   handler = {this.msgchildhandler} msg={'Please fill mandatory fields'} showerrorform={this.state.errormsg}/></div>
             }
         
       </div>

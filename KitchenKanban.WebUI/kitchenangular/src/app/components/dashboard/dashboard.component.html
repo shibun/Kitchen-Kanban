@@ -247,10 +247,11 @@
                                     <div class="float-right"><img src="../../assets/images/time_icon.png" /> {{
                                         getOrderAging(order) }}</div>
                                     <div class="clearfix"></div>
-                                </div>
+                                </div>                                
+                                <div class="delivered-status" *ngIf="order.orderStatus == 6">Delivered</div>
                             </div>
                             <div class="order-description" id="orderdetailsdivready{{ orderIndex }}"
-                                style="display: none;">
+                                style="display: none;"  *ngIf="order.orderStatus != 6">
                                 <table class="order-tbl">
                                     <tbody>
                                         <tr class="order-tbl-header">
@@ -286,7 +287,7 @@
                                 </div>
                             </div>
 
-                            <div class="ticket-main delivered-tkt" *ngIf="order.orderStatus == 6">
+                            <!-- <div class="ticket-main delivered-tkt" *ngIf="order.orderStatus == 6">
                                 <div class="order-detail">
                                     <div>
                                         <div class="float-left"><img src="../../assets/images/order_number_icon.png" /> {{
@@ -297,7 +298,7 @@
                                     </div>
                                     <div class="delivered-status">Delivered</div>
                                 </div>
-                            </div>
+                            </div> -->
 
                         </div>
                     </div>

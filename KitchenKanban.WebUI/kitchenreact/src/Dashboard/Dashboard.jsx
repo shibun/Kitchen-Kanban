@@ -11,7 +11,9 @@ import moment from 'moment';
 class DashboardPage extends React.Component {
  constructor(props) {
         super(props); 
+        this._isMounted = false;
         this.state={
+          filter:"",
             currentdate:moment(new Date()).format("DD/MM/YYYY hh:mm a"),
             showform:false, 
             ordertobeedited:{},         
@@ -37,14 +39,20 @@ class DashboardPage extends React.Component {
         this.changeOrderStatus=this.changeOrderStatus.bind(this);
         this.showWarningCancel=this.showWarningCancel.bind(this);
         this.editOrder=this.editOrder.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         //this.changeOrderStatus=this.changeOrderStatus.bind(this);
     
     
       }
    
   componentDidMount () {   
-        this.props.getKanboard();
+    this._isMounted = true;
+    this._isMounted && this.props.getKanboard();
     }
+
+    componentWillUnmount() {
+      this._isMounted = false;
+   }
 
   handleOnAddClick(){
         this.setState({
@@ -52,10 +60,11 @@ class DashboardPage extends React.Component {
             ordertobeedited:{}      
         });        
     }  
-     handler = (val) => {
+  handler = (val) => {
     this.setState({
       showform: val
     })
+    this.props.getKanboard();
   } 
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -172,10 +181,36 @@ editOrder(order) {
   //console.log("editorder", orderid);
 }
 
+handleChange = event => {
+  this.setState({ filter: event.target.value });
+};
+
     render() {
       const { kanbanorders,orderdetails } = this.props;
-      const {neworders,beingpreparedorders,preparedorders,packingorders,readyorders,deliveredorders,showform,currentdate,ordertobeedited}=this.state;
-        return (
+      var {filter,neworders,beingpreparedorders,preparedorders,packingorders,readyorders,deliveredorders,showform,currentdate,ordertobeedited}=this.state;
+     
+      if(filter){
+
+        if(neworders && neworders.length>0){
+          neworders=neworders.filter(function (order) {  return order.orderNumber.includes(filter)});
+       } 
+        if(beingpreparedorders && beingpreparedorders.length>0){
+          beingpreparedorders=beingpreparedorders.filter(function (order) {  return order.orderNumber.includes(filter)});
+        } 
+        if(preparedorders && preparedorders.length>0){
+          preparedorders=preparedorders.filter(function (order) {  return order.orderNumber.includes(filter)});
+        } 
+        if(packingorders && packingorders.length>0){
+          packingorders=packingorders.filter(function (order) {  return order.orderNumber.includes(filter)});
+        } 
+        if(readyorders && readyorders.length>0){
+          readyorders=readyorders.filter(function (order) {  return order.orderNumber.includes(filter)});
+        } 
+       
+       
+            
+      }
+      return (
           <div>
 
     <section>
@@ -191,8 +226,8 @@ editOrder(order) {
           <div className="row">
             <div className="col-xs-9"></div>
             <div className="col-xs-3">
-              <input
-                type="search"
+              <input value={filter} onChange={this.handleChange}
+                type="text"
                 placeholder="Search Order"
                 className="form-control" 
               />
@@ -653,7 +688,7 @@ editOrder(order) {
       </div>
       </div>
          </section>
-         {this.state.showform && <div className ="tkt-desc"><NewOrder  handler = {this.handler} showorderform={this.state.showform} ordertobeedited={ordertobeedited}></NewOrder></div>}
+         {this.state.showform && <div className ="tkt-desc"><NewOrder   handler = {this.handler} showorderform={this.state.showform} ordertobeedited={ordertobeedited}></NewOrder></div>}
       
       </div>
         );
