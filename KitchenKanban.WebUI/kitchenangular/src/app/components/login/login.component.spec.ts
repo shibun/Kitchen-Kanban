@@ -1,4 +1,4 @@
-import { async, ComponentFixture, fakeAsync, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { async, ComponentFixture, fakeAsync, flush, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
 
 import { LoginComponent } from './login.component';
 import { AuthService } from '../../services/auth.service';
@@ -47,6 +47,7 @@ describe('LoginComponent', () => {
     component.signIn();
     tick(100);
     expect(component.isFormValid).toBeFalse();
+    flush();
   }));
 
   it('signIn() to be called along with authService.login()', fakeAsync(() => {
@@ -61,5 +62,6 @@ describe('LoginComponent', () => {
     component.signIn();
     tick(100);
     expect(service.login).toHaveBeenCalled();
+    flush();
   }));
 });

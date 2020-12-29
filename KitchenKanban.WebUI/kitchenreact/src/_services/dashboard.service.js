@@ -1,4 +1,4 @@
-import config from 'config';
+import * as config from '../_helpers/config';
 import { authHeader } from '../_helpers';
 import axios from 'axios';
 
@@ -22,9 +22,5 @@ export const dashboardService = {
   }
   function updateOrderStatus(data) {
     return axios.post(`${config.apiUrl}/Order/OrderStatus`,data);
-}
- 
-function updateOrderStatus(data) {
-  return axios.post(`${config.apiUrl}/Order/OrderStatus`,data);
 }
   
