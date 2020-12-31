@@ -106,7 +106,7 @@
             Cancel
           </button>
           <button v-if="!user.userId"
-            type="submit"
+            type="submit" id="adduserformbutton"
             @click="addUser"
             class="btn btn-active"
             data-dismiss="modal"

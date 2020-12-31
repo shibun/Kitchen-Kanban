@@ -2,7 +2,7 @@ import KitchenCounterService from "../services/KitchenCounterService";
 import MessageSuccess from "@/components/MessageSuccess.vue";
 import MessageError from "@/components/MessageError.vue";
 export default {
-  name: "KitchenCounterService",
+  name: "KitchenCounterList",
   created() {
     this.getKitchenCounters();
   },

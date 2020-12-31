@@ -6,7 +6,7 @@
          <div class="clearfix"></div></div>
       <div class="list-sec">
         <div class="text-right">
-          <button class="trans-btn" @click="showAddUser">
+          <button class="trans-btn" @click="showAddUser" id="adduserbutton">
             <img src="../assets/../assets/images/add.png" />
           </button>
         </div>

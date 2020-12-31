@@ -133,7 +133,7 @@
             Add
           </button>
           <button
-            type="button"
+            type="button" id="additemupdatebutton"
             class="btn btn-active"
             v-if="editmode"
             data-dismiss="modal"

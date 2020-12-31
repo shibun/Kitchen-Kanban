@@ -2,6 +2,7 @@
 import axios from 'axios'
 
 export default {
+   name: 'userService',
   getUsers() {
     return axios.get('/User');
   },

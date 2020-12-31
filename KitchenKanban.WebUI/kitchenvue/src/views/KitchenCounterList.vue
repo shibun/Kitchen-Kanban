@@ -6,7 +6,7 @@
          <div class="clearfix"></div></div>
       <div class="list-sec">
         <div class="text-right">
-          <button class="trans-btn" @click="showForm">
+          <button class="trans-btn" @click="showForm" id="addcounterbutton">
             <img src="../assets/images/add.png" />
           </button>
         </div>
@@ -98,7 +98,7 @@
             Cancel
           </button>
           <button
-            type="button"
+            type="button" id="addmodalcounterbutton"
             class="btn btn-active"
             v-if="!editmode"
             data-dismiss="modal"
@@ -107,7 +107,7 @@
             Add
           </button>
           <button
-            type="button"
+            type="button" id="updatemodalcounterbutton"
             class="btn btn-active"
             v-if="editmode"
             data-dismiss="modal"
