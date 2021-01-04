@@ -46,7 +46,7 @@ export default {
 
   methods: {
     showForm() {
-      this.isShowForm = true;
+      this.isShowForm = true;     
     },
     hideForm() {
       this.isShowForm = false;
@@ -58,6 +58,7 @@ export default {
       const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
       const dateTime = date + ' ' + time;
       this.currentdate = dateTime;
+//      return this.currentdate;
     },
     getItems() {
       (this.successmsg = false),
@@ -73,7 +74,7 @@ export default {
     },
     addItem: function() {
       console.log('item is in add', this.files);
-      if (!this.Item.ItemName) {
+      if (!this.Item.ItemName ||this.Item.ItemName=="" ) {
         this.errormsg = "Please enter Item Name";
         return;
       }

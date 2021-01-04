@@ -1,4 +1,4 @@
-import config from 'config';
+import * as config from '../_helpers/config';
 import { authHeader } from '../_helpers';
 import axios from 'axios';
 

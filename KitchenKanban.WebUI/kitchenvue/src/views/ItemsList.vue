@@ -9,7 +9,7 @@
      
       <div class="list-sec">
         <div class="text-right">
-          <button class="trans-btn" @click="showForm">
+          <button class="trans-btn" @click="showForm" id="addbutton">
             <img src="../assets/images/add.png" />
           </button>
         </div>
@@ -123,8 +123,8 @@
           >
             Cancel
           </button>
-          <button
-            type="button"
+          <button 
+            type="button" id="additembutton"
             class="btn btn-active"
             v-if="!editmode"
             data-dismiss="modal"
@@ -133,7 +133,7 @@
             Add
           </button>
           <button
-            type="button"
+            type="button" id="additemupdatebutton"
             class="btn btn-active"
             v-if="editmode"
             data-dismiss="modal"
@@ -151,3 +151,4 @@
 </template>
 
 <script src="../viewscripts/itemListScript.js" type="text/javascript"/>
+
