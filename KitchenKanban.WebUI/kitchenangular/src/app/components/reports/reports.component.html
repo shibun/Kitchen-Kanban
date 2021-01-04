@@ -96,7 +96,7 @@
                         <th class="text-center">Quantity</th>
                         <th class="text-center">Price</th>
                     </tr>
-                    <tr *ngFor='let orderLine of record.orderLines; index as i;'>
+                    <tr *ngFor='let orderLine of orderLineItems; index as i;'>
                         <td class="text-center">{{i + 1}}</td>
                         <td>{{ orderLine.itemName }}</td>
                         <td class="text-center">{{ orderLine.orderQuantity }}</td>
