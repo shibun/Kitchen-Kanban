@@ -265,6 +265,10 @@
                
             },
             addOrder() {
+                if (this.Orderdetail.Order.customerContactNumber.length!=10) {
+                    this.errormsg = "Please enter Correct phone number";
+                    return;
+                }
                 if (this.Orderdetail.OrderLines.length == 0) {
                     this.errormsg = "Please enter Items";
                     return;
@@ -283,6 +287,10 @@
                     });
             },
              updateOrder() {
+                   if (this.Orderdetail.Order.customerContactNumber.length!=10) {
+                    this.errormsg = "Please enter Correct phone number";
+                    return;
+                }
                 if (this.Orderdetail.OrderLines.length == 0) {
                     this.errormsg = "Please enter Items";
                     return;
