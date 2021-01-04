@@ -20,7 +20,7 @@
                   <div class="form-group">
                     <label>First Name <span class="asterisk">*</span></label>
                     <input
-                      v-model="user.firstName"
+                      v-model="user.firstName" autofocus
                       type="text"
                       class="form-control"
                     />
@@ -67,7 +67,7 @@
               <div class="row" v-if="!user.userId">
                 <div class="col-xs-6">
                   <div class="form-group">
-                    <label>Password<span class="asterisk">*</span></label>
+                    <label>Password <span class="asterisk">*</span></label>
                     <input
                       v-model="user.password"
                       type="password"

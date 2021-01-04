@@ -88,11 +88,11 @@
                                     <span class="cancelled-order-status" v-if="orderdetail.order.orderStatus==7">Cancelled</span>
 
                                 </td>
-                                <th>Ordered Date</th>
+                                <th>Order Date</th>
                                 <td>{{orderdetail.order.orderDate |toDate}}</td>
                             </tr>
                             <tr>
-                                <th>Ordered Time</th>
+                                <th>Order Time</th>
                                 <td>{{orderdetail.order.orderDate|toTime}}</td>
                                 <th>Delivered Time</th>
                                 <td>
@@ -101,7 +101,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th>Ordered Taken By</th>
+                                <th>Order Taken By</th>
                                 <td>{{orderdetail.order.orderTakenByUserName}}</td>
                                 <th>Customer Phone No</th>
                                 <td>{{orderdetail.order.customerContactNumber?orderdetail.order.customerContactNumber.substring(0,4)+"*****":''}}</td>

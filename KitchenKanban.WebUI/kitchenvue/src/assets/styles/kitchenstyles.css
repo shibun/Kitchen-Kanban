@@ -67,7 +67,13 @@ body {
 
 .welcome-text {
     font-size:22px;
-    margin-top: 100px;
+    margin-top: 155px;
+}
+
+.dropdown-menu
+{
+    position:absolute;
+    left:-90px;
 }
 
 .welcome-des
@@ -269,6 +275,17 @@ section {
 .user-img
 {
     margin-right:15px;
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    border:1px solid #ccc;
+}
+
+.display-user-img
+{
+    width:28px;
+    height:28px;
+    border-radius:50%;
 }
 
 .navbar-inverse {
@@ -605,13 +622,6 @@ button:focus, button:active, button:visited, button:link
     font-size:12px;
 }
 
-.display-user-img
-{
-height:25px;
-width:25px;
-border-radius:50%;
-}
-
 .uploaded-user-img
 {
 width:100px;
@@ -699,6 +709,12 @@ display: none!important;
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: 4px;
+}
+
+.incorrect_credentials
+{
+    color:#ff0000;
+    text-align:center;
 }
 
 @keyframes stroke {

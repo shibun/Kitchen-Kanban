@@ -48,7 +48,7 @@
                 >
                   <div>
                     <div class="float-left"><img src="../assets/images/order_number_icon.png"/> {{ order.orderNumber.split("-")[1] }}</div>
-                    <div class="float-right"><img src="../assets/images/time_icon.png"/>{{getordertime(order.orderDate) |toFixed}}</div>                    
+                    <div class="float-right"><img src="../assets/images/time_icon.png"/> {{getordertime(order.orderDate) |toFixed}}</div>                    
                     <div class="clearfix"></div>
                   </div>
                   
@@ -83,8 +83,19 @@
                     </tbody>
                   </table>
                   <div class="top6">
-                    <div class="float-right">
-                      <div class="dropup tkt-left-btn">
+                    <div class="float-right">                      
+                      <button
+                        @click="editOrder(order.orderId)"
+                        class="edit-order-btn tkt-left-btn"
+                      >
+                        Edit Order
+                      </button>
+                      <button
+                        class="cancel-order-btn tkt-left-btn"
+                        @click="showWarningCancel(order.orderId, 7, 'Incorrect order')">
+                        Cancel Order
+                      </button>
+                      <div class="dropup">
                         <button
                           class="move-order-btn dropdown-toggle"
                           type="button"
@@ -109,17 +120,6 @@
                           </li>
                         </ul>
                       </div>
-                      <button
-                        @click="editOrder(order.orderId)"
-                        class="edit-order-btn tkt-left-btn"
-                      >
-                        Edit Order
-                      </button>
-                      <button
-                        class="cancel-order-btn"
-                        @click="showWarningCancel(order.orderId, 7, 'Incorrect order')">
-                        Cancel Order
-                      </button>
                     </div>
                     <div class="clearfix"></div>
                   </div>
@@ -154,7 +154,7 @@
                 >
                   <div>
                     <div class="float-left"><img src="../assets/images/order_number_icon.png"/> {{ bporder.orderNumber.split("-")[1] }}</div>
-                    <div class="float-right"><img src="../assets/images/time_icon.png"/>{{getordertime(bporder.orderDate) |toFixed}}</div>
+                    <div class="float-right"><img src="../assets/images/time_icon.png"/> {{getordertime(bporder.orderDate) |toFixed}}</div>
                     <div class="clearfix"></div>
                   </div>                  
                 </div>
@@ -189,7 +189,7 @@
                   </table>
                   <div class="top6">
                     <div class="float-right">
-                      <div class="dropup tkt-left-btn">
+                      <div class="dropup">
                         <button
                           class="move-order-btn dropdown-toggle"
                           type="button"
@@ -261,7 +261,7 @@
                 >
                   <div>
                     <div class="float-left"><img src="../assets/images/order_number_icon.png"/> {{ order.orderNumber.split("-")[1] }}</div>
-                    <div class="float-right"><img src="../assets/images/time_icon.png"/>{{getordertime(order.orderDate) |toFixed}}</div>
+                    <div class="float-right"><img src="../assets/images/time_icon.png"/> {{getordertime(order.orderDate) |toFixed}}</div>
                     <div class="clearfix"></div>
                   </div>                  
                 </div>
@@ -296,7 +296,7 @@
                   </table>
                   <div class="top6">
                     <div class="float-right">
-                      <div class="dropup tkt-left-btn">
+                      <div class="dropup">
                         <button
                           class="move-order-btn dropdown-toggle"
                           type="button"
@@ -402,7 +402,7 @@
                   </table>
                   <div class="top6">
                     <div class="float-right">
-                      <div class="dropup tkt-left-btn">
+                      <div class="dropup">
                         <button
                           class="move-order-btn dropdown-toggle"
                           type="button"
