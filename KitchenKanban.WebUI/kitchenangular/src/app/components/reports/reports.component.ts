@@ -36,7 +36,8 @@ export class ReportsComponent implements OnInit {
       customerContactNumber: ''
     },
     orderLines: []
-  };
+  };  
+  orderLineItems: any = [];
 
   currentDate = new Date();
   constructor(private reportService: ReportService, private messageService: MessageService,
@@ -87,6 +88,7 @@ export class ReportsComponent implements OnInit {
     this.orderService.getOrderById(orderId).subscribe(
       data => {
         this.record = data;
+        this.orderLineItems = data.orderLines;
         if (this.record.order.customerName != null) {
           var regex = /\b(\w{2})(\w+)(\w)\b/g;
           this.record.order.customerName = (this.record.order.customerName.replace(regex, (_, first, middle, last) => `${first}${'x'.repeat(middle.length)}${last}`));
