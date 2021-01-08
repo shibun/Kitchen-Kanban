@@ -42,6 +42,7 @@ export default {
   },
   created() {
     this.getUsers();
+      
     //this.userTypes=this.$data
   },
   mounted: function () {
@@ -54,11 +55,17 @@ export default {
       this.successmsg = "";
       userService
         .getUsers()
-        .then((response) => (this.users = response.data))
+        .then((response) => {this.users = response.data;    
+        })
         .catch((err) => {
           this.errormsg = err.messge;
           console.log(err.message);
         });
+         //  
+    },
+    reloadfunction(){
+      this.successmsg = "";
+      window.location.reload(true);
     },
     showAddUser() {
       this.isAddUser = true;
@@ -98,7 +105,9 @@ export default {
             }   
             else{
                this.successmsg = "user added";
-                   this.isAddUser = false;    
+                   this.isAddUser = false; 
+                  
+                  
             }
                 
     
@@ -126,15 +135,19 @@ export default {
                    this.successmsg = "user updated";
                     this.isAddUser = false        
                   console.log("response", response);
+                
                 })
               .catch((err) => {
                 (this.errormsg = "error occured"), console.log(err.message);
               });
             }
             else{
-               this.successmsg = "user updated";
-                    this.isAddUser = false       
+               this.successmsg = "user updated";              
+                    this.isAddUser = false ;
+                
+                     
             }
+         
            
             }
         )

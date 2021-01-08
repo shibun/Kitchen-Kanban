@@ -3,7 +3,7 @@
         <div class="add-overlay" >
             <div class="add-pop-overlay">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" @click="hideForm">×</button>
+                    <button type="button" class="close" data-dismiss="modal" @click="cancelForm">×</button>
                     <h4 class="modal-title">New Order</h4>
                 </div>
                 <div class="modal-body">
@@ -18,7 +18,7 @@
                             <div class="col-xs-6">
                                 <div class="form-group">
                                     <label>Customer Phone </label>
-                                    <input type="text" class="form-control" v-model="Orderdetail.Order.customerContactNumber">
+                                    <input type="number" class="form-control" v-model="Orderdetail.Order.customerContactNumber" >
                                 </div>
                             </div>
                         </div>
@@ -44,9 +44,9 @@
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <input class="form-control" list="itemList" name="ItemList" v-model="selecteditem" v-on:change="selectionChanged">
-                                <datalist id="itemList">
-                                    <option v-for="item in Items" v-bind:key="item.itemId" v-label="item.itemName">{{item.itemName}}</option>
+                                <input class="form-control" list="itemsList" name="ItemList" v-model="selecteditem" v-on:change="selectionChanged">
+                                <datalist id="itemsList">
+                                    <option v-for="item in OrderItems" v-bind:key="item.itemId" >{{item.itemName}}</option>
                                 </datalist>
                             </div>
                         </div>
@@ -120,7 +120,7 @@
         },
         data() {
             return {
-                Items: [],
+                OrderItems: [],
                 TakeAway:"TakeAway",
                 Orderdetail: {
                     Order: {
@@ -184,7 +184,7 @@
                 (this.successmsg = false),
                 ItemListService.get().then((response) => {
                     if(response.data.length>0){
-                          this.Items = response.data
+                          this.OrderItems = response.data
                     }
                   
                 });
@@ -214,7 +214,7 @@
             },
             selectionChanged: function (e) {
                
-                this.Items.forEach((value, index) => {
+                this.OrderItems.forEach((value, index) => {
                     if (value.itemName === e.target.value) {
                             this.OrderLine = {},
                             this.OrderLine.orderLineId = "",
@@ -265,6 +265,10 @@
                
             },
             addOrder() {
+                if (this.Orderdetail.Order.customerContactNumber.length!=10) {
+                    this.errormsg = "Please enter Correct phone number";
+                    return;
+                }
                 if (this.Orderdetail.OrderLines.length == 0) {
                     this.errormsg = "Please enter Items";
                     return;
@@ -283,6 +287,10 @@
                     });
             },
              updateOrder() {
+                   if (this.Orderdetail.Order.customerContactNumber.length!=10) {
+                    this.errormsg = "Please enter Correct phone number";
+                    return;
+                }
                 if (this.Orderdetail.OrderLines.length == 0) {
                     this.errormsg = "Please enter Items";
                     return;

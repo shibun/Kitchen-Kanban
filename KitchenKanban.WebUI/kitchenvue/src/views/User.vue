@@ -29,7 +29,13 @@
               </td>
               <td>{{ data.firstName }} {{ data.lastName }}</td>
               <td>{{ data.userName }}</td>
-              <td>{{ data.userType }}</td>
+              <td>
+                <span v-if="data.userType==1">Administrator</span>
+                <span v-if="data.userType==2">FrontDesk</span>
+                 <span v-if="data.userType==3">Chef</span>
+                <span v-if="data.userType==4">BackOffice</span>
+                <span v-if="data.userType==5">Service</span>               
+             </td>
               <td class="text-center">
                 <button
                   @click="editUser(data)"
@@ -54,7 +60,7 @@
       v-on:add-user="addUser"
       v-on:update-user="updateUser"
     />
-    <MessageSuccess :msg="successmsg" v-on:on-success="getUsers" />
+    <MessageSuccess :msg="successmsg" v-on:on-success="reloadfunction" />
     <MessageError :msg="errormsg" v-on:on-error="onError" />
   </div>
 </template>

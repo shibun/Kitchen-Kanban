@@ -7,10 +7,10 @@
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li><a>
-                <img class="user-img" src="../assets/images/user_img.png" v-if="!usrImage"/> 
-                   <img v-bind:src="'data:image/jpeg;base64,'+ usrImage" v-if="usrImage" class="display-user-img"/>
-                
-                 {{loggedUser && loggedUser.userFullName}}</a></li>
+                <img class="user-img" src="../assets/images/no_user_img.png" v-if="!usrImage"/> 
+                <img v-bind:src="'data:image/jpeg;base64,'+ usrImage" v-if="usrImage" class="user-img"/>                
+               {{this.user.firstName}}  {{this.user.lastName}}</a></li>
+               
                 <li><a href="" @click="logout" ><i class="glyphicon glyphicon-log-out"></i></a></li>
             </ul>
         </div>
@@ -40,11 +40,11 @@ export default {
     },
     data(){
       return {
-        usrImage:''
+        usrImage:'',
+        user:''
       }
     },
-    created (){
-      console.log('loggedUser',this.loggedUser);
+    created (){     
       this.getUserDetails()
     },
     methods: {
@@ -54,18 +54,21 @@ export default {
           this.$router.push('/login')
         })
       },
-      getUserDetails(){
-        if(this.isLoggedIn && this.loggedUser){
+      getUserDetails(){     
+        if(this.isLoggedIn ){    
+           this.user= JSON.parse(localStorage.getItem('user'));       
            userService
-            .getUser(this.loggedUser.userId)
+            .getUser(this.user.userId)
               .then((response) => {
-                this.usrImage=response.data.imageContent;
-                //console.log('img',response.data.imageContent);
+                  this.usrImage=response.data.imageContent;
+                  this.user=response.data;
+                console.log('img',response.data.imageContent);
             })
             .catch((err) => {
               (this.errormsg = err.messge), console.log(err.message);
             });
         }
+        
       }
     }
 }

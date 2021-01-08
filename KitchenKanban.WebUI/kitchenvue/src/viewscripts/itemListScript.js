@@ -63,9 +63,9 @@ export default {
     getItems() {
       (this.successmsg = false),
         ItemListService.get().then((response) => {
-          if (response.data.length > 0) {
-            console.log("Image : ", response.data);
+          console.log('length',response.data.length);
             (this.Items = response.data);
+            if (response.data.length > 0) {  
              (this.itemsnotfound = false);
           } else {
             this.itemsnotfound = true;

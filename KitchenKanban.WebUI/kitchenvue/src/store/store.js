@@ -22,6 +22,7 @@ export default new Vuex.Store({
         state.status = 'success'
         state.token = user.token
         state.user = user
+        localStorage.setItem('user', JSON.stringify(user))
       },
       auth_error(state){
         state.status = 'error'
@@ -39,8 +40,9 @@ export default new Vuex.Store({
           axios({url: 'http://localhost:64464/WebApi/token', data: user, method: 'POST' })
           .then(resp => {
             const token = resp.data.token
-                     
+              
             localStorage.setItem('token', token)
+           
             //apiConfig.defaults.headers.common['Authorization'] = token
             axios.defaults.headers.common['Authorization'] = token
             commit('auth_success',resp.data)

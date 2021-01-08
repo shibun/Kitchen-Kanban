@@ -33,7 +33,7 @@
                 <img src="../assets/images/no_item_img.png" v-if="data.imageId==null" class="display-user-img" />
                 <img v-bind:src="'data:image/jpeg;base64,'+ data.imageContent" v-if="data.imageId!=null" class="display-user-img"/>
               </td>
-              <td class="text-center">{{ data.itemName }}</td>
+              <td>{{ data.itemName }}</td>
               <td class="text-right">
                 {{ data.itemCharge | toFixed | toUSD }}
               </td>

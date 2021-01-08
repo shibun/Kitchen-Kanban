@@ -2,12 +2,7 @@
   <div class="login-sec">
     <div class="login-flex">
       <div class="login-left-sec">
-        <div class="welcome-text">Welcome to My Kitchen</div>
-        <p class="welcome-des">
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text ever
-          since the 1500s,
-        </p>
+        <div class="welcome-text">Welcome to My Kitchen</div>        
       </div>
       <div class="login-right-sec">
         <h3 class="login-header">Login</h3>
@@ -30,11 +25,11 @@
               id="Password"
             />
           </div>
-          <div class="text-center">
-            <button class="login-btn" type="submit">Login</button>
-            <div v-if="!loginsuccess" id="validation1">
-              <span>Username or password is wrong</span>
+          <div class="incorrect_credentials" v-if="!loginsuccess" id="validation1">
+              <span>User name or password is incorrect</span>
             </div>
+          <div class="text-center">
+            <button class="login-btn" type="submit">Login</button>            
           </div>
         </form>
       </div>
